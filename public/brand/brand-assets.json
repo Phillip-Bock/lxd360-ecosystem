@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "LXD360 Brand Assets Manifest",
+  "version": "1.0.0",
+  "lastUpdated": "2024-12-06",
+  "organization": {
+    "name": "LXD360 LLC",
+    "website": "https://lxd360.com",
+    "brandName": "LXP360 SaaS"
+  },
+  "assets": {
+    "logos": {
+      "primary": {
+        "filename": "LXP360 SaaS Logo.png",
+        "path": "/LXP360 SaaS Logo.png",
+        "format": "PNG",
+        "dimensions": {
+          "width": 1200,
+          "height": 400
+        },
+        "useCase": "Primary full logo for headers, marketing materials",
+        "backgrounds": ["light", "dark"],
+        "minSize": "120px width"
+      },
+      "lxd360Logo": {
+        "filename": "lxd360-logo.png",
+        "path": "/lxd360-logo.png",
+        "format": "PNG",
+        "dimensions": {
+          "width": 600,
+          "height": 200
+        },
+        "useCase": "Company logo for footers, legal documents",
+        "backgrounds": ["light", "dark"]
+      },
+      "inspireLogo": {
+        "filename": "inspire-logo.png",
+        "path": "/inspire-logo.png",
+        "format": "PNG",
+        "dimensions": {
+          "width": 800,
+          "height": 300
+        },
+        "useCase": "INSPIRE Studio product logo",
+        "backgrounds": ["light", "dark"]
+      }
+    },
+    "icons": {
+      "appIcon": {
+        "filename": "icon.svg",
+        "path": "/icon.svg",
+        "format": "SVG",
+        "dimensions": {
+          "width": 180,
+          "height": 180
+        },
+        "useCase": "App icon, favicon base, touch icons",
+        "features": ["adaptive-colors", "dark-mode-support"],
+        "borderRadius": "37px (20.5%)"
+      }
+    },
+    "marketing": {
+      "heroImage": {
+        "filename": "hero-image.jpg",
+        "path": "/hero-image.jpg",
+        "format": "JPEG",
+        "dimensions": {
+          "width": 1920,
+          "height": 1080
+        },
+        "useCase": "Landing page hero section background"
+      },
+      "placeholder": {
+        "filename": "placeholder.jpg",
+        "path": "/placeholder.jpg",
+        "format": "JPEG",
+        "dimensions": {
+          "width": 800,
+          "height": 600
+        },
+        "useCase": "Default placeholder for missing images"
+      }
+    },
+    "integrations": {
+      "centerLogo": {
+        "filename": "center-logo.png",
+        "path": "/integrations/center-logo.png",
+        "format": "PNG",
+        "useCase": "Central logo in integrations wheel"
+      },
+      "partnerLogos": [
+        "/integrations/integration-1.png",
+        "/integrations/integration-2.png",
+        "/integrations/integration-3.png",
+        "/integrations/integration-4.png",
+        "/integrations/integration-5.png",
+        "/integrations/integration-6.png",
+        "/integrations/integration-7.png",
+        "/integrations/integration-8.png",
+        "/integrations/integration-9.png",
+        "/integrations/integration-10.png"
+      ]
+    },
+    "blog": {
+      "featuredImages": [
+        {
+          "filename": "blog-1.jpg",
+          "path": "/blog/blog-1.jpg",
+          "useCase": "Blog post featured image"
+        },
+        {
+          "filename": "blog-2.jpg",
+          "path": "/blog/blog-2.jpg",
+          "useCase": "Blog post featured image"
+        },
+        {
+          "filename": "blog-3.jpg",
+          "path": "/blog/blog-3.jpg",
+          "useCase": "Blog post featured image"
+        }
+      ]
+    },
+    "howItWorks": {
+      "videoFallback": {
+        "filename": "video-fallback.png",
+        "path": "/how-it-works/video-fallback.png",
+        "format": "PNG",
+        "useCase": "Fallback image when video cannot play"
+      }
+    }
+  },
+  "brandColors": {
+    "primary": {
+      "name": "LXD Blue",
+      "hex": "#0056B8",
+      "rgb": "rgb(0, 86, 184)",
+      "hsl": "hsl(210, 100%, 36%)"
+    },
+    "secondary": {
+      "name": "LXD Purple",
+      "hex": "#BA23FB",
+      "rgb": "rgb(186, 35, 251)",
+      "hsl": "hsl(282, 97%, 56%)"
+    },
+    "accent": {
+      "name": "LXD Bright Blue",
+      "hex": "#00D4FF",
+      "rgb": "rgb(0, 212, 255)"
+    }
+  },
+  "typography": {
+    "primaryFont": "Inter",
+    "headingFont": "Plus Jakarta Sans",
+    "monoFont": "JetBrains Mono",
+    "googleFontsUrl": "https://fonts.google.com/share?selection.family=Inter:wght@400;500;600;700|JetBrains+Mono:wght@400;500;700|Plus+Jakarta+Sans:wght@500;600;700;800"
+  },
+  "guidelines": {
+    "logoMinClearSpace": "1x logo height on all sides",
+    "logoMinSize": "120px width for digital, 1 inch for print",
+    "primaryColorUsage": "Primary buttons, links, interactive elements",
+    "secondaryColorUsage": "Borders, accents, CTAs, highlights",
+    "darkModeDefault": true,
+    "accessibilityStandard": "WCAG 2.1 AA"
+  },
+  "missingAssets": {
+    "needed": [
+      {
+        "type": "logo",
+        "name": "Logo Wordmark",
+        "description": "Text-only version of logo without icon"
+      },
+      {
+        "type": "logo",
+        "name": "Logo Icon Only",
+        "description": "Standalone icon without text for small spaces"
+      },
+      {
+        "type": "favicon",
+        "name": "favicon.ico",
+        "description": "Multi-size ICO file for browser tabs"
+      },
+      {
+        "type": "og-image",
+        "name": "og-default.png",
+        "description": "Default OpenGraph image (1200x630px)"
+      },
+      {
+        "type": "og-image",
+        "name": "twitter-card.png",
+        "description": "Twitter card image (1200x600px)"
+      },
+      {
+        "type": "icon",
+        "name": "apple-touch-icon.png",
+        "description": "Apple touch icon (180x180px)"
+      }
+    ]
+  }
+}

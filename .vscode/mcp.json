@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "Linear ": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.linear.app/sse"]
+    }
+  },
+  "inputs": []
+}

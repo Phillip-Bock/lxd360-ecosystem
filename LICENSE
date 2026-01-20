@@ -1,0 +1,219 @@
+PROPRIETARY SOFTWARE LICENSE AGREEMENT
+
+================================================================================
+                              LXD360 LLC
+                     PROPRIETARY SOFTWARE LICENSE
+================================================================================
+
+Copyright © 2025 LXD360 LLC. All Rights Reserved.
+
+IMPORTANT: READ THIS LICENSE AGREEMENT CAREFULLY BEFORE USING THIS SOFTWARE.
+
+================================================================================
+1. DEFINITIONS
+================================================================================
+
+"Software" means the LXP360 SaaS Platform, including but not limited to:
+- All source code, object code, and executable code
+- The INSPIRE Framework and all related methodologies
+- All packages within the @lxp360 namespace
+- All documentation, specifications, and technical materials
+- All user interfaces, designs, and visual elements
+- All databases, schemas, and data structures
+- All APIs, algorithms, and business logic
+- All trademarks, trade names, and branding assets
+
+"Licensor" means LXD360 LLC, a Limited Liability Company registered in the 
+State of Alabama, United States of America.
+
+"Owner" means Dr. Phillip Bock, Founder, Owner, and Chief Executive Officer 
+of LXD360 LLC.
+
+"Registered Agent" means LegalZoom, serving as the statutory agent for 
+LXD360 LLC.
+
+"Principal Place of Business" means Daphne, Alabama 36526, United States.
+
+================================================================================
+2. PROPRIETARY RIGHTS
+================================================================================
+
+This Software is the sole and exclusive property of LXD360 LLC. The Software 
+contains trade secrets, proprietary information, and intellectual property 
+that is protected by:
+
+a) United States copyright laws
+b) International copyright treaties
+c) Trade secret laws
+d) Patent laws (where applicable)
+e) Trademark laws
+f) Other intellectual property laws and treaties
+
+All rights, title, and interest in and to the Software, including all 
+intellectual property rights therein, are and shall remain the exclusive 
+property of LXD360 LLC.
+
+================================================================================
+3. RESTRICTIONS
+================================================================================
+
+WITHOUT THE EXPRESS PRIOR WRITTEN CONSENT OF LXD360 LLC, YOU MAY NOT:
+
+a) COPY, REPRODUCE, OR DUPLICATE the Software or any portion thereof
+
+b) MODIFY, ADAPT, ALTER, TRANSLATE, OR CREATE DERIVATIVE WORKS based on 
+   the Software
+
+c) DISTRIBUTE, SELL, LEASE, RENT, LOAN, SUBLICENSE, OR OTHERWISE TRANSFER 
+   the Software or any rights therein to any third party
+
+d) REVERSE ENGINEER, DISASSEMBLE, DECOMPILE, OR OTHERWISE ATTEMPT TO DERIVE 
+   the source code, algorithms, or data structures of the Software
+
+e) REMOVE, ALTER, OR OBSCURE any proprietary notices, labels, or marks on 
+   the Software
+
+f) USE the Software for any commercial purpose without a valid commercial 
+   license agreement
+
+g) PUBLICLY DISPLAY, PERFORM, OR PUBLISH the Software or any portion thereof
+
+h) USE the Software to develop competing products or services
+
+i) PERMIT any third party to do any of the foregoing
+
+================================================================================
+4. NO LICENSE GRANTED
+================================================================================
+
+No license, express or implied, is granted to any party under this notice. 
+Viewing of this repository does not constitute a license to use, copy, 
+modify, or distribute the Software.
+
+Access to this repository may be granted for:
+- Authorized employees of LXD360 LLC
+- Authorized contractors under written agreement
+- Potential investors under NDA
+- Due diligence purposes under written agreement
+
+Such access does not grant any license to the Software.
+
+================================================================================
+5. CONFIDENTIALITY
+================================================================================
+
+The Software and all related materials constitute confidential and proprietary 
+information of LXD360 LLC. Any party with access to the Software agrees to:
+
+a) Maintain the confidentiality of the Software
+b) Not disclose the Software to any third party
+c) Use the Software only for authorized purposes
+d) Implement reasonable security measures to protect the Software
+e) Promptly notify LXD360 LLC of any unauthorized access or disclosure
+
+================================================================================
+6. ENFORCEMENT
+================================================================================
+
+LXD360 LLC reserves the right to enforce its intellectual property rights to 
+the fullest extent of the law. Violations of this license may result in:
+
+a) Civil liability for damages, including but not limited to:
+   - Actual damages
+   - Statutory damages
+   - Consequential damages
+   - Lost profits
+   - Attorney's fees and costs
+
+b) Injunctive relief
+
+c) Criminal prosecution under applicable laws, including but not limited to:
+   - The Computer Fraud and Abuse Act (18 U.S.C. § 1030)
+   - The Economic Espionage Act (18 U.S.C. §§ 1831-1839)
+   - The Digital Millennium Copyright Act (17 U.S.C. § 1201)
+   - State computer crime laws
+
+================================================================================
+7. DISCLAIMER OF WARRANTIES
+================================================================================
+
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+
+LXD360 LLC DOES NOT WARRANT THAT THE SOFTWARE WILL MEET YOUR REQUIREMENTS, 
+THAT THE OPERATION OF THE SOFTWARE WILL BE UNINTERRUPTED OR ERROR-FREE, OR 
+THAT DEFECTS IN THE SOFTWARE WILL BE CORRECTED.
+
+================================================================================
+8. LIMITATION OF LIABILITY
+================================================================================
+
+IN NO EVENT SHALL LXD360 LLC, ITS OFFICERS, DIRECTORS, EMPLOYEES, AGENTS, 
+OR AFFILIATES BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, 
+OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, 
+BUSINESS, OR GOODWILL, ARISING OUT OF OR IN CONNECTION WITH THIS LICENSE 
+OR THE SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+================================================================================
+9. GOVERNING LAW AND JURISDICTION
+================================================================================
+
+This License Agreement shall be governed by and construed in accordance with 
+the laws of the State of Alabama, United States of America, without regard 
+to its conflict of law provisions.
+
+Any legal action or proceeding arising out of or relating to this License 
+Agreement shall be brought exclusively in the state or federal courts located 
+in Baldwin County, Alabama, and each party irrevocably submits to the 
+jurisdiction of such courts.
+
+================================================================================
+10. SEVERABILITY
+================================================================================
+
+If any provision of this License Agreement is held to be invalid, illegal, 
+or unenforceable, the validity, legality, and enforceability of the remaining 
+provisions shall not in any way be affected or impaired thereby.
+
+================================================================================
+11. ENTIRE AGREEMENT
+================================================================================
+
+This License Agreement constitutes the entire agreement between the parties 
+with respect to the subject matter hereof and supersedes all prior or 
+contemporaneous understandings, agreements, negotiations, representations, 
+and warranties, both written and oral, with respect to such subject matter.
+
+================================================================================
+12. CONTACT INFORMATION
+================================================================================
+
+For licensing inquiries, permissions, or questions regarding this License 
+Agreement, please contact:
+
+    LXD360 LLC
+    Attn: Policies & Legal Department
+    Daphne, Alabama 36526
+    United States of America
+
+    Email: policies@lxd360.com
+    Website: https://lxd360.com
+
+================================================================================
+13. SDVOSB CERTIFICATION
+================================================================================
+
+LXD360 LLC is a certified Service-Disabled Veteran-Owned Small Business 
+(SDVOSB). This certification does not affect the terms of this License 
+Agreement.
+
+================================================================================
+
+NOTICE: UNAUTHORIZED ACCESS, USE, REPRODUCTION, OR DISTRIBUTION OF THIS 
+SOFTWARE, OR ANY PORTION OF IT, MAY RESULT IN SEVERE CIVIL AND CRIMINAL 
+PENALTIES, AND WILL BE PROSECUTED TO THE MAXIMUM EXTENT POSSIBLE UNDER LAW.
+
+================================================================================
+                    © 2025 LXD360 LLC. ALL RIGHTS RESERVED.
+================================================================================

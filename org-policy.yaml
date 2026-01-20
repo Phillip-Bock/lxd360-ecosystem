@@ -1,0 +1,79 @@
+constraint: constraints/gcp.restrictServiceUsage
+listPolicy:
+  allowedValues:
+    # Core Infrastructure
+    - compute.googleapis.com
+    - run.googleapis.com
+    - cloudfunctions.googleapis.com
+    - cloudresourcemanager.googleapis.com
+    - serviceusage.googleapis.com
+    - servicenetworking.googleapis.com
+    
+    # Storage & Database
+    - storage.googleapis.com
+    - sql.googleapis.com
+    - firestore.googleapis.com
+    - redis.googleapis.com
+    
+    # Firebase & Auth
+    - firebase.googleapis.com
+    - firebasehosting.googleapis.com
+    - firebasestorage.googleapis.com
+    - identitytoolkit.googleapis.com
+    - apikeys.googleapis.com
+    - iap.googleapis.com
+    
+    # Build & Deploy
+    - cloudbuild.googleapis.com
+    - artifactregistry.googleapis.com
+    - containerregistry.googleapis.com
+    - sourcerepo.googleapis.com
+    
+    # Networking & DNS
+    - dns.googleapis.com
+    - vpcaccess.googleapis.com
+    - certificatemanager.googleapis.com
+    - domains.googleapis.com
+    
+    # Messaging & Tasks
+    - pubsub.googleapis.com
+    - cloudtasks.googleapis.com
+    - cloudscheduler.googleapis.com
+    - eventarc.googleapis.com
+    
+    # AI/ML & Analytics
+    - aiplatform.googleapis.com
+    - bigquery.googleapis.com
+    - bigquerystorage.googleapis.com
+    - dataflow.googleapis.com
+    - ml.googleapis.com
+    - generativelanguage.googleapis.com
+    - texttospeech.googleapis.com
+    - speech.googleapis.com
+    - translate.googleapis.com
+    - vision.googleapis.com
+    - videointelligence.googleapis.com
+    - documentai.googleapis.com
+    - dialogflow.googleapis.com
+    
+    # Monitoring & Logging
+    - logging.googleapis.com
+    - monitoring.googleapis.com
+    - cloudtrace.googleapis.com
+    - clouderrorreporting.googleapis.com
+    - cloudprofiler.googleapis.com
+    
+    # Security & Secrets
+    - secretmanager.googleapis.com
+    - cloudkms.googleapis.com
+    - iam.googleapis.com
+    - iamcredentials.googleapis.com
+    - securitycenter.googleapis.com
+    - binaryauthorization.googleapis.com
+    
+    # Misc Services
+    - sheets.googleapis.com
+    - drive.googleapis.com
+    - gmail.googleapis.com
+    - calendar-json.googleapis.com
+    - people.googleapis.com

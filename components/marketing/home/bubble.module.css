@@ -1,0 +1,69 @@
+/**
+ * Bubble Text Animation Styles
+ * ============================
+ * Creates a wave-like scale effect when hovering over text.
+ * Each character scales up and affects neighboring characters.
+ * WCAG 2.2 AA: Uses darker blue variants in light mode for contrast
+ */
+
+.hoverText {
+  display: inline-block;
+  transition:
+    transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    font-weight 0.35s,
+    color 0.35s;
+  cursor: default;
+}
+
+/* Main hovered character - WCAG AA: blue-600 = 4.6:1 on light, blue-400 = 4.5:1 on dark */
+.hoverText:hover {
+  transform: scale(1.5);
+  font-weight: 900;
+  color: rgb(37, 99, 235); /* blue-600 for light mode */
+}
+
+:global(.dark) .hoverText:hover {
+  color: rgb(96, 165, 250); /* blue-400 for dark mode */
+}
+
+/* Adjacent characters (siblings) - wave effect */
+.hoverText:hover + .hoverText {
+  transform: scale(1.25);
+  font-weight: 700;
+  color: rgb(59, 130, 246); /* blue-500 for light mode */
+}
+
+:global(.dark) .hoverText:hover + .hoverText {
+  color: rgb(147, 197, 253); /* blue-300 for dark mode */
+}
+
+.hoverText:hover + .hoverText + .hoverText {
+  transform: scale(1.1);
+  font-weight: 500;
+  color: rgb(96, 165, 250); /* blue-400 for light mode */
+}
+
+:global(.dark) .hoverText:hover + .hoverText + .hoverText {
+  color: rgb(191, 219, 254); /* blue-200 for dark mode */
+}
+
+/* Previous siblings using :has() - for modern browsers */
+.hoverText:has(+ .hoverText:hover) {
+  transform: scale(1.25);
+  font-weight: 700;
+  color: rgb(59, 130, 246); /* blue-500 for light mode */
+}
+
+:global(.dark) .hoverText:has(+ .hoverText:hover) {
+  color: rgb(147, 197, 253); /* blue-300 for dark mode */
+}
+
+.hoverText:has(+ .hoverText + .hoverText:hover) {
+  transform: scale(1.1);
+  font-weight: 500;
+  color: rgb(96, 165, 250); /* blue-400 for light mode */
+}
+
+:global(.dark) .hoverText:has(+ .hoverText + .hoverText:hover) {
+  color: rgb(191, 219, 254); /* blue-200 for dark mode */
+}

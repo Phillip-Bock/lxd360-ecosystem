@@ -1,0 +1,115 @@
+name: LXD Content Idea
+description: Submit a learning experience design content idea
+title: "[Content]: "
+labels: ["documentation", "content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share your Learning Experience Design (LXD) content ideas! This could be course content, learning modules, educational resources, or INSPIRE framework applications.
+
+  - type: textarea
+    id: title
+    attributes:
+      label: Content Title
+      description: What would you call this content or learning experience?
+      placeholder: "e.g., Introduction to Neuroscience-Based Learning"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Content Type
+      description: What type of content is this?
+      options:
+        - Course Module
+        - Interactive Lesson
+        - Assessment/Quiz
+        - Case Study
+        - Tutorial/How-to
+        - Reference Material
+        - Video Content
+        - Simulation/Scenario
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Content Description
+      description: Describe the content and its learning objectives
+      placeholder: "This content will teach learners about..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: audience
+    attributes:
+      label: Target Audience
+      description: Who is this content designed for?
+      placeholder: "e.g., New employees, managers, technical staff..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: inspire
+    attributes:
+      label: INSPIRE Framework Focus
+      description: Which INSPIRE principle does this content emphasize?
+      options:
+        - I - Immersive
+        - N - Neuroscience-based
+        - S - Skill-focused
+        - P - Personalized
+        - I - Interactive
+        - R - Results-driven
+        - E - Engaging
+        - Multiple principles
+    validations:
+      required: false
+
+  - type: textarea
+    id: outcomes
+    attributes:
+      label: Learning Outcomes
+      description: What will learners be able to do after completing this content?
+      placeholder: |
+        1. Learners will be able to...
+        2. Learners will understand...
+        3. Learners will demonstrate...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: duration
+    attributes:
+      label: Estimated Duration
+      description: How long will it take to complete?
+      options:
+        - 5-15 minutes (Micro-learning)
+        - 15-30 minutes (Short module)
+        - 30-60 minutes (Standard module)
+        - 1-2 hours (Extended learning)
+        - 2+ hours (Comprehensive course)
+    validations:
+      required: false
+
+  - type: textarea
+    id: resources
+    attributes:
+      label: Resources Needed
+      description: What resources or assets would be needed to create this content?
+      placeholder: "e.g., Subject matter expert, video recording, graphics..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other details, references, or inspiration for this content
+      placeholder: Links to similar content, research, examples...
+    validations:
+      required: false

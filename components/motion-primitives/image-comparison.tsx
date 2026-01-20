@@ -1,0 +1,147 @@
+'use client';
+import {
+  type MotionValue,
+  motion,
+  type SpringOptions,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from 'motion/react';
+import { createContext, useContext, useState } from 'react';
+import { cn } from '@/lib/utils';
+
+const ImageComparisonContext = createContext<
+  | {
+      sliderPosition: number;
+      setSliderPosition: (pos: number) => void;
+      motionSliderPosition: MotionValue<number>;
+    }
+  | undefined
+>(undefined);
+
+export type ImageComparisonProps = {
+  children: React.ReactNode;
+  className?: string;
+  enableHover?: boolean;
+  springOptions?: SpringOptions;
+};
+
+const DEFAULT_SPRING_OPTIONS = {
+  bounce: 0,
+  duration: 0,
+};
+
+function ImageComparison({
+  children,
+  className,
+  enableHover,
+  springOptions,
+}: ImageComparisonProps): React.JSX.Element {
+  const [isDragging, setIsDragging] = useState(false);
+  const motionValue = useMotionValue(50);
+  const motionSliderPosition = useSpring(motionValue, springOptions ?? DEFAULT_SPRING_OPTIONS);
+  const [sliderPosition, setSliderPosition] = useState(50);
+
+  const handleDrag = (event: React.MouseEvent | React.TouchEvent): void => {
+    if (!isDragging && !enableHover) return;
+
+    const containerRect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const x =
+      'touches' in event
+        ? event.touches[0].clientX - containerRect.left
+        : (event as React.MouseEvent).clientX - containerRect.left;
+
+    const percentage = Math.min(Math.max((x / containerRect.width) * 100, 0), 100);
+    motionValue.set(percentage);
+    setSliderPosition(percentage);
+  };
+
+  return (
+    <ImageComparisonContext.Provider
+      value={{ sliderPosition, setSliderPosition, motionSliderPosition }}
+    >
+      <div
+        role="slider"
+        aria-valuenow={sliderPosition}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="Image comparison slider"
+        tabIndex={0}
+        className={cn(
+          'relative select-none overflow-hidden',
+          enableHover && 'cursor-ew-resize',
+          className,
+        )}
+        onMouseMove={handleDrag}
+        onMouseDown={() => !enableHover && setIsDragging(true)}
+        onMouseUp={() => !enableHover && setIsDragging(false)}
+        onMouseLeave={() => !enableHover && setIsDragging(false)}
+        onTouchMove={handleDrag}
+        onTouchStart={() => !enableHover && setIsDragging(true)}
+        onTouchEnd={() => !enableHover && setIsDragging(false)}
+      >
+        {children}
+      </div>
+    </ImageComparisonContext.Provider>
+  );
+}
+
+const ImageComparisonImage = ({
+  className,
+  alt,
+  src,
+  position,
+}: {
+  className?: string;
+  alt: string;
+  src: string;
+  position: 'left' | 'right';
+}): React.JSX.Element => {
+  const context = useContext(ImageComparisonContext);
+  if (!context) throw new Error('ImageLayer must be used within ImageComparisonProvider');
+  const { motionSliderPosition } = context;
+  const leftClipPath = useTransform(motionSliderPosition, (value) => `inset(0 0 0 ${value}%)`);
+  const rightClipPath = useTransform(
+    motionSliderPosition,
+    (value) => `inset(0 ${100 - value}% 0 0)`,
+  );
+
+  return (
+    // biome-ignore lint/performance/noImgElement: motion.img required for framer-motion animations
+    <motion.img
+      src={src}
+      alt={alt}
+      className={cn('absolute inset-0 h-full w-full object-cover', className)}
+      style={{
+        clipPath: position === 'left' ? leftClipPath : rightClipPath,
+      }}
+    />
+  );
+};
+
+const ImageComparisonSlider = ({
+  className,
+  children,
+}: {
+  className: string;
+  children?: React.ReactNode;
+}): React.JSX.Element => {
+  const context = useContext(ImageComparisonContext);
+  if (!context) throw new Error('ImageComparisonSlider must be used within ImageComparison');
+  const { motionSliderPosition } = context;
+
+  const left = useTransform(motionSliderPosition, (value) => `${value}%`);
+
+  return (
+    <motion.div
+      className={cn('absolute bottom-0 top-0 w-1 cursor-ew-resize', className)}
+      style={{
+        left,
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+export { ImageComparison, ImageComparisonImage, ImageComparisonSlider };

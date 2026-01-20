@@ -1,0 +1,11 @@
+export { default as CalendarWidget } from './calendar-widget';
+export { default as ChartsWidget } from './charts-widget';
+export { default as NotificationsWidget } from './notifications-widget';
+export { default as ProjectsWidget } from './projects-widget';
+export { default as QuickLinksWidget } from './quick-links-widget';
+export { default as RecentActivityWidget } from './recent-activity-widget';
+export { default as SearchWidget } from './search-widget';
+export { default as StorageWidget } from './storage-widget';
+export { default as TimerWidget } from './timer-widget';
+export { default as TodoWidget } from './todo-widget';
+export { default as WidgetWrapper } from './widget-wrapper';

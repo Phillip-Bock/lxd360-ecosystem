@@ -1,0 +1,139 @@
+echo "Running pre-commit checks..."
+echo ""
+
+# 1. Check for forbidden patterns in staged files
+echo "Checking for forbidden patterns..."
+
+# Get list of staged TypeScript/TSX files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx)$' || true)
+
+if [ -n "$STAGED_FILES" ]; then
+  # Check for eslint-disable comments (legacy - should not exist)
+  ESLINT_DISABLE_FILES=$(echo "$STAGED_FILES" | xargs grep -l -E "eslint-disable" 2>/dev/null || true)
+  if [ -n "$ESLINT_DISABLE_FILES" ]; then
+    echo ""
+    echo "COMMIT BLOCKED: eslint-disable comments found!"
+    echo ""
+    echo "The following files contain eslint-disable:"
+    echo "$ESLINT_DISABLE_FILES"
+    echo ""
+    echo "Remove these legacy comments - we use Biome now."
+    echo "Fix the actual code issue instead of suppressing warnings."
+    exit 1
+  fi
+
+  # Check for biome-ignore comments (should be rare, must be documented)
+  BIOME_IGNORE_FILES=$(echo "$STAGED_FILES" | xargs grep -l -E "biome-ignore" 2>/dev/null || true)
+  if [ -n "$BIOME_IGNORE_FILES" ]; then
+    echo ""
+    echo "WARNING: biome-ignore comments found!"
+    echo ""
+    echo "The following files contain biome-ignore:"
+    echo "$BIOME_IGNORE_FILES"
+    echo ""
+    echo "Ensure each ignore has a documented reason."
+    echo "Proceeding with commit..."
+    echo ""
+  fi
+
+  # Check for TypeScript escape hatches
+  TS_ESCAPE_FILES=$(echo "$STAGED_FILES" | xargs grep -l -E "@ts-ignore|@ts-nocheck|@ts-expect-error" 2>/dev/null || true)
+  if [ -n "$TS_ESCAPE_FILES" ]; then
+    echo ""
+    echo "COMMIT BLOCKED: TypeScript escape hatches found!"
+    echo ""
+    echo "The following files contain @ts-ignore, @ts-nocheck, or @ts-expect-error:"
+    echo "$TS_ESCAPE_FILES"
+    echo ""
+    echo "Add proper types instead of suppressing TypeScript errors."
+    echo "See CLAUDE.md for proper fix patterns."
+    exit 1
+  fi
+
+  # Check for 'any' type usage (strict enforcement)
+  ANY_FILES=$(echo "$STAGED_FILES" | xargs grep -l -E ": any[^a-zA-Z]|as any[^a-zA-Z]|<any>" 2>/dev/null || true)
+  if [ -n "$ANY_FILES" ]; then
+    echo ""
+    echo "COMMIT BLOCKED: 'any' type usage found!"
+    echo ""
+    echo "The following files use 'any' type:"
+    echo "$ANY_FILES"
+    echo ""
+    echo "Define proper TypeScript interfaces instead."
+    echo "See CLAUDE.md for proper fix patterns."
+    exit 1
+  fi
+
+  # Check for raw <img> tags in TSX files
+  TSX_FILES=$(echo "$STAGED_FILES" | grep -E '\.tsx$' || true)
+  if [ -n "$TSX_FILES" ]; then
+    IMG_FILES=$(echo "$TSX_FILES" | xargs grep -l '<img ' 2>/dev/null || true)
+    if [ -n "$IMG_FILES" ]; then
+      echo ""
+      echo "COMMIT BLOCKED: Raw <img> tags found!"
+      echo ""
+      echo "The following files use <img> instead of next/image:"
+      echo "$IMG_FILES"
+      echo ""
+      echo "Replace with: import Image from 'next/image'"
+      echo "See CLAUDE.md for proper patterns."
+      exit 1
+    fi
+  fi
+
+  # Check for console.log (but allow console.warn and console.error)
+  # Exclude scripts/, tests/, functions/, docs/, and lib/logger.ts
+  PRODUCTION_FILES=$(echo "$STAGED_FILES" | grep -v -E "^(scripts/|tests/|functions/|docs/|lib/logger\.ts)" || true)
+  if [ -n "$PRODUCTION_FILES" ]; then
+    CONSOLE_LOG_FILES=$(echo "$PRODUCTION_FILES" | xargs grep -l -E "console\.(log|info|debug|trace)" 2>/dev/null || true)
+    if [ -n "$CONSOLE_LOG_FILES" ]; then
+      echo ""
+      echo "COMMIT BLOCKED: console.log found!"
+      echo ""
+      echo "The following files contain console.log (or similar):"
+      echo "$CONSOLE_LOG_FILES"
+      echo ""
+      echo "Use console.error for actual errors, or remove debug logs."
+      echo "See CLAUDE.md for proper patterns."
+      exit 1
+    fi
+  fi
+fi
+
+echo "No forbidden patterns found"
+echo ""
+
+# 2. Run lint-staged for formatting and linting with Biome
+echo "Running lint-staged..."
+npx lint-staged
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "COMMIT BLOCKED: lint-staged failed!"
+  echo ""
+  echo "Fix all lint and formatting errors before committing."
+  exit 1
+fi
+
+# 3. Run Biome check on staged files only
+echo ""
+echo "Running Biome on staged files..."
+
+if [ -n "$STAGED_FILES" ]; then
+  echo "$STAGED_FILES" | xargs npx biome check --no-errors-on-unmatched
+
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "COMMIT BLOCKED: Biome errors found in staged files!"
+    echo ""
+    echo "Fix all lint errors before committing."
+    echo "Run: pnpm lint:fix"
+    exit 1
+  fi
+else
+  echo "No TypeScript files staged, skipping Biome check."
+fi
+
+echo ""
+echo "All pre-commit checks passed!"
+echo ""

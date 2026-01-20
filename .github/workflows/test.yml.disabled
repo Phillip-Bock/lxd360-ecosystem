@@ -1,0 +1,250 @@
+# LXP360-SaaS Test Workflow
+# Purpose: Run unit, integration, and E2E tests on every push/PR
+# Notifications: Uses GitHub Actions job summaries for success/failure status
+# Owner: @Phillip-Bock
+
+name: Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+# Cancel in-progress runs for the same branch to save resources
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Restrict workflow permissions for security
+permissions:
+  contents: read
+
+env:
+  # Playwright browsers cache
+  PLAYWRIGHT_BROWSERS_PATH: 0
+
+jobs:
+  # Unit and Integration Tests
+  unit-tests:
+    name: Unit & Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit tests
+        run: pnpm run test:run
+        env:
+          # CI environment
+          CI: true
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  # Component Tests
+  component-tests:
+    name: Component Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run component tests
+        run: pnpm run test:components
+        env:
+          CI: true
+
+  # E2E Tests
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build application
+        run: pnpm run build:web
+        env:
+          # Firebase/GCP environment configured in Cloud Run
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'lxd-saas-dev' }}
+
+      - name: Run E2E tests
+        run: pnpm run test:e2e
+        env:
+          CI: true
+          # Test environment variables
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'lxd-saas-dev' }}
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL || 'test@example.com' }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD || 'TestPass123!' }}
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 7
+
+  # Coverage Report
+  coverage:
+    name: Coverage Report
+    runs-on: ubuntu-latest
+    needs: [unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests with coverage
+        run: pnpm run test:coverage
+        env:
+          CI: true
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+          verbose: true
+
+  # Notification job
+  notify:
+    name: Notify
+    runs-on: ubuntu-latest
+    needs: [unit-tests, component-tests, e2e-tests]
+    if: always()
+    steps:
+      - name: Determine job statuses
+        id: status
+        run: |
+          # Set status emoji for each job
+          if [ "${{ needs.unit-tests.result }}" = "success" ]; then
+            echo "unit=✅ Passed" >> $GITHUB_OUTPUT
+          else
+            echo "unit=❌ Failed" >> $GITHUB_OUTPUT
+          fi
+
+          if [ "${{ needs.component-tests.result }}" = "success" ]; then
+            echo "component=✅ Passed" >> $GITHUB_OUTPUT
+          else
+            echo "component=❌ Failed" >> $GITHUB_OUTPUT
+          fi
+
+          if [ "${{ needs.e2e-tests.result }}" = "success" ]; then
+            echo "e2e=✅ Passed" >> $GITHUB_OUTPUT
+          elif [ "${{ needs.e2e-tests.result }}" = "skipped" ]; then
+            echo "e2e=⏭️ Skipped" >> $GITHUB_OUTPUT
+          else
+            echo "e2e=❌ Failed" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create success summary
+        if: needs.unit-tests.result == 'success' && needs.component-tests.result == 'success' && needs.e2e-tests.result == 'success'
+        run: |
+          echo "## ✅ All Tests Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All test suites completed successfully." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit & Integration | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "| Component Tests | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Author:** @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*Owner: @Phillip-Bock*" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create failure summary
+        if: needs.unit-tests.result != 'success' || needs.component-tests.result != 'success' || needs.e2e-tests.result != 'success'
+        run: |
+          echo "## ❌ Tests Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "One or more test suites failed. Please review the logs." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit & Integration | ${{ steps.status.outputs.unit }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Component Tests | ${{ steps.status.outputs.component }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ${{ steps.status.outputs.e2e }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Author:** @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- 📊 [Coverage Report](artifact:coverage-report)" >> $GITHUB_STEP_SUMMARY
+          echo "- 🎭 [Playwright Report](artifact:playwright-report)" >> $GITHUB_STEP_SUMMARY
+          echo "- 📋 [Test Results](artifact:test-results)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*Owner: @Phillip-Bock*" >> $GITHUB_STEP_SUMMARY

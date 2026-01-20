@@ -1,0 +1,48 @@
+name: Development Task
+description: Task for Claude instance
+title: "[PRODUCT] "
+labels: ["needs-triage"]
+body:
+  - type: dropdown
+    id: product
+    attributes:
+      label: Product
+      options:
+        - inspire-studio
+        - lxd-nexus
+        - lxp360
+        - infrastructure
+    validations:
+      required: true
+  - type: dropdown
+    id: instance
+    attributes:
+      label: Assign To
+      options:
+        - instance:desktop
+        - instance:vscode
+        - instance:browser
+        - unassigned
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - priority:critical
+        - priority:high
+        - priority:medium
+        - priority:low
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What needs to be done
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done When
+      placeholder: |
+        - [ ] Criteria 1
+        - [ ] Criteria 2

@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "target": "ES6",
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "types/**/*.d.ts"],
+  "exclude": [
+    "node_modules",
+    "packages",
+    "functions",
+    "components/bolt-migration",
+    "Chat Folder Do Not Delete",
+    "inspire-packages",
+    "_archive_do_not_delete",
+    "_archive",
+    "_archived",
+    "app/inspire-studio/_reference",
+    "app/(dashboard)/inspire-studio/tools",
+    "app/(dashboard)/inspire-studio/inspire",
+    "components/inspire/tools",
+    "components/inspire/wizard",
+    "components/inspire/cognitive",
+    "lib/inspire",
+    ".fix-yourself",
+    ".v2_archive",
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
+}

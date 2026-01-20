@@ -1,0 +1,54 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$(git branch --show-current)\" != \"main\" ] || { echo '{\"block\": true, \"message\": \"ERROR: Cannot edit on main branch. Create a feature branch first: git checkout -b claude/[feature]-[id]\"}' >&2; exit 2; }",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write(*.ts)|Write(*.tsx)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if grep -q '@ts-ignore\\|@ts-nocheck\\|eslint-disable' \"$CLAUDE_FILE_PATHS\" 2>/dev/null; then echo '{\"block\": true, \"message\": \"ERROR: File contains @ts-ignore, @ts-nocheck, or eslint-disable. These are forbidden.\"}' >&2; exit 2; fi",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write(*.ts)|Write(*.tsx)|Edit(*.ts)|Edit(*.tsx)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx tsc --noEmit --skipLibCheck 2>&1 | head -30 || echo '⚠️ TypeScript errors detected - fix before continuing'",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "deny": [
+      "Bash(git commit --no-verify*)",
+      "Bash(git commit -n*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Read(./.env.local)",
+      "Read(./.env)",
+      "Write(./.env.local)",
+      "Write(./.env)"
+    ]
+  },
+  "env": {
+    "CLAUDE_STANDARDS_VERSION": "12",
+    "CLAUDE_CHECKPOINT_REQUIRED": "true"
+  }
+}

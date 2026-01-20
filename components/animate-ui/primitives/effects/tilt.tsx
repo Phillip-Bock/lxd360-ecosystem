@@ -1,0 +1,128 @@
+'use client';
+
+import {
+  type HTMLMotionProps,
+  type MotionValue,
+  motion,
+  type SpringOptions,
+  useMotionValue,
+  useSpring,
+} from 'motion/react';
+import * as React from 'react';
+
+import { Slot, type WithAsChild } from '@/components/animate-ui/primitives/animate/slot';
+import { getStrictContext } from '@/lib/get-strict-context';
+
+type TiltContextType = {
+  sRX: MotionValue<number>;
+  sRY: MotionValue<number>;
+  transition: SpringOptions;
+};
+
+const [TiltProvider, useTilt] = getStrictContext<TiltContextType>('TiltContext');
+
+type TiltProps = WithAsChild<
+  HTMLMotionProps<'div'> & {
+    maxTilt?: number;
+    perspective?: number;
+    transition?: SpringOptions;
+  }
+>;
+
+function Tilt({
+  maxTilt = 10,
+  perspective = 800,
+  style,
+  transition = {
+    stiffness: 300,
+    damping: 25,
+    mass: 0.5,
+  },
+  onMouseMove,
+  onMouseLeave,
+  asChild = false,
+  ...props
+}: TiltProps): React.JSX.Element {
+  const rX = useMotionValue(0);
+  const rY = useMotionValue(0);
+
+  const sRX = useSpring(rX, transition);
+  const sRY = useSpring(rY, transition);
+
+  const handleMouseMove = React.useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      onMouseMove?.(e);
+      const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width;
+      const py = (e.clientY - rect.top) / rect.height;
+      const nx = px * 2 - 1;
+      const ny = py * 2 - 1;
+      rY.set(nx * maxTilt);
+      rX.set(-ny * maxTilt);
+    },
+    [maxTilt, rX, rY, onMouseMove],
+  );
+
+  const handleMouseLeave = React.useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      onMouseLeave?.(e);
+      rX.set(0);
+      rY.set(0);
+    },
+    [rX, rY, onMouseLeave],
+  );
+
+  const commonProps = {
+    style: {
+      perspective,
+      transformStyle: 'preserve-3d' as const,
+      willChange: 'transform' as const,
+      ...style,
+    },
+    onMouseMove: handleMouseMove,
+    onMouseLeave: handleMouseLeave,
+    ...props,
+  };
+
+  return (
+    <TiltProvider value={{ sRX, sRY, transition }}>
+      {asChild ? (
+        <Slot {...(commonProps as React.ComponentProps<typeof Slot>)} />
+      ) : (
+        <motion.div {...commonProps} />
+      )}
+    </TiltProvider>
+  );
+}
+
+type TiltContentProps = WithAsChild<HTMLMotionProps<'div'>>;
+
+function TiltContent({
+  children,
+  style,
+  transition,
+  asChild = false,
+  ...props
+}: TiltContentProps): React.JSX.Element {
+  const { sRX, sRY, transition: tiltTransition } = useTilt();
+
+  const commonProps = {
+    style: {
+      rotateX: sRX,
+      rotateY: sRY,
+      willChange: 'transform' as const,
+      ...style,
+    },
+    transition: transition ?? tiltTransition,
+    ...props,
+    children,
+  };
+
+  if (asChild) {
+    return <Slot {...(commonProps as React.ComponentProps<typeof Slot>)} />;
+  }
+
+  return <motion.div {...commonProps} />;
+}
+
+export { Tilt, TiltContent, type TiltProps, type TiltContentProps };

@@ -1,0 +1,193 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "error",
+        "noArrayIndexKey": "off",
+        "useIterableCallbackReturn": "warn",
+        "noAssignInExpressions": "warn",
+        "noImplicitAnyLet": "warn",
+        "noShadowRestrictedNames": "warn",
+        "noDocumentCookie": "warn",
+        "noControlCharactersInRegex": "warn"
+      },
+      "style": {
+        "noNonNullAssertion": "warn",
+        "useConst": "error",
+        "useImportType": "error"
+      },
+      "correctness": {
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error",
+        "useExhaustiveDependencies": "warn",
+        "noUnusedFunctionParameters": "warn",
+        "noEmptyPattern": "warn"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "warn"
+      },
+      "performance": {
+        "noImgElement": "warn",
+        "noAccumulatingSpread": "warn"
+      },
+      "a11y": {
+        "useButtonType": "warn",
+        "noLabelWithoutControl": "warn",
+        "noStaticElementInteractions": "warn",
+        "noSvgWithoutTitle": "warn",
+        "useKeyWithClickEvents": "warn",
+        "useSemanticElements": "warn",
+        "useAriaPropsSupportedByRole": "warn",
+        "useFocusableInteractive": "warn",
+        "useValidAnchor": "warn",
+        "useKeyWithMouseEvents": "warn",
+        "useAriaPropsForRole": "warn"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/email/**", "**/emails/**", "**/react-email/**"],
+      "linter": {
+        "rules": {
+          "performance": {
+            "noImgElement": "off"
+          },
+          "a11y": {
+            "noSvgWithoutTitle": "off",
+            "useButtonType": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/seo/**", "**/JsonLd.tsx", "**/json-ld.tsx"],
+      "linter": {
+        "rules": {
+          "security": {
+            "noDangerouslySetInnerHtml": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/code-block.tsx",
+        "**/code-comparison.tsx",
+        "**/ContentRenderer.tsx",
+        "**/icon-viewer.tsx",
+        "**/breadcrumb-nav.tsx",
+        "**/chart.tsx",
+        "**/tweet-card.tsx",
+        "**/theme-builder.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "security": {
+            "noDangerouslySetInnerHtml": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/storage/utils.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noControlCharactersInRegex": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/RolePerspectiveSwitcher.tsx", "**/sidebar.tsx"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noDocumentCookie": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/immersive/**", "**/3d/**", "**/xr/**", "**/vr/**", "**/ar/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noStaticElementInteractions": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/scenario-canvas.tsx", "**/InteractiveImage.tsx"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useSemanticElements": "off",
+            "noStaticElementInteractions": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/animate-ui/**",
+        "**/dashboard/widgets/**",
+        "**/status/uptime-history.tsx",
+        "**/inspire/accessibility/**",
+        "**/components/ui/*.tsx",
+        "**/media-dropzone.tsx",
+        "**/audio-library.tsx",
+        "**/image-library.tsx",
+        "**/video-library.tsx",
+        "**/video-viewer.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noStaticElementInteractions": "off",
+            "noSvgWithoutTitle": "off"
+          }
+        }
+      }
+    }
+  ],
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "always",
+      "trailingCommas": "all"
+    }
+  },
+  "css": {
+    "parser": {
+      "cssModules": true,
+      "tailwindDirectives": true
+    }
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/.next",
+      "!**/dist",
+      "!**/.turbo",
+      "!**/*.min.js",
+      "!**/public",
+      "!**/.archive",
+      "!**/_archived",
+      "!**/scripts"
+    ]
+  }
+}

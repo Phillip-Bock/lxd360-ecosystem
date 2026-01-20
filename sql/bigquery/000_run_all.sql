@@ -1,0 +1,33 @@
+-- =============================================================================
+-- LXD360 BigQuery - Master Setup Script
+-- Ticket: LXD-249 - Set Up BigQuery for xAPI Analytics
+-- =============================================================================
+-- Description: Run all BigQuery setup scripts in order
+--
+-- USAGE:
+-- Option 1 - BigQuery Console:
+--   Copy and paste each file's contents in order
+--
+-- Option 2 - bq CLI:
+--   bq query --use_legacy_sql=false < 001_create_dataset.sql
+--   bq query --use_legacy_sql=false < 002_create_xapi_statements_table.sql
+--   bq query --use_legacy_sql=false < 003_create_learner_progress_table.sql
+--   bq query --use_legacy_sql=false < 004_create_course_analytics_table.sql
+--
+-- Option 3 - gcloud CLI:
+--   cat sql/bigquery/001_create_dataset.sql | bq query --use_legacy_sql=false
+--   cat sql/bigquery/002_create_xapi_statements_table.sql | bq query --use_legacy_sql=false
+--   cat sql/bigquery/003_create_learner_progress_table.sql | bq query --use_legacy_sql=false
+--   cat sql/bigquery/004_create_course_analytics_table.sql | bq query --use_legacy_sql=false
+--
+-- =============================================================================
+-- EXECUTION ORDER:
+-- =============================================================================
+-- 1. 001_create_dataset.sql        - Creates the lxd360_analytics dataset
+-- 2. 002_create_xapi_statements_table.sql - Creates xapi_statements table
+-- 3. 003_create_learner_progress_table.sql - Creates learner_progress table
+-- 4. 004_create_course_analytics_table.sql - Creates course_analytics table
+-- =============================================================================
+
+-- This file serves as documentation only.
+-- Execute the numbered SQL files in sequence.

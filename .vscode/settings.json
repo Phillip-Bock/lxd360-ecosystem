@@ -1,0 +1,105 @@
+{
+  "files.eol": "\n",
+  "git.ignoreLimitWarning": true,
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "editor.formatOnSave": true,
+  "editor.linkedEditing": true,
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "files.autoSave": "onFocusChange",
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/.next/**": true,
+    "**/node_modules/**": true,
+    "**/.pnpm-store/**": true,
+    "**/dist/**": true,
+    "**/coverage/**": true,
+    "**/.turbo/**": true,
+    "**/playwright-report/**": true,
+    "**/test-results/**": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/dist": true,
+    "**/coverage": true,
+    "**/.pnpm-store": true,
+    "**/playwright-report": true,
+    "**/*.chunk.js": true,
+    "**/test-results": true
+  },
+  "typescript.tsserver.maxTsServerMemory": 8192,
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "git.autorefresh": false,
+  "git.confirmSync": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.tsx": "${capture}.ts, ${capture}.test.tsx, ${capture}.spec.ts, ${capture}.module.css, ${capture}.css",
+    "page.tsx": "layout.tsx, loading.tsx, error.tsx, not-found.tsx, head.tsx, metadata.ts",
+    "package.json": "package-lock.json, pnpm-lock.yaml, .npmrc, tsconfig.json, tailwind.config.ts, postcss.config.js, next.config.mjs"
+  },
+  "cSpell.words": [
+    "adipiscing",
+    "airtable",
+    "amet",
+    "annotatable",
+    "atque",
+    "Barab",
+    "Camtasia",
+    "codepen",
+    "codesandbox",
+    "corrupti",
+    "cupiditate",
+    "deleniti",
+    "elit",
+    "excepturi",
+    "flippable",
+    "Glassmorphic",
+    "hotspot",
+    "HRIS",
+    "HSTS",
+    "IADC",
+    "KAIZEN",
+    "lxdnexus",
+    "Meilisearch",
+    "Microlearning",
+    "molestias",
+    "neuro",
+    "occaecati",
+    "Praesentium",
+    "quas",
+    "runbooks",
+    "SCORM",
+    "SDVOSB",
+    "Solopreneur",
+    "soundcloud",
+    "Subheadline",
+    "Synthesization",
+    "Typeform",
+    "voluptatum",
+    "Waitlist",
+    "WCAG",
+    "XAPI"
+  ],
+  "emmet.includeLanguages": {
+    "typescript": "html"
+  }
+}

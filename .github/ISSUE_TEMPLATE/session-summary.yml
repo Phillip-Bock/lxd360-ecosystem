@@ -1,0 +1,34 @@
+name: Session Summary
+description: End of day Claude instance report
+title: "[DATE] "
+labels: ["documentation", "status:done"]
+body:
+  - type: dropdown
+    id: instance
+    attributes:
+      label: Instance
+      options:
+        - instance:desktop
+        - instance:vscode
+        - instance:browser
+    validations:
+      required: true
+  - type: textarea
+    id: completed
+    attributes:
+      label: Completed
+    validations:
+      required: true
+  - type: input
+    id: lines
+    attributes:
+      label: Lines Added
+      placeholder: "+5000"
+  - type: input
+    id: branch
+    attributes:
+      label: Branch
+  - type: textarea
+    id: tomorrow
+    attributes:
+      label: Tomorrow

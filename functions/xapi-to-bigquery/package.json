@@ -1,0 +1,33 @@
+{
+  "name": "xapi-to-bigquery",
+  "version": "1.0.0",
+  "description": "Cloud Function for ingesting xAPI statements into BigQuery",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "xapi",
+    "bigquery",
+    "lrs",
+    "learning-analytics",
+    "lxp360"
+  ],
+  "author": "LXD360 Development Team",
+  "license": "Proprietary",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@google-cloud/bigquery": "^7.9.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.0"
+  }
+}

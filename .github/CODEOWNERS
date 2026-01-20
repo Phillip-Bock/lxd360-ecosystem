@@ -1,0 +1,61 @@
+# CODEOWNERS - Defines code ownership for automatic review assignment
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# For future team expansion best practices, see: docs/TEAM_EXPANSION.md
+
+# Default owner for all files
+* @Phillip-Bock
+
+# Application code
+/app/ @Phillip-Bock
+/components/ @Phillip-Bock
+/lib/ @Phillip-Bock
+/hooks/ @Phillip-Bock
+/contexts/ @Phillip-Bock
+
+# Packages and internal libraries
+/packages/ @Phillip-Bock
+/inspire-packages/ @Phillip-Bock
+
+# Content Management (Sanity)
+/sanity/ @Phillip-Bock
+
+# Database (Supabase)
+/supabase/ @Phillip-Bock
+
+# Configuration files
+*.config.* @Phillip-Bock
+tsconfig*.json @Phillip-Bock
+package.json @Phillip-Bock
+pnpm-lock.yaml @Phillip-Bock
+
+# Documentation
+/docs/ @Phillip-Bock
+*.md @Phillip-Bock
+
+# GitHub configuration
+/.github/ @Phillip-Bock
+
+# CI/CD workflows
+/.github/workflows/ @Phillip-Bock
+
+# =============================================================================
+# FUTURE TEAM EXPANSION EXAMPLES
+# =============================================================================
+# When adding new team members, add their GitHub username after existing owners:
+#
+# Frontend Team:
+# /app/ @Phillip-Bock @frontend-lead @frontend-dev
+# /components/ @Phillip-Bock @frontend-lead @frontend-dev
+#
+# Backend Team:
+# /supabase/ @Phillip-Bock @backend-lead
+# /lib/ @Phillip-Bock @backend-lead
+#
+# Content/LXD Team:
+# /sanity/ @Phillip-Bock @content-lead
+# /docs/ @Phillip-Bock @content-lead @tech-writer
+#
+# DevOps Team:
+# /.github/workflows/ @Phillip-Bock @devops-lead
+# *.config.* @Phillip-Bock @devops-lead
