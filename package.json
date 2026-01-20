@@ -180,7 +180,7 @@
     "eventsource": "^4.1.0",
     "husky": "^9.1.7",
     "jsdom": "^27.2.0",
-    "lighthouse": "^12.2.0",
+    "lighthouse": "^13.0.1",
     "lint-staged": "^15.2.10",
     "msw": "^2.12.4",
     "pa11y": "^6.2.3",
