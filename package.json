@@ -168,7 +168,7 @@
     "@types/d3-path": "^3.1.1",
     "@types/lodash": "^4.17.21",
     "@types/lodash.clamp": "^4.0.9",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.9",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/stats.js": "^0.17.4",
