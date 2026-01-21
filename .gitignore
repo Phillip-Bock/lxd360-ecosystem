@@ -43,6 +43,9 @@ yarn-error.log*
 .env*
 !.env.example
 
+# Local test credentials (NEVER commit)
+local-test-creds.json
+
 # Reference materials (not part of app)
 Chat Folder Do Not Delete/
 
