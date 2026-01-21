@@ -214,6 +214,7 @@ export function CSVUploader({ onUploadComplete, className }: CSVUploaderProps) {
         </Button>
 
         {/* Upload Zone */}
+        {/* biome-ignore lint/a11y/useSemanticElements: File upload zone with drag-drop requires div for complex interactions */}
         <div
           className={cn(
             'border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer',

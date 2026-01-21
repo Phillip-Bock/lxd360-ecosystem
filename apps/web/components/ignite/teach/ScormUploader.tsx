@@ -186,10 +186,11 @@ export function ScormUploader({
   return (
     <div className={cn('space-y-4', className)}>
       {/* Upload Zone */}
-      <div
+      <section
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
+        aria-label="SCORM package upload zone"
         className={cn(
           'relative rounded-lg border-2 border-dashed transition-all duration-200',
           uploadState === 'idle' &&
@@ -283,7 +284,7 @@ export function ScormUploader({
             </Button>
           </div>
         )}
-      </div>
+      </section>
 
       {/* SCORM Info */}
       <div className="text-xs text-muted-foreground space-y-1">

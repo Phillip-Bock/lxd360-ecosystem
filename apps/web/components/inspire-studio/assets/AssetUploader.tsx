@@ -1,6 +1,7 @@
 'use client';
 
 import { AlertCircle, FileAudio, FileImage, FileText, FileVideo, Upload, X } from 'lucide-react';
+import Image from 'next/image';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
@@ -288,12 +289,14 @@ export function AssetUploader({
                 )}
               >
                 {/* Preview/Icon */}
-                <div className="flex-shrink-0 w-10 h-10 rounded bg-lxd-dark-bg flex items-center justify-center overflow-hidden">
+                <div className="flex-shrink-0 w-10 h-10 rounded bg-lxd-dark-bg flex items-center justify-center overflow-hidden relative">
                   {upload.preview ? (
-                    <img
+                    <Image
                       src={upload.preview}
                       alt={upload.file.name}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      unoptimized
                     />
                   ) : (
                     <Icon className="w-5 h-5 text-white/40" />

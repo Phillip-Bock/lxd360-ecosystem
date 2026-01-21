@@ -401,6 +401,15 @@ export function SocialHubBlock({
                         : 'bg-lxd-dark-bg border-lxd-dark-border hover:border-lxd-purple/50',
                   )}
                   onClick={() => !hasVoted && setSelectedPollOption(option.id)}
+                  onKeyDown={(e) => {
+                    if ((e.key === 'Enter' || e.key === ' ') && !hasVoted) {
+                      e.preventDefault();
+                      setSelectedPollOption(option.id);
+                    }
+                  }}
+                  role="option"
+                  aria-selected={isSelected}
+                  tabIndex={hasVoted ? -1 : 0}
                 >
                   <div className="flex items-center justify-between relative z-10">
                     <span className="text-sm">{option.text}</span>

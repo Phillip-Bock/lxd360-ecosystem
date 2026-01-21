@@ -143,6 +143,7 @@ export default function CompliancePage() {
                       ? 'bg-yellow-500'
                       : 'bg-red-500',
                 )}
+                role="img"
                 aria-label={`Score: ${complianceData.overview.complianceScore}%`}
               />
             </div>

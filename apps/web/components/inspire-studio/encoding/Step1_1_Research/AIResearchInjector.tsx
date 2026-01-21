@@ -181,6 +181,7 @@ export function AIResearchInjector({
             <div className="space-y-2">
               <h4 className="font-medium text-sm">Suggested Performance Gaps</h4>
               {suggestions.performanceGaps.map((gap) => (
+                // biome-ignore lint/a11y/useSemanticElements: Custom checkbox card with nested checkbox input
                 <div
                   key={gap.id}
                   className={cn(

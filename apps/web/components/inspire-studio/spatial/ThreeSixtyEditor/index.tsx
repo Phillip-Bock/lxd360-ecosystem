@@ -221,6 +221,16 @@ export function ThreeSixtyEditor({
           isPlacingHotspot && 'cursor-crosshair',
         )}
         onClick={handlePanoramaClick}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            // Trigger click for keyboard users when placing hotspot
+            handlePanoramaClick(e as unknown as React.MouseEvent);
+          }
+        }}
+        role="application"
+        aria-label="360 degree panorama viewer"
+        tabIndex={isPlacingHotspot ? 0 : -1}
       >
         <PanoramaSphere
           imageUrl={scene.assetUrl}

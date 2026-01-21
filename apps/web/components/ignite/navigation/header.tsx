@@ -129,11 +129,13 @@ export function IgniteHeader({ user = defaultUser }: IgniteHeaderProps) {
                           notification.unread && 'bg-lxd-purple/5',
                         )}
                         role="menuitem"
+                        tabIndex={0}
                       >
                         <div className="flex items-start gap-3">
                           {notification.unread && (
                             <span
                               className="w-2 h-2 mt-1.5 rounded-full bg-lxd-purple shrink-0"
+                              role="img"
                               aria-label="Unread"
                             />
                           )}

@@ -1,6 +1,7 @@
 'use client';
 
 import { ImageOff, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -151,11 +152,13 @@ export function PanoramaSphere({
               transition: 'transform 0.05s ease-out',
             }}
           >
-            <img
+            <Image
               src={imageUrl}
               alt="360° panorama"
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
               draggable={false}
+              unoptimized
             />
           </div>
         </div>

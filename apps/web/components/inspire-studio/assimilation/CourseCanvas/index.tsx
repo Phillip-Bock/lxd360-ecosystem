@@ -208,6 +208,11 @@ export function CourseCanvas({ className }: CourseCanvasProps) {
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onClick={handleCanvasClick}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                handleCanvasClick();
+              }
+            }}
             role="application"
             aria-label="Course canvas"
           >

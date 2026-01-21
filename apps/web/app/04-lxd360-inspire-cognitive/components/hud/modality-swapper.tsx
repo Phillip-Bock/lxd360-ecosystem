@@ -71,6 +71,7 @@ export function ModalitySwapper({
         const isSuggested = modality === suggestedModality && !isActive;
 
         return (
+          // biome-ignore lint/a11y/useSemanticElements: Custom styled radio button within radiogroup - button provides better styling
           <button
             key={modality}
             type="button"

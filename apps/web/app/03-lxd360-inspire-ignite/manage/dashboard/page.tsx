@@ -247,6 +247,7 @@ function StatCard({ icon: Icon, label, value, change, status }: StatCardProps) {
                     ? 'bg-yellow-500'
                     : 'bg-red-500'
               }`}
+              role="img"
               aria-label={`Status: ${status}`}
             />
           )}

@@ -62,6 +62,7 @@ export function CognitiveLoadRing({
   const shouldPulse = normalizedLoad > 0.7;
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: Custom meter with SVG animations requires div container
     <div
       className={cn('relative inline-flex items-center justify-center', className)}
       style={{ width: size, height: size }}

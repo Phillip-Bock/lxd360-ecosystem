@@ -84,6 +84,7 @@ export function BlockItem({
   const Icon = ICON_MAP[block.type] ?? ICON_MAP[blockType?.icon ?? ''] ?? Box;
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: Canvas block uses absolute positioning incompatible with native button styling
     <div
       role="button"
       tabIndex={0}

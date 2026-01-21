@@ -175,11 +175,13 @@ export function SpatialContainerBlock({
               min={0.1}
               max={5}
               step={0.1}
-              onValueChange={([v]) =>
-                handleContentChange({
-                  model: { ...content.model!, scale: v },
-                })
-              }
+              onValueChange={([v]) => {
+                if (content.model) {
+                  handleContentChange({
+                    model: { ...content.model, scale: v },
+                  });
+                }
+              }}
               className="w-full"
             />
             <span className="text-xs text-muted-foreground">{content.model.scale ?? 1}x</span>

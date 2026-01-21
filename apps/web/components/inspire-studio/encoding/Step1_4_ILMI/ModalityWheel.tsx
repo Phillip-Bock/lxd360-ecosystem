@@ -106,7 +106,12 @@ export function ModalityWheel({
 
         {/* Connection Lines for Primary/Secondary */}
         {primaryModality && secondaryModality && (
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 256 256">
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            viewBox="0 0 256 256"
+            aria-hidden="true"
+          >
+            <title>Modality connections</title>
             <line
               x1="128"
               y1="128"

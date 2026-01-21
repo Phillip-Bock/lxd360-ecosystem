@@ -125,6 +125,7 @@ export function HotspotListItem({ hotspot, isSelected, onSelect, onDelete }: Hot
   const Icon = getHotspotIcon(hotspot.type);
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: Hotspot list item with complex layout requires div
     <div
       className={cn(
         'flex items-center gap-3 p-2 rounded-lg cursor-pointer',

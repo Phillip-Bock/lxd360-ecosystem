@@ -12,6 +12,7 @@ import {
   MoreVertical,
   Trash2,
 } from 'lucide-react';
+import Image from 'next/image';
 import { useCallback, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -201,9 +202,10 @@ function AssetGridItem({
   const Icon = CategoryIcon[asset.category];
 
   return (
-    <div
+    <button
+      type="button"
       className={cn(
-        'group relative aspect-square rounded-lg overflow-hidden bg-lxd-dark-surface border-2 cursor-pointer transition-all',
+        'group relative aspect-square rounded-lg overflow-hidden bg-lxd-dark-surface border-2 cursor-pointer transition-all text-left',
         isSelected
           ? 'border-lxd-cyan ring-2 ring-lxd-cyan/30'
           : 'border-transparent hover:border-lxd-dark-border',
@@ -215,10 +217,12 @@ function AssetGridItem({
     >
       {/* Preview */}
       {asset.category === 'image' ? (
-        <img
+        <Image
           src={asset.thumbnailUrl ?? asset.url}
           alt={asset.altText || asset.originalFileName}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
+          unoptimized
         />
       ) : (
         <div className="w-full h-full flex items-center justify-center bg-lxd-dark-bg">
@@ -249,7 +253,7 @@ function AssetGridItem({
           />
         </div>
       )}
-    </div>
+    </button>
   );
 }
 
@@ -271,9 +275,10 @@ function AssetListItem({
   const uploadDate = asset.uploadedAt?.toDate?.()?.toLocaleDateString?.() ?? 'Unknown';
 
   return (
-    <div
+    <button
+      type="button"
       className={cn(
-        'flex items-center gap-3 p-3 cursor-pointer transition-colors',
+        'flex items-center gap-3 p-3 cursor-pointer transition-colors w-full text-left',
         isSelected ? 'bg-lxd-cyan/10' : 'hover:bg-lxd-dark-surface',
       )}
       onClick={(e) => onSelect(asset, e)}
@@ -290,12 +295,14 @@ function AssetListItem({
       </div>
 
       {/* Thumbnail */}
-      <div className="flex-shrink-0 w-10 h-10 rounded bg-lxd-dark-bg overflow-hidden">
+      <div className="flex-shrink-0 w-10 h-10 rounded bg-lxd-dark-bg overflow-hidden relative">
         {asset.category === 'image' ? (
-          <img
+          <Image
             src={asset.thumbnailUrl ?? asset.url}
             alt={asset.altText || asset.originalFileName}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            unoptimized
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -330,7 +337,7 @@ function AssetListItem({
         onDelete={onDelete}
         onDownload={onDownload}
       />
-    </div>
+    </button>
   );
 }
 

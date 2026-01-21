@@ -82,6 +82,7 @@ export function VariableEditor({
       )}
     >
       {/* Header Row */}
+      {/* biome-ignore lint/a11y/useSemanticElements: Expandable header with nested button requires div */}
       <div
         role="button"
         tabIndex={0}

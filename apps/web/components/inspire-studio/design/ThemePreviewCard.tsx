@@ -50,6 +50,7 @@ export function ThemePreviewCard({
   const { palette, typography, blockStyles } = theme;
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: Theme card with complex styling requires div container
     <div
       className={cn(
         'relative rounded-lg overflow-hidden transition-all cursor-pointer border-2',

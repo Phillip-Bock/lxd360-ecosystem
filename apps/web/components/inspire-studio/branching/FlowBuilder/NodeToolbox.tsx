@@ -23,11 +23,11 @@ function ToolboxItem({ type, label, description, icon: Icon, colorClass }: Toolb
   };
 
   return (
-    <div
+    <li
       draggable
       onDragStart={onDragStart}
       className={cn(
-        'flex items-center gap-3 p-3 rounded-lg cursor-grab',
+        'flex items-center gap-3 p-3 rounded-lg cursor-grab list-none',
         'bg-lxd-dark-surface border border-lxd-dark-border',
         'hover:border-lxd-cyan/50 hover:bg-lxd-dark-surface/80',
         'transition-all duration-200',
@@ -41,7 +41,7 @@ function ToolboxItem({ type, label, description, icon: Icon, colorClass }: Toolb
         <p className="text-sm font-medium text-white truncate">{label}</p>
         <p className="text-xs text-white/50 truncate">{description}</p>
       </div>
-    </div>
+    </li>
   );
 }
 
@@ -97,11 +97,11 @@ export function NodeToolbox({ className }: NodeToolboxProps) {
     >
       <h3 className="text-sm font-semibold text-white mb-3">Node Toolbox</h3>
       <p className="text-xs text-white/50 mb-4">Drag nodes to the canvas</p>
-      <div className="space-y-2">
+      <ul className="space-y-2">
         {toolboxItems.map((item) => (
           <ToolboxItem key={item.type} {...item} />
         ))}
-      </div>
+      </ul>
     </div>
   );
 }

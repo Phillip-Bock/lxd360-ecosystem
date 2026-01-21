@@ -13,6 +13,7 @@ import {
   Tag,
   X,
 } from 'lucide-react';
+import Image from 'next/image';
 import { useCallback, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -156,12 +157,14 @@ export function AssetMetadataPanel({
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {/* Preview */}
-        <div className="aspect-video rounded-lg overflow-hidden bg-lxd-dark-surface flex items-center justify-center">
+        <div className="aspect-video rounded-lg overflow-hidden bg-lxd-dark-surface flex items-center justify-center relative">
           {asset.category === 'image' ? (
-            <img
+            <Image
               src={asset.url}
               alt={asset.altText || asset.originalFileName}
-              className="w-full h-full object-contain"
+              fill
+              className="object-contain"
+              unoptimized
             />
           ) : (
             <Icon className="w-16 h-16 text-white/20" />
