@@ -3,10 +3,12 @@
 export const dynamic = 'force-dynamic';
 
 import {
+  AlertCircle,
   BarChart3,
   Building,
   FileText,
   LayoutDashboard,
+  Loader2,
   Settings,
   Shield,
   Users,
@@ -14,10 +16,10 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { IgniteHeader } from '@/components/ignite/navigation/header';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '@/lib/firebase/useAuth';
 import { cn } from '@/lib/utils';
-
-// TODO: Add RBAC check - require admin role
-// import { useRBAC } from '@/lib/hooks/useRBAC';
 
 const manageNavItems = [
   {
@@ -59,14 +61,52 @@ const manageNavItems = [
 
 /**
  * Manage layout - Admin dashboard with RBAC protection
+ * Only accessible to org_admin and super_admin roles
  */
 export default function ManageLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  // TODO: Implement RBAC check
-  // const { hasRole } = useRBAC();
-  // if (!hasRole(['admin'])) {
-  //   redirect('/03-lxd360-inspire-ignite/learn');
-  // }
+  const { profile, loading: authLoading } = useAuth();
+
+  // Check role - only org_admin or super_admin can access
+  const userRole = profile?.role;
+  const authorizedRoles = ['org_admin', 'super_admin'];
+  const isAuthorized = userRole ? authorizedRoles.includes(userRole) : false;
+
+  // Show loading while auth is being checked
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-lxd-dark-bg flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-lxd-purple" />
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show unauthorized state if user doesn't have proper role
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen bg-lxd-dark-bg flex items-center justify-center p-6">
+        <Card className="max-w-md bg-lxd-dark-surface border-amber-500/30">
+          <CardHeader>
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/10">
+              <AlertCircle className="h-8 w-8 text-amber-500" />
+            </div>
+            <CardTitle className="text-center text-brand-primary">Access Restricted</CardTitle>
+          </CardHeader>
+          <CardContent className="text-center space-y-4">
+            <p className="text-muted-foreground">
+              You need administrator permissions to access the Admin Console.
+            </p>
+            <Button asChild>
+              <Link href="/03-lxd360-inspire-ignite/dashboard">Return to Dashboard</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-lxd-dark-bg">

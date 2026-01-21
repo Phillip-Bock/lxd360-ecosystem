@@ -137,9 +137,10 @@ export default function TeachCoursesPage() {
   // Get tenantId from profile
   const tenantId = profile?.tenantId;
 
-  // Check role - only instructor or admin can access
+  // Check role - only instructor or higher can access
   const userRole = profile?.role;
-  const isAuthorized = userRole === 'instructor' || userRole === 'admin';
+  const authorizedRoles = ['instructor', 'org_admin', 'super_admin'];
+  const isAuthorized = userRole ? authorizedRoles.includes(userRole) : false;
 
   const fetchCourses = useCallback(async () => {
     if (!tenantId) return;

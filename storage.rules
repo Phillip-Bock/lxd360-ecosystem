@@ -68,12 +68,48 @@ service firebase.storage {
       return isImage() || isVideo() || isAudio() || isDocument();
     }
 
+    // Validate SCORM package (zip file)
+    function isScormPackage() {
+      return request.resource.contentType == 'application/zip'
+             || request.resource.contentType == 'application/x-zip-compressed';
+    }
+
+    // Validate SCORM file size (max 500MB)
+    function isValidScormSize() {
+      return request.resource.size < 500 * 1024 * 1024;
+    }
+
     // ========================================
     // Default Deny
     // ========================================
 
     match /{allPaths=**} {
       allow read, write: if false;
+    }
+
+    // ========================================
+    // SCORM Packages (Instructor Upload)
+    // Pattern: tenants/{tenantId}/scorm/{courseId}/{filename}
+    // ========================================
+
+    match /tenants/{tenantId}/scorm/{courseId}/{filename} {
+      // Tenant members can read SCORM packages
+      allow read: if belongsToTenant(tenantId) || isSuperAdmin();
+
+      // Authors (instructors) can upload SCORM packages
+      allow create: if belongsToTenant(tenantId)
+                    && isAuthor()
+                    && isValidScormSize()
+                    && isScormPackage();
+
+      // Authors can replace SCORM packages
+      allow update: if belongsToTenant(tenantId)
+                    && isAuthor()
+                    && isValidScormSize()
+                    && isScormPackage();
+
+      // Authors can delete SCORM packages
+      allow delete: if belongsToTenant(tenantId) && isAuthor();
     }
 
     // ========================================
