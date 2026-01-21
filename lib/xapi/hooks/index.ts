@@ -4,12 +4,12 @@
 // ============================================================================
 
 export {
-  useHesitationTracker,
-  useVisibilityHesitation,
-  useFocusHesitation,
-  useIdleHesitation,
   type HesitationEvent,
   type HesitationMetrics,
   type UseHesitationTrackerOptions,
   type UseHesitationTrackerReturn,
+  useFocusHesitation,
+  useHesitationTracker,
+  useIdleHesitation,
+  useVisibilityHesitation,
 } from './use-hesitation-tracker';

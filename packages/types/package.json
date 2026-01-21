@@ -1,0 +1,36 @@
+{
+  "name": "@inspire/types",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./firestore": {
+      "types": "./dist/firestore/index.d.ts",
+      "import": "./dist/firestore/index.js",
+      "require": "./dist/firestore/index.js"
+    },
+    "./bigquery": {
+      "types": "./dist/bigquery/index.d.ts",
+      "import": "./dist/bigquery/index.js",
+      "require": "./dist/bigquery/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

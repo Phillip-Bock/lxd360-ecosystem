@@ -20,22 +20,24 @@ export default function KinetixStorePage() {
           Kinetix Gear
         </h1>
         <p className="text-xl text-lxd-text-dark/70 dark:text-lxd-text-light/70 mb-12 max-w-2xl mx-auto">
-          Official LXD360 merchandise for learning experience design professionals. 
-          Wear your passion for neuroscience-backed learning.
+          Official LXD360 merchandise for learning experience design professionals. Wear your
+          passion for neuroscience-backed learning.
         </p>
 
         {/* Placeholder Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {['Apparel', 'Accessories', 'Drinkware', 'Notebooks', 'Stickers', 'Bundles'].map((category) => (
-            <div
-              key={category}
-              className="aspect-square rounded-2xl bg-lxd-light-surface dark:bg-lxd-dark-surface border-2 border-dashed border-lxd-light-border dark:border-lxd-dark-border flex items-center justify-center"
-            >
-              <span className="text-lg font-medium text-lxd-text-dark/40 dark:text-lxd-text-light/40">
-                {category}
-              </span>
-            </div>
-          ))}
+          {['Apparel', 'Accessories', 'Drinkware', 'Notebooks', 'Stickers', 'Bundles'].map(
+            (category) => (
+              <div
+                key={category}
+                className="aspect-square rounded-2xl bg-lxd-light-surface dark:bg-lxd-dark-surface border-2 border-dashed border-lxd-light-border dark:border-lxd-dark-border flex items-center justify-center"
+              >
+                <span className="text-lg font-medium text-lxd-text-dark/40 dark:text-lxd-text-light/40">
+                  {category}
+                </span>
+              </div>
+            ),
+          )}
         </div>
 
         {/* Notify CTA */}

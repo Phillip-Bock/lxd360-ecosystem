@@ -11,22 +11,22 @@
 
 export type ICDTLevel = 'recall' | 'apply' | 'analyze' | 'evaluate';
 export type FluencyZone = 'too_fast' | 'fluency' | 'thinking' | 'struggle';
-export type Modality = 
-  | 'visual' 
-  | 'auditory' 
-  | 'textual' 
-  | 'kinesthetic' 
-  | 'social_async' 
-  | 'gamified' 
-  | 'reflective' 
+export type Modality =
+  | 'visual'
+  | 'auditory'
+  | 'textual'
+  | 'kinesthetic'
+  | 'social_async'
+  | 'gamified'
+  | 'reflective'
   | 'contextual_situated';
 
-export type EngagementLevel = 
-  | 'passive' 
-  | 'reflective' 
-  | 'active' 
-  | 'collaborative' 
-  | 'exploratory' 
+export type EngagementLevel =
+  | 'passive'
+  | 'reflective'
+  | 'active'
+  | 'collaborative'
+  | 'exploratory'
   | 'immersive';
 
 export interface FluencyThresholds {
@@ -62,9 +62,9 @@ export interface CognitiveLoadFactors {
 
 export const FLUENCY_THRESHOLDS: Record<ICDTLevel, FluencyThresholds> = {
   recall: {
-    too_fast_max_ms: 800,    // Below 800ms = likely guessing
-    fluency_max_ms: 3000,    // 800-3000ms = fluent retrieval
-    thinking_max_ms: 8000,   // 3000-8000ms = effortful recall
+    too_fast_max_ms: 800, // Below 800ms = likely guessing
+    fluency_max_ms: 3000, // 800-3000ms = fluent retrieval
+    thinking_max_ms: 8000, // 3000-8000ms = effortful recall
     // Above 8000ms = struggle zone
   },
   apply: {
@@ -98,22 +98,19 @@ const ICDT_INTRINSIC_WEIGHTS: Record<ICDTLevel, number> = {
 
 /**
  * Classify a response time into a fluency zone based on ICDT level
- * 
+ *
  * @param hesitation_ms - Response time in milliseconds
  * @param icdt_level - Cognitive depth level of the task
  * @returns The fluency zone classification
- * 
+ *
  * @example
  * classifyFluencyZone(2500, 'recall') // => 'fluency'
  * classifyFluencyZone(500, 'recall')  // => 'too_fast' (likely guessing)
  * classifyFluencyZone(15000, 'recall') // => 'struggle'
  */
-export function classifyFluencyZone(
-  hesitation_ms: number,
-  icdt_level: ICDTLevel
-): FluencyZone {
+export function classifyFluencyZone(hesitation_ms: number, icdt_level: ICDTLevel): FluencyZone {
   const thresholds = FLUENCY_THRESHOLDS[icdt_level];
-  
+
   if (hesitation_ms < thresholds.too_fast_max_ms) {
     return 'too_fast';
   }
@@ -139,18 +136,16 @@ export function getFluencyThresholds(icdt_level: ICDTLevel): FluencyThresholds {
 
 /**
  * Calculate cognitive load using the INSPIRE Cognitive Load (ICL) Framework
- * 
+ *
  * Based on Cognitive Load Theory (Sweller, 1988):
  * - Intrinsic Load: Inherent complexity of the material
  * - Extraneous Load: How information is presented (design friction)
  * - Germane Load: Mental effort devoted to learning (schema construction)
- * 
+ *
  * @param input - Cognitive load input signals
  * @returns Estimated cognitive load (1-10 scale)
  */
-export async function calculateCognitiveLoad(
-  input: CognitiveLoadInput
-): Promise<number> {
+export async function calculateCognitiveLoad(input: CognitiveLoadInput): Promise<number> {
   const factors = calculateCognitiveLoadFactors(input);
   return factors.total;
 }
@@ -158,9 +153,7 @@ export async function calculateCognitiveLoad(
 /**
  * Calculate detailed cognitive load factors
  */
-export function calculateCognitiveLoadFactors(
-  input: CognitiveLoadInput
-): CognitiveLoadFactors {
+export function calculateCognitiveLoadFactors(input: CognitiveLoadInput): CognitiveLoadFactors {
   const sources = {
     intrinsic: [] as string[],
     extraneous: [] as string[],
@@ -169,7 +162,7 @@ export function calculateCognitiveLoadFactors(
 
   // INTRINSIC LOAD (content complexity)
   let intrinsicLoad = 3; // Base intrinsic load
-  
+
   if (input.icdt_level) {
     intrinsicLoad = ICDT_INTRINSIC_WEIGHTS[input.icdt_level];
     sources.intrinsic.push(`ICDT level: ${input.icdt_level}`);
@@ -177,11 +170,11 @@ export function calculateCognitiveLoadFactors(
 
   // EXTRANEOUS LOAD (processing friction)
   let extraneousLoad = 2; // Base extraneous load
-  
+
   // Hesitation indicates processing difficulty
   if (input.hesitation_ms !== undefined && input.icdt_level) {
     const zone = classifyFluencyZone(input.hesitation_ms, input.icdt_level);
-    
+
     switch (zone) {
       case 'too_fast':
         extraneousLoad -= 1; // Might be too easy or guessing
@@ -210,10 +203,10 @@ export function calculateCognitiveLoadFactors(
 
   // GERMANE LOAD (learning effort)
   let germaneLoad = 3; // Base germane load
-  
+
   // Focus depth indicates engagement
   if (input.focus_depth !== undefined) {
-    germaneLoad = 2 + (input.focus_depth * 4); // Scale 0-1 to 2-6
+    germaneLoad = 2 + input.focus_depth * 4; // Scale 0-1 to 2-6
     sources.germane.push(`Focus depth: ${(input.focus_depth * 100).toFixed(0)}%`);
   }
 
@@ -222,23 +215,24 @@ export function calculateCognitiveLoadFactors(
     // Weight self-report heavily (40% of total)
     const selfReportContribution = input.self_report * 0.4;
     sources.germane.push(`Self-reported load: ${input.self_report}/10`);
-    
+
     return {
       intrinsic: Math.min(10, Math.max(1, intrinsicLoad)),
       extraneous: Math.min(10, Math.max(1, extraneousLoad)),
       germane: Math.min(10, Math.max(1, germaneLoad)),
-      total: Math.min(10, Math.max(1, 
-        (intrinsicLoad * 0.25) + 
-        (extraneousLoad * 0.25) + 
-        (germaneLoad * 0.1) + 
-        selfReportContribution
-      )),
+      total: Math.min(
+        10,
+        Math.max(
+          1,
+          intrinsicLoad * 0.25 + extraneousLoad * 0.25 + germaneLoad * 0.1 + selfReportContribution,
+        ),
+      ),
       sources,
     };
   }
 
   // Without self-report, calculate weighted average
-  const total = (intrinsicLoad * 0.4) + (extraneousLoad * 0.4) + (germaneLoad * 0.2);
+  const total = intrinsicLoad * 0.4 + extraneousLoad * 0.4 + germaneLoad * 0.2;
 
   return {
     intrinsic: Math.min(10, Math.max(1, intrinsicLoad)),
@@ -255,10 +249,10 @@ export function calculateCognitiveLoadFactors(
 
 /**
  * Calculate decayed mastery probability based on time since last practice
- * 
+ *
  * Uses exponential decay model: P(t) = P0 * e^(-λt)
  * where λ is calibrated to halve mastery every 30 days without practice
- * 
+ *
  * @param currentMastery - Current P(mastery) from 0 to 1
  * @param daysSinceLastPractice - Days since last interaction
  * @param decayRate - Decay constant (default: 0.023 for 30-day half-life)
@@ -267,7 +261,7 @@ export function calculateCognitiveLoadFactors(
 export function calculateMasteryDecay(
   currentMastery: number,
   daysSinceLastPractice: number,
-  decayRate: number = 0.023 // ln(2)/30 ≈ 0.023
+  decayRate: number = 0.023, // ln(2)/30 ≈ 0.023
 ): number {
   const decayedMastery = currentMastery * Math.exp(-decayRate * daysSinceLastPractice);
   return Math.max(0, Math.min(1, decayedMastery));
@@ -275,15 +269,12 @@ export function calculateMasteryDecay(
 
 /**
  * Check if a skill needs review based on decayed mastery
- * 
+ *
  * @param decayedMastery - Current decayed P(mastery)
  * @param threshold - Mastery threshold (default: 0.7)
  * @returns Whether the skill needs review
  */
-export function needsReview(
-  decayedMastery: number,
-  threshold: number = 0.7
-): boolean {
+export function needsReview(decayedMastery: number, threshold: number = 0.7): boolean {
   return decayedMastery < threshold;
 }
 
@@ -293,12 +284,12 @@ export function needsReview(
 
 /**
  * Estimate probability that a correct answer was a guess
- * 
+ *
  * Based on:
  * - Response time relative to fluency thresholds
  * - Historical guess rate for this learner
  * - Number of answer choices (if applicable)
- * 
+ *
  * @param hesitation_ms - Response time
  * @param icdt_level - Task complexity
  * @param numChoices - Number of answer choices (for MCQ)
@@ -307,25 +298,25 @@ export function needsReview(
 export function estimateGuessProbability(
   hesitation_ms: number,
   icdt_level: ICDTLevel,
-  numChoices: number = 4
+  numChoices: number = 4,
 ): number {
   const thresholds = FLUENCY_THRESHOLDS[icdt_level];
-  
+
   // Base guess probability from number of choices
   const baseGuessProb = 1 / numChoices;
-  
+
   // If response is in "too fast" zone, higher guess probability
   if (hesitation_ms < thresholds.too_fast_max_ms) {
     // Scale: faster = more likely guess
-    const speedFactor = 1 - (hesitation_ms / thresholds.too_fast_max_ms);
-    return Math.min(1, baseGuessProb + (speedFactor * (1 - baseGuessProb) * 0.8));
+    const speedFactor = 1 - hesitation_ms / thresholds.too_fast_max_ms;
+    return Math.min(1, baseGuessProb + speedFactor * (1 - baseGuessProb) * 0.8);
   }
-  
+
   // If in fluency zone, low guess probability
   if (hesitation_ms < thresholds.fluency_max_ms) {
     return baseGuessProb * 0.2; // 20% of base
   }
-  
+
   // In thinking or struggle zone, very low guess probability
   return baseGuessProb * 0.1;
 }
@@ -355,7 +346,7 @@ export const DEFAULT_INTERVENTION_THRESHOLDS: InterventionThresholds = {
  */
 export function shouldTriggerCognitiveLoadIntervention(
   cognitiveLoad: number,
-  thresholds: InterventionThresholds = DEFAULT_INTERVENTION_THRESHOLDS
+  thresholds: InterventionThresholds = DEFAULT_INTERVENTION_THRESHOLDS,
 ): { should: boolean; level: 'none' | 'warning' | 'critical' } {
   if (cognitiveLoad >= thresholds.cognitive_load_critical) {
     return { should: true, level: 'critical' };

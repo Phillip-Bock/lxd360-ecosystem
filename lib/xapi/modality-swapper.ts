@@ -30,8 +30,8 @@
 
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
-import { doc, onSnapshot, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getFirebaseDb } from '@/lib/firebase/client';
 import {
   ContentModality,
@@ -103,10 +103,6 @@ export interface ModalitySwapperState {
 // FIRESTORE PATHS
 // ============================================================================
 
-function getLearnerProfilePath(tenantId: string, learnerId: string): string {
-  return `tenants/${tenantId}/learner_profiles/${learnerId}`;
-}
-
 function getModalityRecommendationPath(
   tenantId: string,
   learnerId: string,
@@ -169,7 +165,7 @@ export function useModalitySwapper(config: ModalitySwapperConfig): ModalitySwapp
   const {
     learnerId,
     skillId,
-    contentId,
+    contentId: _contentId,
     currentModality,
     availableModalities = Object.values(ContentModality),
     tenantId = 'default',

@@ -114,7 +114,14 @@
       }
     },
     {
-      "includes": ["**/immersive/**", "**/3d/**", "**/xr/**", "**/vr/**", "**/ar/**"],
+      "includes": [
+        "**/immersive/**",
+        "**/3d/**",
+        "**/xr/**",
+        "**/vr/**",
+        "**/ar/**",
+        "**/spatial/**"
+      ],
       "linter": {
         "rules": {
           "a11y": {

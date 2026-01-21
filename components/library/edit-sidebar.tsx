@@ -29,8 +29,6 @@ export function EditSidebar({ item, isOpen, onClose, onSave }: EditSidebarProps)
 
   if (!isOpen || !item) return null;
 
-  const _hasNameChanged = name !== item.name;
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value;
     setName(newName);

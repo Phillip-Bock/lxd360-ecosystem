@@ -189,48 +189,8 @@ export function InsertTab({
   onInsertBranchingScenario,
   onInsertCustomHTML,
 }: InsertTabProps) {
-  const _handleTextGallerySelect = (id: string) => {
-    switch (id) {
-      case 'paragraph':
-        onInsertParagraph?.();
-        break;
-      case 'heading':
-        onInsertHeading?.(2);
-        break;
-      case 'list':
-        onInsertList?.('bullet');
-        break;
-      case 'quote':
-        onInsertQuote?.();
-        break;
-      case 'code':
-        onInsertCode?.();
-        break;
-    }
-  };
-
-  const _handleAssessmentSelect = (id: string) => {
-    switch (id) {
-      case 'multiple-choice':
-        onInsertMultipleChoice?.();
-        break;
-      case 'multiple-select':
-        onInsertMultipleSelect?.();
-        break;
-      case 'true-false':
-        onInsertTrueFalse?.();
-        break;
-      case 'fill-blank':
-        onInsertFillBlank?.();
-        break;
-      case 'matching':
-        onInsertMatching?.();
-        break;
-      case 'ordering':
-        onInsertOrdering?.();
-        break;
-    }
-  };
+  // Gallery selection handlers will be implemented when BlockGallery component is integrated
+  // See LXD-XXX for text gallery and assessment gallery implementation
 
   return (
     <RibbonContent>

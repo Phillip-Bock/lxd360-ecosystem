@@ -16,17 +16,18 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import {
   ContentModality,
-  FunctionalLearningState,
-  inferFunctionalState,
   type ContentModalityType,
+  FunctionalLearningState,
   type FunctionalLearningStateType,
+  inferFunctionalState,
 } from '@/lib/xapi/inspire-extensions';
 
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
 
-const VERTEX_ENDPOINT_URL = process.env.VERTEX_MODALITY_ENDPOINT_URL;
+// TODO: Enable Vertex AI endpoint when ready for production ML inference
+// const VERTEX_ENDPOINT_URL = process.env.VERTEX_MODALITY_ENDPOINT_URL;
 
 // ============================================================================
 // REQUEST/RESPONSE SCHEMAS
@@ -39,24 +40,28 @@ const PredictRequestSchema = z.object({
   contentId: z.string().optional(),
 
   // Behavioral signals
-  signals: z.object({
-    latency: z.number().optional(),
-    expectedLatency: z.number().optional(),
-    revisionCount: z.number().optional(),
-    rageClicks: z.number().optional(),
-    focusLossCount: z.number().optional(),
-    streakIncorrect: z.number().optional(),
-    cognitiveLoad: z.number().optional(),
-    timeOnTask: z.number().optional(),
-  }).optional(),
+  signals: z
+    .object({
+      latency: z.number().optional(),
+      expectedLatency: z.number().optional(),
+      revisionCount: z.number().optional(),
+      rageClicks: z.number().optional(),
+      focusLossCount: z.number().optional(),
+      streakIncorrect: z.number().optional(),
+      cognitiveLoad: z.number().optional(),
+      timeOnTask: z.number().optional(),
+    })
+    .optional(),
 
   // Current mastery state (from BKT)
-  masteryState: z.object({
-    probability: z.number().min(0).max(1),
-    level: z.enum(['novice', 'developing', 'proficient', 'mastered']),
-    totalAttempts: z.number(),
-    successRate: z.number().min(0).max(1),
-  }).optional(),
+  masteryState: z
+    .object({
+      probability: z.number().min(0).max(1),
+      level: z.enum(['novice', 'developing', 'proficient', 'mastered']),
+      totalAttempts: z.number(),
+      successRate: z.number().min(0).max(1),
+    })
+    .optional(),
 
   // Available modalities for this content
   availableModalities: z.array(z.string()).optional(),
@@ -130,9 +135,15 @@ function scoreModalities(
   const scores: ModalityScore[] = [];
 
   // Default available modalities if not specified
-  const modalities = availableModalities.length > 0
-    ? availableModalities
-    : [ContentModality.VIDEO, ContentModality.TEXT, ContentModality.INTERACTIVE, ContentModality.INFOGRAPHIC];
+  const modalities =
+    availableModalities.length > 0
+      ? availableModalities
+      : [
+          ContentModality.VIDEO,
+          ContentModality.TEXT,
+          ContentModality.INTERACTIVE,
+          ContentModality.INFOGRAPHIC,
+        ];
 
   for (const modality of modalities) {
     let score = 50; // Base score
@@ -301,8 +312,7 @@ function generateExplanation(
       'Some uncertainty detected. Additional reinforcement recommended.',
     [FunctionalLearningState.FOCUSED]:
       'You are progressing well. This format matches your current learning state.',
-    [FunctionalLearningState.NEUTRAL]:
-      'Recommendation based on content and skill requirements.',
+    [FunctionalLearningState.NEUTRAL]: 'Recommendation based on content and skill requirements.',
   };
 
   return {
@@ -373,14 +383,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const {
-    learnerId,
-    skillId,
-    currentModality,
-    signals,
-    masteryState,
-    availableModalities,
-  } = parseResult.data;
+  const { learnerId, skillId, currentModality, signals, masteryState, availableModalities } =
+    parseResult.data;
 
   // Infer functional learning state from signals
   const functionalState = inferFunctionalState(signals || {});
@@ -419,9 +423,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   // Create audit record
   const predictionId = crypto.randomUUID();
-  const inputHash = Buffer.from(
-    JSON.stringify({ learnerId, skillId, signals }),
-  ).toString('base64').slice(0, 32);
+  const inputHash = Buffer.from(JSON.stringify({ learnerId, skillId, signals }))
+    .toString('base64')
+    .slice(0, 32);
 
   // TODO: Log to ai_decisions table for EU AI Act compliance
   // This would be a Firestore or BigQuery write

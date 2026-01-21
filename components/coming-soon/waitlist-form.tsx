@@ -1,23 +1,23 @@
-"use client"
+'use client';
 
-import { useActionState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { joinWaitlist, type WaitlistFormState } from "@/lib/actions/waitlist"
-import { CheckCircle2, Loader2, ArrowRight } from "lucide-react"
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
+import { useActionState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { joinWaitlist, type WaitlistFormState } from '@/lib/actions/waitlist';
 
 const initialState: WaitlistFormState = {
   success: false,
-  message: "",
-}
+  message: '',
+};
 
 interface WaitlistFormProps {
-  variant?: "hero" | "footer"
+  variant?: 'hero' | 'footer';
 }
 
-export function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
-  const [state, formAction, isPending] = useActionState(joinWaitlist, initialState)
+export function WaitlistForm({ variant = 'hero' }: WaitlistFormProps) {
+  const [state, formAction, isPending] = useActionState(joinWaitlist, initialState);
 
   if (state.success) {
     return (
@@ -29,12 +29,14 @@ export function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
         <CheckCircle2 className="h-5 w-5" />
         <span className="font-medium">{state.message}</span>
       </motion.div>
-    )
+    );
   }
 
   return (
     <form action={formAction} className="w-full max-w-md">
-      <div className={`flex flex-col gap-3 sm:flex-row ${variant === "hero" ? "sm:gap-2" : "sm:gap-3"}`}>
+      <div
+        className={`flex flex-col gap-3 sm:flex-row ${variant === 'hero' ? 'sm:gap-2' : 'sm:gap-3'}`}
+      >
         <div className="relative flex-1">
           <Input
             type="email"
@@ -43,7 +45,7 @@ export function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
             required
             disabled={isPending}
             className={`h-12 rounded-md border-white/20 bg-white/10 px-5 text-white placeholder:text-white/50 backdrop-blur-sm focus:border-blue-400 focus:ring-blue-400/20 ${
-              state.errors?.email ? "border-red-400" : ""
+              state.errors?.email ? 'border-red-400' : ''
             }`}
           />
         </div>
@@ -75,5 +77,5 @@ export function WaitlistForm({ variant = "hero" }: WaitlistFormProps) {
         )}
       </AnimatePresence>
     </form>
-  )
+  );
 }

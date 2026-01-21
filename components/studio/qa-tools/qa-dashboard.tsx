@@ -67,19 +67,6 @@ export function QADashboard({
     }
   }, [onRunCheck]);
 
-  const _getStatusColor = (status: QAStatus) => {
-    switch (status) {
-      case 'passed':
-        return 'text-green-500';
-      case 'failed':
-        return 'text-red-500';
-      case 'warning':
-        return 'text-yellow-500';
-      default:
-        return 'text-zinc-500';
-    }
-  };
-
   const getStatusIcon = (status: QAStatus) => {
     switch (status) {
       case 'passed':

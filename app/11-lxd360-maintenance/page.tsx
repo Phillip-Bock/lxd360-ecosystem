@@ -55,11 +55,15 @@ export default function StatusPage() {
             {services.map((service) => (
               <div key={service.name} className="flex items-center justify-between p-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-2.5 h-2.5 rounded-full ${
-                    service.status === 'operational' ? 'bg-green-500' :
-                    service.status === 'degraded' ? 'bg-yellow-500' :
-                    'bg-red-500'
-                  }`} />
+                  <div
+                    className={`w-2.5 h-2.5 rounded-full ${
+                      service.status === 'operational'
+                        ? 'bg-green-500'
+                        : service.status === 'degraded'
+                          ? 'bg-yellow-500'
+                          : 'bg-red-500'
+                    }`}
+                  />
                   <span className="font-medium text-lxd-text-dark dark:text-lxd-text-light">
                     {service.name}
                   </span>
@@ -68,11 +72,15 @@ export default function StatusPage() {
                   <span className="text-sm text-lxd-text-dark/60 dark:text-lxd-text-light/60">
                     {service.uptime} uptime
                   </span>
-                  <span className={`text-sm font-medium capitalize ${
-                    service.status === 'operational' ? 'text-green-600 dark:text-green-400' :
-                    service.status === 'degraded' ? 'text-yellow-600 dark:text-yellow-400' :
-                    'text-red-600 dark:text-red-400'
-                  }`}>
+                  <span
+                    className={`text-sm font-medium capitalize ${
+                      service.status === 'operational'
+                        ? 'text-green-600 dark:text-green-400'
+                        : service.status === 'degraded'
+                          ? 'text-yellow-600 dark:text-yellow-400'
+                          : 'text-red-600 dark:text-red-400'
+                    }`}
+                  >
                     {service.status}
                   </span>
                 </div>

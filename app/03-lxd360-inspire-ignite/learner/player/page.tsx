@@ -34,15 +34,11 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { GOOGLE_AI } from '@/lib/constants/api';
 import { cn } from '@/lib/utils';
 
 // ============================================================================
-// GEMINI API CONFIGURATION
+// GEMINI API HELPER (via secure server-side route)
 // ============================================================================
-
-const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || '';
-const GEMINI_BASE_URL = GOOGLE_AI.GEMINI_MODELS;
 
 // PCM to WAV Converter for Gemini TTS
 function pcmToWav(pcmBase64: string, sampleRate = 24000): Blob {
@@ -76,49 +72,26 @@ function pcmToWav(pcmBase64: string, sampleRate = 24000): Blob {
   return new Blob([view, pcmData], { type: 'audio/wav' });
 }
 
-// Gemini API Caller
+// Gemini API Caller (via secure server-side route - API key not exposed to client)
 async function callGemini(
   prompt: string,
   type: 'text' | 'json' | 'tts' = 'text',
 ): Promise<string | null> {
-  let url: string;
-  let payload: Record<string, unknown>;
-
-  if (type === 'tts') {
-    url = `${GEMINI_BASE_URL}/gemini-2.5-flash-preview-tts:generateContent?key=${GEMINI_API_KEY}`;
-    payload = {
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: {
-        responseModalities: ['AUDIO'],
-        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } } },
-      },
-    };
-  } else {
-    url = `${GEMINI_BASE_URL}/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
-    payload = { contents: [{ parts: [{ text: prompt }] }] };
-    if (type === 'json') {
-      payload.generationConfig = { responseMimeType: 'application/json' };
-    }
-  }
-
   const retries = 3;
   let delay = 1000;
 
   for (let i = 0; i < retries; i++) {
     try {
-      const response = await fetch(url, {
+      const response = await fetch('/api/ai/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ prompt, type }),
       });
 
       if (!response.ok) throw new Error(response.statusText);
       const data = await response.json();
 
-      if (type === 'tts') {
-        return data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-      }
-      return data.candidates?.[0]?.content?.parts?.[0]?.text;
+      return data.result ?? null;
     } catch (error) {
       if (i === retries - 1) throw error;
       await new Promise((r) => setTimeout(r, delay));
@@ -744,9 +717,9 @@ export default function LearnerPlayerPage() {
           <div className="bg-indigo-600 p-1.5 rounded-lg mr-3">
             <GraduationCap className="text-brand-primary h-5 w-5" />
           </div>
-          <h1 className="font-bold text-lg text-brand-primary tracking-tight">
+          <span className="font-bold text-lg text-brand-primary tracking-tight">
             LXP<span className="text-indigo-600">360</span> Player
-          </h1>
+          </span>
         </div>
         <div className="flex items-center space-x-4">
           <div className="hidden md:flex flex-col items-end mr-2">

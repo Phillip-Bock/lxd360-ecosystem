@@ -202,7 +202,7 @@ export function ExplodedViewEditor({
     (part: ModelPart) => {
       // Calculate offset based on part position relative to center
       // This is a simplified calculation - real implementation would use mesh bounds
-      const _center = config.center;
+      // Note: config.center will be used when implementing accurate part positioning
       const baseDistance = 2; // Base explosion distance
 
       let offset: Vector3;

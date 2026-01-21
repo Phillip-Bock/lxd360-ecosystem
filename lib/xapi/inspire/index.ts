@@ -6,5 +6,5 @@
 // =============================================================================
 
 export * from './extensions';
-export * from './recipes';
 export * from './modality-swapper';
+export * from './recipes';

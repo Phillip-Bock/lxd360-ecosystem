@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "default": "lxd-saas-dev",
+    "development": "lxd-saas-dev",
+    "staging": "lxd-saas-staging",
+    "production": "lxd-saas-prod"
+  },
+  "targets": {},
+  "etags": {}
+}

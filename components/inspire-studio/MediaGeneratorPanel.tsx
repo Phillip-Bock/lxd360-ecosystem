@@ -60,7 +60,7 @@ export default function MediaGeneratorPanel({
           response = await GoogleCloudAI.generateImage({
             type: 'image',
             prompt,
-            settings,
+            settings: settings as unknown as Record<string, unknown>,
             options: { width: 1024, height: 1024 },
           });
           break;
@@ -68,7 +68,7 @@ export default function MediaGeneratorPanel({
           response = await GoogleCloudAI.generateVideo({
             type: 'video',
             prompt,
-            settings,
+            settings: settings as unknown as Record<string, unknown>,
             options: { duration: 30 },
           });
           break;
@@ -76,7 +76,7 @@ export default function MediaGeneratorPanel({
           response = await GoogleCloudAI.generateAudio({
             type: 'audio',
             prompt,
-            settings,
+            settings: settings as unknown as Record<string, unknown>,
             options: { voice: 'en-US-Neural2-A' },
           });
           break;
@@ -119,7 +119,7 @@ export default function MediaGeneratorPanel({
       const response = await GoogleCloudAI.processDocument({
         file,
         type: 'extract',
-        settings,
+        settings: settings as unknown as Record<string, unknown>,
       });
 
       if (response.success) {

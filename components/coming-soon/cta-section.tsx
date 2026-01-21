@@ -1,14 +1,13 @@
-"use client"
+'use client';
 
-import { motion } from "framer-motion"
-import { useInView } from "framer-motion"
-import { useRef } from "react"
-import { WaitlistForm } from "./waitlist-form"
-import { AnimatedLinesBadge } from "@/components/ui/animated-lines-badge"
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { AnimatedLinesBadge } from '@/components/ui/animated-lines-badge';
+import { WaitlistForm } from './waitlist-form';
 
 export function CtaSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
     <section ref={ref} className="bg-black py-24 sm:py-32">
@@ -25,13 +24,13 @@ export function CtaSection() {
           Be Part of the Learning Revolution
         </h2>
         <p className="mx-auto mb-10 max-w-xl text-pretty text-lg text-gray-400">
-          Join forward-thinking L&D professionals who are ready to transform their organizations. Get exclusive early
-          access and updates.
+          Join forward-thinking L&D professionals who are ready to transform their organizations.
+          Get exclusive early access and updates.
         </p>
         <div className="flex justify-center">
           <WaitlistForm variant="footer" />
         </div>
       </motion.div>
     </section>
-  )
+  );
 }

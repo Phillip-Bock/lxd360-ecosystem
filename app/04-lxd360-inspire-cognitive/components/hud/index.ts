@@ -7,19 +7,17 @@ export {
   CognitiveLoadRing,
   type CognitiveLoadRingProps,
 } from './cognitive-load-ring';
-
+export {
+  GlassBoxOverlay,
+  type GlassBoxOverlayProps,
+} from './glass-box-overlay';
 export {
   HesitationMonitor,
   type HesitationMonitorProps,
 } from './hesitation-monitor';
 
 export {
-  GlassBoxOverlay,
-  type GlassBoxOverlayProps,
-} from './glass-box-overlay';
-
-export {
+  MODALITY_CONFIG,
   ModalitySwapper,
   type ModalitySwapperProps,
-  MODALITY_CONFIG,
 } from './modality-swapper';

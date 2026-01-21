@@ -1,0 +1,63 @@
+/**
+ * INSPIRE Studio - Asset Command Center
+ *
+ * Centralized media management for INSPIRE Studio content authoring.
+ * Includes upload, organization, AI tagging, and library browsing.
+ *
+ * @module components/inspire-studio/assets
+ */
+
+// =============================================================================
+// Components
+// =============================================================================
+
+export { AIAutoTagger, default as AIAutoTaggerComponent, useAIAutoTagger } from './AIAutoTagger';
+export { AssetGrid, default as AssetGridComponent } from './AssetGrid';
+export { AssetLibraryModal, default as AssetLibraryModalComponent } from './AssetLibraryModal';
+export { AssetMetadataPanel, default as AssetMetadataPanelComponent } from './AssetMetadataPanel';
+export { AssetUploader, default as AssetUploaderComponent } from './AssetUploader';
+
+// =============================================================================
+// Re-export Types from lib/assets
+// =============================================================================
+
+export type {
+  AllowedMimeType,
+  AssetCategory,
+} from '@/lib/assets/mimeTypes';
+export type {
+  AssetMetadata,
+  UploadProgress,
+  UploadResult,
+} from '@/lib/assets/storage';
+
+// =============================================================================
+// Re-export Utilities from lib/assets
+// =============================================================================
+
+export {
+  type OptimizationOptions,
+  type OptimizationResult,
+  optimizeImage,
+} from '@/lib/assets/imageOptimizer';
+
+export {
+  ALLOWED_AUDIO_TYPES,
+  ALLOWED_DOCUMENT_TYPES,
+  ALLOWED_IMAGE_TYPES,
+  ALLOWED_VIDEO_TYPES,
+  FILE_SIZE_LIMITS,
+  formatFileSize,
+  getAssetCategory,
+  getSizeLimit,
+  isAllowedMimeType,
+  isAudioMimeType,
+  isImageMimeType,
+  isVideoMimeType,
+  isWithinSizeLimit,
+} from '@/lib/assets/mimeTypes';
+export {
+  deleteAsset,
+  updateAssetMetadata,
+  uploadAsset,
+} from '@/lib/assets/storage';

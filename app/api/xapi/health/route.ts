@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 
-import { type NextRequest, NextResponse } from 'next/server';
 import { BigQuery } from '@google-cloud/bigquery';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // =============================================================================
 // Configuration
@@ -38,7 +38,7 @@ interface HealthStatus {
  */
 export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now();
-  
+
   const health: HealthStatus = {
     status: 'healthy',
     timestamp: new Date().toISOString(),
@@ -52,13 +52,13 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
       },
     },
   };
-  
+
   // Check BigQuery connectivity
   try {
     const bigquery = new BigQuery({ projectId: PROJECT_ID });
     const [datasets] = await bigquery.getDatasets();
-    const datasetExists = datasets.some(d => d.id === DATASET_ID);
-    
+    const datasetExists = datasets.some((d) => d.id === DATASET_ID);
+
     if (!datasetExists) {
       health.checks.bigquery.status = 'error';
       health.checks.bigquery.error = `Dataset ${DATASET_ID} not found`;
@@ -71,8 +71,8 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     health.checks.bigquery.error = error instanceof Error ? error.message : 'Unknown error';
     health.status = 'unhealthy';
   }
-  
+
   const statusCode = health.status === 'healthy' ? 200 : health.status === 'degraded' ? 200 : 503;
-  
+
   return NextResponse.json(health, { status: statusCode });
 }

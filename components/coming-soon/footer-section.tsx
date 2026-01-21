@@ -1,7 +1,7 @@
-"use client"
+'use client';
 
-import Image from "next/image"
-import { Linkedin, Twitter, Mail } from "lucide-react"
+import { Linkedin, Mail, Twitter } from 'lucide-react';
+import Image from 'next/image';
 
 export function FooterSection() {
   return (
@@ -21,7 +21,9 @@ export function FooterSection() {
               />
               <div className="h-12 w-px bg-white/20 hidden md:block" />
               <div className="text-center md:text-left">
-                <span className="block text-sm font-semibold text-white">Veteran-Owned. Federal-Ready.</span>
+                <span className="block text-sm font-semibold text-white">
+                  Veteran-Owned. Federal-Ready.
+                </span>
                 <span className="block text-xs text-gray-400 mt-1">Certified SDVOSB</span>
               </div>
             </div>
@@ -29,14 +31,18 @@ export function FooterSection() {
             {/* Social links */}
             <div className="flex items-center gap-4">
               <a
-                href="#"
+                href="https://www.linkedin.com/company/lxd360"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-full border border-white/10 p-2.5 text-gray-400 transition-colors hover:border-white/30 hover:text-white"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-5 w-5" />
               </a>
               <a
-                href="#"
+                href="https://x.com/lxd360"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-full border border-white/10 p-2.5 text-gray-400 transition-colors hover:border-white/30 hover:text-white"
                 aria-label="Twitter"
               >
@@ -54,10 +60,12 @@ export function FooterSection() {
 
           {/* Copyright */}
           <div className="mt-8 border-t border-white/10 pt-8 text-center">
-            <p className="text-sm text-gray-500">&copy; {new Date().getFullYear()} LXD360 LLC. All rights reserved.</p>
+            <p className="text-sm text-gray-500">
+              &copy; {new Date().getFullYear()} LXD360 LLC. All rights reserved.
+            </p>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }

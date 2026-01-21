@@ -1,41 +1,40 @@
-"use client"
+'use client';
 
-import { motion } from "framer-motion"
-import { useInView } from "framer-motion"
-import { useRef } from "react"
-import Image from "next/image"
-import { Brain, Glasses } from "lucide-react"
-import { GlowingEffect } from "@/components/ui/glowing-effect"
-import { AnimatedLinesBadge } from "@/components/ui/animated-lines-badge"
+import { motion, useInView } from 'framer-motion';
+import { Brain, Glasses } from 'lucide-react';
+import Image from 'next/image';
+import { useRef } from 'react';
+import { AnimatedLinesBadge } from '@/components/ui/animated-lines-badge';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 const initiatives = [
   {
-    id: "lxp360",
-    title: "LXP360 AI/ML Platform",
+    id: 'lxp360',
+    title: 'LXP360 AI/ML Platform',
     description:
-      "An all-in-one Learning Management System (LMS), Learning Experience Platform (LXP), and Learning Record Store (LRS) powered by artificial intelligence. Deliver personalized learning paths, intelligent content recommendations, and comprehensive analytics.",
+      'An all-in-one Learning Management System (LMS), Learning Experience Platform (LXP), and Learning Record Store (LRS) powered by artificial intelligence. Deliver personalized learning paths, intelligent content recommendations, and comprehensive analytics.',
     icon: Brain,
-    features: ["AI-Powered Personalization", "xAPI Compliant", "Advanced Analytics"],
-    gradient: "from-blue-600 to-cyan-500",
-    size: "large",
-    logo: "/images/lxp360-20saas-20logo.png",
+    features: ['AI-Powered Personalization', 'xAPI Compliant', 'Advanced Analytics'],
+    gradient: 'from-blue-600 to-cyan-500',
+    size: 'large',
+    logo: '/images/lxp360-20saas-20logo.png',
   },
   {
-    id: "inspire",
-    title: "INSPIRE Studio",
+    id: 'inspire',
+    title: 'INSPIRE Studio',
     description:
-      "A cloud-native AI-powered authoring platform that transforms course creation. Create neuroscience-backed learning experiences with integrated cognitive load management, WCAG 2.2 AA accessibility, and multi-format export (SCORM, xAPI, cmi5).",
+      'A cloud-native AI-powered authoring platform that transforms course creation. Create neuroscience-backed learning experiences with integrated cognitive load management, WCAG 2.2 AA accessibility, and multi-format export (SCORM, xAPI, cmi5).',
     icon: Glasses,
-    features: ["AI-Powered Content Generation", "Cognitive Load Calculator", "Multi-Format Export"],
-    gradient: "from-sky-600 to-blue-500",
-    size: "medium",
-    logo: "/images/inspire-studio-logo.png",
+    features: ['AI-Powered Content Generation', 'Cognitive Load Calculator', 'Multi-Format Export'],
+    gradient: 'from-sky-600 to-blue-500',
+    size: 'medium',
+    logo: '/images/inspire-studio-logo.png',
   },
-]
+];
 
 export function InitiativesSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -45,19 +44,19 @@ export function InitiativesSection() {
         staggerChildren: 0.15,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  }
+  };
 
   return (
     <section ref={ref} className="bg-black py-24 sm:py-32">
       <motion.div
         variants={containerVariants}
         initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
+        animate={isInView ? 'visible' : 'hidden'}
         className="mx-auto max-w-6xl px-6"
       >
         {/* Section header */}
@@ -69,7 +68,8 @@ export function InitiativesSection() {
             Launching Soon
           </h2>
           <p className="mx-auto max-w-2xl text-pretty text-lg text-gray-400">
-            Two powerful solutions designed to transform how your organization approaches learning and development.
+            Two powerful solutions designed to transform how your organization approaches learning
+            and development.
           </p>
         </motion.div>
 
@@ -89,7 +89,7 @@ export function InitiativesSection() {
                     {initiatives[0].logo && (
                       <div className="mb-6 flex justify-start">
                         <Image
-                          src={initiatives[0].logo || "/placeholder.svg"}
+                          src={initiatives[0].logo || '/placeholder.svg'}
                           alt="LXP360 Logo"
                           width={140}
                           height={56}
@@ -158,7 +158,7 @@ export function InitiativesSection() {
                     {initiatives[1].logo && (
                       <div className="mb-6 flex justify-start">
                         <Image
-                          src={initiatives[1].logo || "/placeholder.svg"}
+                          src={initiatives[1].logo || '/placeholder.svg'}
                           alt="INSPIRE Studio Logo"
                           width={140}
                           height={56}
@@ -193,5 +193,5 @@ export function InitiativesSection() {
         </div>
       </motion.div>
     </section>
-  )
+  );
 }

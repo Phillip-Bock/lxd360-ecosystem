@@ -171,7 +171,7 @@ export function VideoPlayer({
         Your browser does not support the video tag.
       </video>
 
-      {/* Placeholder for when video URL is TODO */}
+      {/* Placeholder for when video URL is not provided */}
       {!videoUrl && (
         <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-(--blue-dark-600) to-(--blue-light-600)">
           <div className="text-center text-brand-primary">
@@ -330,7 +330,7 @@ export function VideoPlayer({
         </div>
       </motion.div>
 
-      {/* TODO: Wire up to LRS for xAPI tracking - video view, progress, completion events */}
+      {/* TODO(LXD-309): Wire up to LRS for xAPI tracking - video view, progress, completion events */}
     </div>
   );
 }

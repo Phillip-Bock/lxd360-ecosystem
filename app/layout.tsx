@@ -106,6 +106,11 @@ export function generateMetadata(): Metadata {
         'max-snippet': -1,
       },
     },
+
+    // Google Site Verification (set GOOGLE_SITE_VERIFICATION in environment)
+    verification: {
+      google: process.env.GOOGLE_SITE_VERIFICATION,
+    },
   };
 }
 

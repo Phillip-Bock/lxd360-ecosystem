@@ -6,7 +6,7 @@
 
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -60,7 +60,7 @@ export function GlassBoxOverlay({
             onClick={onClose}
             aria-hidden="true"
           />
-          
+
           {/* Panel */}
           <motion.div
             role="dialog"
@@ -75,7 +75,7 @@ export function GlassBoxOverlay({
               'bg-white dark:bg-gray-900 rounded-2xl shadow-2xl',
               'border border-gray-200 dark:border-gray-800',
               'z-50 overflow-hidden',
-              className
+              className,
             )}
           >
             {/* Header */}
@@ -84,24 +84,18 @@ export function GlassBoxOverlay({
                 <div className="p-2 bg-white/20 rounded-full">
                   <Lightbulb className="h-5 w-5 text-white" />
                 </div>
-                <h3 
-                  id="glass-box-headline"
-                  className="text-lg font-semibold text-white"
-                >
+                <h3 id="glass-box-headline" className="text-lg font-semibold text-white">
                   {headline}
                 </h3>
               </div>
             </div>
-            
+
             {/* Content */}
             <div className="p-6">
-              <p 
-                id="glass-box-detail"
-                className="text-gray-700 dark:text-gray-300"
-              >
+              <p id="glass-box-detail" className="text-gray-700 dark:text-gray-300">
                 {detail}
               </p>
-              
+
               {/* Evidence */}
               {evidence.length > 0 && (
                 <div className="mt-4 space-y-2">
@@ -109,13 +103,8 @@ export function GlassBoxOverlay({
                     Why we think this
                   </p>
                   {evidence.map((item, index) => (
-                    <div 
-                      key={index}
-                      className="flex items-center justify-between text-sm"
-                    >
-                      <span className="text-gray-600 dark:text-gray-400">
-                        {item.factor}
-                      </span>
+                    <div key={index} className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-400">{item.factor}</span>
                       <span className="font-medium text-gray-900 dark:text-gray-100">
                         {item.value}
                       </span>
@@ -124,7 +113,7 @@ export function GlassBoxOverlay({
                 </div>
               )}
             </div>
-            
+
             {/* Actions */}
             {actions.length > 0 && (
               <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800/50 flex gap-2">
@@ -140,7 +129,7 @@ export function GlassBoxOverlay({
                       'flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-colors',
                       action.variant === 'primary'
                         ? 'bg-cyan-500 hover:bg-cyan-600 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300'
+                        : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300',
                     )}
                   >
                     {action.label}

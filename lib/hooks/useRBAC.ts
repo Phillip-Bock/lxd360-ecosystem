@@ -3,7 +3,6 @@
 'use client';
 
 import type { PermissionAction, PermissionResource, ProductType, RoleName } from '@/lib/rbac/types';
-import { ROLE_HIERARCHY } from '@/lib/rbac/types';
 
 // ============================================================================
 // Types
@@ -42,9 +41,9 @@ interface EmployeeResult {
  *
  * TODO(LXD-351): Implement with Firebase custom claims
  */
-export function useMinimumRole(requiredRole: RoleName): MinimumRoleResult {
+export function useMinimumRole(_requiredRole: RoleName): MinimumRoleResult {
   // Stub: Always returns false until Firebase Auth is integrated
-  const _hierarchy = ROLE_HIERARCHY[requiredRole];
+  // TODO(LXD-351): Use _requiredRole with ROLE_HIERARCHY for proper permission checks
   return {
     hasMinimum: false,
     isLoading: false,

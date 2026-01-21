@@ -9,35 +9,43 @@ export const metadata: Metadata = {
 const faqs = [
   {
     question: 'What is LXD360?',
-    answer: 'LXD360 is a learning experience design company that provides AI-powered tools for creating and delivering neuroscience-backed learning experiences. Our ecosystem includes INSPIRE Studio (authoring) and INSPIRE Ignite (delivery/LMS).',
+    answer:
+      'LXD360 is a learning experience design company that provides AI-powered tools for creating and delivering neuroscience-backed learning experiences. Our ecosystem includes INSPIRE Studio (authoring) and INSPIRE Ignite (delivery/LMS).',
   },
   {
     question: 'What is the INSPIRE Framework?',
-    answer: 'INSPIRE is our proprietary methodology based on cognitive science and learning theory. It stands for: Investigation & Analysis, Neuroscience Integration, Strategic Design, Production & Development, Implementation & Delivery, Reinforcement & Retention, and Evaluation & Optimization.',
+    answer:
+      'INSPIRE is our proprietary methodology based on cognitive science and learning theory. It stands for: Investigation & Analysis, Neuroscience Integration, Strategic Design, Production & Development, Implementation & Delivery, Reinforcement & Retention, and Evaluation & Optimization.',
   },
   {
     question: 'What is Glass Box AI?',
-    answer: 'Glass Box AI is our approach to explainable artificial intelligence. Unlike "black box" systems, Glass Box AI provides transparent explanations for every recommendation, allowing learners and instructors to understand why specific content or paths are suggested.',
+    answer:
+      'Glass Box AI is our approach to explainable artificial intelligence. Unlike "black box" systems, Glass Box AI provides transparent explanations for every recommendation, allowing learners and instructors to understand why specific content or paths are suggested.',
   },
   {
     question: 'Is LXD360 SCORM compatible?',
-    answer: 'Yes! INSPIRE Studio exports to SCORM 1.2, SCORM 2004 (4th Edition), xAPI, and cmi5. You can use our content in any LMS, or deliver it natively through INSPIRE Ignite.',
+    answer:
+      'Yes! INSPIRE Studio exports to SCORM 1.2, SCORM 2004 (4th Edition), xAPI, and cmi5. You can use our content in any LMS, or deliver it natively through INSPIRE Ignite.',
   },
   {
     question: 'What compliance standards do you support?',
-    answer: 'We support WCAG 2.2 AA accessibility, EU AI Act requirements, HIPAA for healthcare clients, and are on the path to FedRAMP certification for government clients.',
+    answer:
+      'We support WCAG 2.2 AA accessibility, EU AI Act requirements, HIPAA for healthcare clients, and are on the path to FedRAMP certification for government clients.',
   },
   {
     question: 'Can I white-label the platform?',
-    answer: 'Yes! Enterprise clients can fully brand INSPIRE Studio and Ignite with their own logo, colors, and custom domain. This is included in our Enterprise plans.',
+    answer:
+      'Yes! Enterprise clients can fully brand INSPIRE Studio and Ignite with their own logo, colors, and custom domain. This is included in our Enterprise plans.',
   },
   {
     question: 'How does pricing work?',
-    answer: 'We offer tiered pricing based on features and learner count. INSPIRE Studio starts at $49/month for creators, and INSPIRE Ignite starts at $99/month for up to 100 learners. Enterprise plans include bundled pricing.',
+    answer:
+      'We offer tiered pricing based on features and learner count. INSPIRE Studio starts at $49/month for creators, and INSPIRE Ignite starts at $99/month for up to 100 learners. Enterprise plans include bundled pricing.',
   },
   {
     question: 'Is there a free trial?',
-    answer: 'We offer a 14-day free trial of both INSPIRE Studio and Ignite. No credit card required to start.',
+    answer:
+      'We offer a 14-day free trial of both INSPIRE Studio and Ignite. No credit card required to start.',
   },
 ];
 
@@ -71,14 +79,20 @@ export default function FAQPage() {
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  role="img"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <title>Chevron</title>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </summary>
               <div className="px-6 pb-6">
-                <p className="text-lxd-text-dark/70 dark:text-lxd-text-light/70">
-                  {faq.answer}
-                </p>
+                <p className="text-lxd-text-dark/70 dark:text-lxd-text-light/70">{faq.answer}</p>
               </div>
             </details>
           ))}

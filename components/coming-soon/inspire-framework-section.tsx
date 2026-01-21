@@ -1,69 +1,68 @@
-"use client"
+'use client';
 
-import { motion } from "framer-motion"
-import { useInView } from "framer-motion"
-import { useRef } from "react"
+import { motion, useInView } from 'framer-motion';
 import {
-  Link2,
+  BarChart3,
   Brain,
+  GraduationCap,
+  Layers,
+  Link2,
+  RefreshCw,
   Target,
   User,
-  Layers,
-  BarChart3,
-  RefreshCw,
-  GraduationCap
-} from "lucide-react"
-import { AnimatedLinesBadge } from "@/components/ui/animated-lines-badge"
-import { GlowingEffect } from "@/components/ui/glowing-effect"
+} from 'lucide-react';
+import { useRef } from 'react';
+import { AnimatedLinesBadge } from '@/components/ui/animated-lines-badge';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 const inspireFramework = [
   {
-    letter: "I",
-    title: "Integrative",
-    description: "Connect new knowledge to existing mental schemas for deeper understanding",
+    letter: 'I',
+    title: 'Integrative',
+    description: 'Connect new knowledge to existing mental schemas for deeper understanding',
     icon: Link2,
   },
   {
-    letter: "N",
-    title: "Neuroscience-Informed",
-    description: "Design based on how the brain actually learns and retains information",
+    letter: 'N',
+    title: 'Neuroscience-Informed',
+    description: 'Design based on how the brain actually learns and retains information',
     icon: Brain,
   },
   {
-    letter: "S",
-    title: "Strategic",
-    description: "Align learning objectives to measurable business outcomes",
+    letter: 'S',
+    title: 'Strategic',
+    description: 'Align learning objectives to measurable business outcomes',
     icon: Target,
   },
   {
-    letter: "P",
-    title: "Personalized",
-    description: "Adapt to individual learner needs, preferences, and pace",
+    letter: 'P',
+    title: 'Personalized',
+    description: 'Adapt to individual learner needs, preferences, and pace',
     icon: User,
   },
   {
-    letter: "I",
-    title: "Immersive",
-    description: "Multi-sensory experiences for high-stakes skill development",
+    letter: 'I',
+    title: 'Immersive',
+    description: 'Multi-sensory experiences for high-stakes skill development',
     icon: Layers,
   },
   {
-    letter: "R",
-    title: "Results-Focused",
-    description: "Measure skill application on the job—not just completions",
+    letter: 'R',
+    title: 'Results-Focused',
+    description: 'Measure skill application on the job—not just completions',
     icon: BarChart3,
   },
   {
-    letter: "E",
-    title: "Evolutionary",
-    description: "Continuous improvement through AI-powered analytics and feedback",
+    letter: 'E',
+    title: 'Evolutionary',
+    description: 'Continuous improvement through AI-powered analytics and feedback',
     icon: RefreshCw,
   },
-]
+];
 
 export function InspireFrameworkSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -73,19 +72,19 @@ export function InspireFrameworkSection() {
         staggerChildren: 0.08,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  }
+  };
 
   return (
     <section ref={ref} className="bg-black py-24 sm:py-32">
       <motion.div
         variants={containerVariants}
         initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
+        animate={isInView ? 'visible' : 'hidden'}
         className="mx-auto max-w-6xl px-6"
       >
         {/* Section header */}
@@ -97,13 +96,20 @@ export function InspireFrameworkSection() {
             The INSPIRE™ Framework
           </h2>
           <p className="mx-auto max-w-3xl text-pretty text-lg text-gray-400">
-            Our proprietary methodology—<span className="text-white font-medium">validated through doctoral research with 289 neurodiverse learners</span>—ensures training transfers to the job. Not marketing. Science.
+            Our proprietary methodology—
+            <span className="text-white font-medium">
+              validated through doctoral research with 289 neurodiverse learners
+            </span>
+            —ensures training transfers to the job. Not marketing. Science.
           </p>
         </motion.div>
 
         {/* Framework grid */}
-        <motion.div variants={containerVariants} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-7">
-          {inspireFramework.map((item, index) => (
+        <motion.div
+          variants={containerVariants}
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-7"
+        >
+          {inspireFramework.map((item, _index) => (
             <motion.div key={item.title} variants={itemVariants}>
               <div className="relative h-full rounded-2xl border border-gray-800 p-2 md:rounded-3xl md:p-2">
                 <GlowingEffect spread={30} glow={true} proximity={50} />
@@ -134,9 +140,14 @@ export function InspireFrameworkSection() {
                   </div>
                 </div>
                 <div className="text-center md:text-left">
-                  <h3 className="text-xl font-bold text-white mb-2">Powered by Bayesian Knowledge Tracing</h3>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    Powered by Bayesian Knowledge Tracing
+                  </h3>
                   <p className="text-gray-400">
-                    When INSPIRE Studio and LXP360 work together, they leverage <span className="text-cyan-400 font-medium">Bayesian Knowledge Tracing</span> to predict learner mastery with scientific precision. Built on the INSPIRE™ Learning Architecture—validated through doctoral research with 289 learners.
+                    When INSPIRE Studio and LXP360 work together, they leverage{' '}
+                    <span className="text-cyan-400 font-medium">Bayesian Knowledge Tracing</span> to
+                    predict learner mastery with scientific precision. Built on the INSPIRE™
+                    Learning Architecture—validated through doctoral research with 289 learners.
                   </p>
                 </div>
               </div>
@@ -145,5 +156,5 @@ export function InspireFrameworkSection() {
         </motion.div>
       </motion.div>
     </section>
-  )
+  );
 }

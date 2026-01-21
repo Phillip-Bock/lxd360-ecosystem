@@ -3,7 +3,8 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'INSPIRE Studio Pricing | LXD360',
-  description: 'AI-powered authoring tool pricing plans. Create neuroscience-backed learning experiences with INSPIRE Studio.',
+  description:
+    'AI-powered authoring tool pricing plans. Create neuroscience-backed learning experiences with INSPIRE Studio.',
 };
 
 const pricingTiers = [
@@ -103,9 +104,25 @@ export default function StudioPricingPage() {
               </p>
               <ul className="space-y-3 mb-8">
                 {tier.features.map((feature) => (
-                  <li key={feature} className="flex items-center text-sm text-lxd-text-dark dark:text-lxd-text-light">
-                    <svg className="w-5 h-5 text-green-500 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <li
+                    key={feature}
+                    className="flex items-center text-sm text-lxd-text-dark dark:text-lxd-text-light"
+                  >
+                    <svg
+                      className="w-5 h-5 text-green-500 mr-2 shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      role="img"
+                    >
+                      <title>Checkmark</title>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                     {feature}
                   </li>

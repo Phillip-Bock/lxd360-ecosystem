@@ -17,14 +17,33 @@ export const AccountSchema = z.object({
 });
 export type Account = z.infer<typeof AccountSchema>;
 
-export const AgentSchema = z.object({
-  objectType: z.literal('Agent').default('Agent'),
-  name: z.string().optional(),
-  mbox: z.string().optional(),
-  mbox_sha1sum: z.string().optional(),
-  openid: z.string().url().optional(),
-  account: AccountSchema.optional(),
-});
+/**
+ * xAPI Agent schema with IFI (Inverse Functional Identifier) validation.
+ * Per xAPI spec, an Agent MUST have exactly one IFI.
+ */
+export const AgentSchema = z
+  .object({
+    objectType: z.literal('Agent').default('Agent'),
+    name: z.string().optional(),
+    mbox: z.string().optional(),
+    mbox_sha1sum: z.string().optional(),
+    openid: z.string().url().optional(),
+    account: AccountSchema.optional(),
+  })
+  .refine(
+    (agent) => {
+      // Count how many IFIs are present
+      const ifiCount = [agent.mbox, agent.mbox_sha1sum, agent.openid, agent.account].filter(
+        Boolean,
+      ).length;
+      // Agent must have exactly one IFI (or none for anonymous)
+      return ifiCount <= 1;
+    },
+    {
+      message:
+        'Agent must have at most one Inverse Functional Identifier (mbox, mbox_sha1sum, openid, or account)',
+    },
+  );
 export type Agent = z.infer<typeof AgentSchema>;
 
 export const GroupSchema = z.object({

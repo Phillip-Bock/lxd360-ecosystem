@@ -88,14 +88,8 @@ export interface DesignTabProps {
   onResetToDefault?: () => void;
 }
 
-const _THEME_OPTIONS = [
-  { value: 'default', label: 'Default' },
-  { value: 'corporate', label: 'Corporate' },
-  { value: 'modern', label: 'Modern' },
-  { value: 'playful', label: 'Playful' },
-  { value: 'minimal', label: 'Minimal' },
-  { value: 'custom', label: 'Custom' },
-];
+// Theme options to be used in future theme selector dropdown
+// { value: 'default', label: 'Default' }, { value: 'corporate', label: 'Corporate' }, etc.
 
 const FONT_OPTIONS = [
   { value: 'inter', label: 'Inter' },

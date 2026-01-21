@@ -167,7 +167,7 @@ const BLOCK_COMPONENTS = {
   spacer: SpacerBlock,
   card: CardBlock,
 
-  // Data blocks - TODO: Create these components
+  // Data blocks - TODO(LXD-410): Create these components
   // table: TableBlock,
   // chart: ChartBlock,
   // stat: StatBlock,

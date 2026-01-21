@@ -1,0 +1,277 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ========================================
+    // Helper Functions
+    // ========================================
+
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user is accessing their own document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Get user's tenant ID from custom claims
+    function getUserTenantId() {
+      return request.auth.token.tenantId;
+    }
+
+    // Check if user belongs to the organization
+    function belongsToOrg(orgId) {
+      return isAuthenticated() && getUserTenantId() == orgId;
+    }
+
+    // Check user role level (higher is more privileged)
+    function getRoleLevel() {
+      return request.auth.token.roleLevel;
+    }
+
+    // Check if user has at least a certain role level
+    function hasMinRoleLevel(minLevel) {
+      return isAuthenticated() && getRoleLevel() >= minLevel;
+    }
+
+    // Check if user is super admin (role level 100)
+    function isSuperAdmin() {
+      return hasMinRoleLevel(100);
+    }
+
+    // Check if user is org admin (role level 80+)
+    function isOrgAdmin() {
+      return hasMinRoleLevel(80);
+    }
+
+    // Check if user is instructor (role level 60+)
+    function isInstructor() {
+      return hasMinRoleLevel(60);
+    }
+
+    // Check if user is content author (role level 50+)
+    function isAuthor() {
+      return hasMinRoleLevel(50);
+    }
+
+    // ========================================
+    // Default Deny
+    // ========================================
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ========================================
+    // User Documents
+    // ========================================
+
+    match /users/{userId} {
+      // Users can read their own profile
+      allow read: if isOwner(userId) || isSuperAdmin();
+
+      // Users can update their own profile
+      allow update: if isOwner(userId);
+
+      // Only allow creation through admin SDK (signup flow)
+      allow create: if false;
+
+      // Only super admins can delete users
+      allow delete: if isSuperAdmin();
+    }
+
+    // ========================================
+    // Organizations
+    // ========================================
+
+    match /organizations/{orgId} {
+      // Organization members can read their org
+      allow read: if belongsToOrg(orgId) || isSuperAdmin();
+
+      // Only org admins can update their organization
+      allow update: if belongsToOrg(orgId) && isOrgAdmin();
+
+      // Only super admins can create/delete organizations
+      allow create, delete: if isSuperAdmin();
+
+      // Organization members subcollection
+      match /members/{memberId} {
+        allow read: if belongsToOrg(orgId) || isSuperAdmin();
+        allow write: if belongsToOrg(orgId) && isOrgAdmin();
+      }
+    }
+
+    // ========================================
+    // Courses (Multi-tenant)
+    // ========================================
+
+    match /courses/{courseId} {
+      // Members can read courses in their organization
+      allow read: if belongsToOrg(resource.data.organizationId) || isSuperAdmin();
+
+      // Authors and above can create courses
+      allow create: if belongsToOrg(request.resource.data.organizationId) && isAuthor();
+
+      // Authors can update their own courses, instructors can update any in their org
+      allow update: if (belongsToOrg(resource.data.organizationId) && isAuthor()) || isSuperAdmin();
+
+      // Only instructors and above can delete courses
+      allow delete: if (belongsToOrg(resource.data.organizationId) && isInstructor()) || isSuperAdmin();
+    }
+
+    // ========================================
+    // Lessons (Multi-tenant)
+    // ========================================
+
+    match /lessons/{lessonId} {
+      // Members can read lessons in their organization
+      allow read: if belongsToOrg(resource.data.organizationId) || isSuperAdmin();
+
+      // Authors can create lessons
+      allow create: if belongsToOrg(request.resource.data.organizationId) && isAuthor();
+
+      // Authors can update lessons in their org
+      allow update: if belongsToOrg(resource.data.organizationId) && isAuthor();
+
+      // Only instructors can delete lessons
+      allow delete: if (belongsToOrg(resource.data.organizationId) && isInstructor()) || isSuperAdmin();
+    }
+
+    // ========================================
+    // Content Blocks (Multi-tenant)
+    // ========================================
+
+    match /content_blocks/{blockId} {
+      allow read: if belongsToOrg(resource.data.organizationId) || isSuperAdmin();
+      allow create: if belongsToOrg(request.resource.data.organizationId) && isAuthor();
+      allow update: if belongsToOrg(resource.data.organizationId) && isAuthor();
+      allow delete: if (belongsToOrg(resource.data.organizationId) && isInstructor()) || isSuperAdmin();
+    }
+
+    // ========================================
+    // Assessments (Multi-tenant)
+    // ========================================
+
+    match /assessments/{assessmentId} {
+      allow read: if belongsToOrg(resource.data.organizationId) || isSuperAdmin();
+      allow create: if belongsToOrg(request.resource.data.organizationId) && isAuthor();
+      allow update: if belongsToOrg(resource.data.organizationId) && isAuthor();
+      allow delete: if (belongsToOrg(resource.data.organizationId) && isInstructor()) || isSuperAdmin();
+    }
+
+    // ========================================
+    // Media Assets (Multi-tenant)
+    // ========================================
+
+    match /media_assets/{assetId} {
+      allow read: if belongsToOrg(resource.data.tenant_id) || isSuperAdmin();
+      allow create: if belongsToOrg(request.resource.data.tenant_id) && isAuthor();
+      allow update: if belongsToOrg(resource.data.tenant_id) && isAuthor();
+      allow delete: if (belongsToOrg(resource.data.tenant_id) && isInstructor()) || isSuperAdmin();
+    }
+
+    // ========================================
+    // User Progress (User-owned within tenant)
+    // ========================================
+
+    match /user_progress/{progressId} {
+      // Users can read their own progress, instructors can read all in their org
+      allow read: if (isOwner(resource.data.userId) && belongsToOrg(resource.data.organizationId))
+                  || (belongsToOrg(resource.data.organizationId) && isInstructor())
+                  || isSuperAdmin();
+
+      // Users can create/update their own progress
+      allow create: if isOwner(request.resource.data.userId) && belongsToOrg(request.resource.data.organizationId);
+      allow update: if isOwner(resource.data.userId) && belongsToOrg(resource.data.organizationId);
+
+      // Only admins can delete progress records
+      allow delete: if (belongsToOrg(resource.data.organizationId) && isOrgAdmin()) || isSuperAdmin();
+    }
+
+    // ========================================
+    // xAPI Statements (Multi-tenant)
+    // ========================================
+
+    match /xapi_statements/{statementId} {
+      // Users can read their own statements, instructors can read all in their org
+      allow read: if isAuthenticated() &&
+                  ((resource.data.actor_id == request.auth.uid && belongsToOrg(resource.data.organization_id))
+                   || (belongsToOrg(resource.data.organization_id) && isInstructor())
+                   || isSuperAdmin());
+
+      // Authenticated users can create statements for themselves
+      allow create: if isAuthenticated()
+                    && request.resource.data.actor_id == request.auth.uid
+                    && belongsToOrg(request.resource.data.organization_id);
+
+      // xAPI statements are immutable - no updates allowed
+      allow update: if false;
+
+      // Only super admins can delete statements (compliance requirement)
+      allow delete: if isSuperAdmin();
+    }
+
+    // ========================================
+    // Enrollments (User-owned within tenant)
+    // ========================================
+
+    match /enrollments/{enrollmentId} {
+      allow read: if (isOwner(resource.data.userId) && belongsToOrg(resource.data.organizationId))
+                  || (belongsToOrg(resource.data.organizationId) && isInstructor())
+                  || isSuperAdmin();
+
+      // Instructors can create enrollments, users can self-enroll
+      allow create: if belongsToOrg(request.resource.data.organizationId)
+                    && (isOwner(request.resource.data.userId) || isInstructor());
+
+      // Only instructors can update enrollments
+      allow update: if (belongsToOrg(resource.data.organizationId) && isInstructor()) || isSuperAdmin();
+
+      // Only org admins can delete enrollments
+      allow delete: if (belongsToOrg(resource.data.organizationId) && isOrgAdmin()) || isSuperAdmin();
+    }
+
+    // ========================================
+    // Waitlist (Public write, admin read)
+    // ========================================
+
+    match /waitlist/{entryId} {
+      // Only admins can read waitlist
+      allow read: if isSuperAdmin();
+
+      // Anyone can add themselves to waitlist
+      allow create: if true;
+
+      // No updates or deletes
+      allow update, delete: if isSuperAdmin();
+    }
+
+    // ========================================
+    // Subscriptions (Stripe managed)
+    // ========================================
+
+    match /subscriptions/{subscriptionId} {
+      // Users can read their own subscription, org admins can read org subscriptions
+      allow read: if isOwner(resource.data.userId)
+                  || (belongsToOrg(resource.data.organizationId) && isOrgAdmin())
+                  || isSuperAdmin();
+
+      // Only admin SDK can write (Stripe webhooks)
+      allow create, update, delete: if false;
+    }
+
+    // ========================================
+    // Audit Logs (Immutable, admin read only)
+    // ========================================
+
+    match /audit_logs/{logId} {
+      // Only super admins can read audit logs
+      allow read: if isSuperAdmin();
+
+      // Audit logs are created by admin SDK only
+      allow create, update, delete: if false;
+    }
+  }
+}

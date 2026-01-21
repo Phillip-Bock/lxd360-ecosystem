@@ -15,8 +15,8 @@
  * @license      Proprietary - See LICENSE file
  *
  * @created      2024-01-01
- * @modified     2026-01-11
- * @version      3.1.0 - GCP Migration Complete
+ * @modified     2026-01-20
+ * @version      3.2.0 - Fixed rewrites for route groups
  *
  * @see          https://nextjs.org/docs/app/api-reference/next-config-js
  *
@@ -25,10 +25,14 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // TypeScript - temporarily ignore build errors (inherited from MAIN)
-  // TODO(LXD-400): Fix all TypeScript errors and set to false
+  // TypeScript - strict mode enabled, no build errors allowed
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
+  },
+
+  // ESLint - strict mode enabled
+  eslint: {
+    ignoreDuringBuilds: false,
   },
 
   // Build performance optimizations
@@ -55,10 +59,6 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cdn.sanity.io',
-      },
-      {
-        protocol: 'https',
         hostname: 'images.pexels.com',
       },
       {
@@ -72,6 +72,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'avatars.githubusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
       },
     ],
     // Device sizes for responsive images
@@ -135,19 +143,19 @@ const nextConfig = {
   // Generate ETags for caching
   // =========================================================================
   generateEtags: true,
+
+  // =========================================================================
+  // Rewrites - Map clean URLs to numbered folder structure
+  // NOTE: Route groups (parentheses) are stripped from URLs by Next.js
+  // =========================================================================
   async rewrites() {
     return [
-      // =========================================================================
       // Favicon
-      // =========================================================================
       {
         source: '/favicon.ico',
         destination: '/icon.svg',
       },
-      // =========================================================================
-      // LXD360 Ecosystem URL Rewrites (numbered folders → clean URLs)
-      // =========================================================================
-      // Auth
+      // Auth routes
       {
         source: '/login',
         destination: '/00-lxd360-auth/login',
@@ -164,39 +172,43 @@ const nextConfig = {
         source: '/callback/:path*',
         destination: '/00-lxd360-auth/callback/:path*',
       },
-      // LLC Company Pages
+      // LLC Company Pages - route groups are invisible in URLs
       {
         source: '/vision',
-        destination: '/01-lxd360-llc/(lxd360-llc)/vision',
+        destination: '/01-lxd360-llc/vision',
       },
       {
         source: '/studio',
-        destination: '/01-lxd360-llc/(lxd360-llc)/studio',
+        destination: '/01-lxd360-llc/studio',
       },
       {
         source: '/ignite',
-        destination: '/01-lxd360-llc/(lxd360-llc)/ignite',
+        destination: '/01-lxd360-llc/ignite',
       },
       {
         source: '/neuro',
-        destination: '/01-lxd360-llc/(lxd360-llc)/neuro',
+        destination: '/01-lxd360-llc/neuro',
       },
       {
         source: '/kinetix',
-        destination: '/01-lxd360-llc/(lxd360-llc)/kinetix',
+        destination: '/01-lxd360-llc/kinetix',
       },
       {
         source: '/contact',
-        destination: '/01-lxd360-llc/(lxd360-llc)/contact',
+        destination: '/01-lxd360-llc/contact',
       },
       {
         source: '/legal/:path*',
-        destination: '/01-lxd360-llc/(lxd360-llc)/legal/:path*',
+        destination: '/01-lxd360-llc/legal/:path*',
       },
       // INSPIRE Studio App
       {
+        source: '/inspire-studio',
+        destination: '/02-lxd360-inspire-studio',
+      },
+      {
         source: '/inspire-studio/:path*',
-        destination: '/02-lxd360-inspire-studio/(inspire-studio)/:path*',
+        destination: '/02-lxd360-inspire-studio/:path*',
       },
       // INSPIRE Ignite App (LMS)
       {
@@ -246,12 +258,12 @@ const nextConfig = {
       // Consulting alias
       {
         source: '/consultation',
-        destination: '/01-lxd360-llc/(lxd360-llc)/neuro',
+        destination: '/01-lxd360-llc/neuro',
       },
       // Store alias
       {
         source: '/store',
-        destination: '/01-lxd360-llc/(lxd360-llc)/kinetix',
+        destination: '/01-lxd360-llc/kinetix',
       },
       // Coming Soon
       {
@@ -273,6 +285,10 @@ const nextConfig = {
       },
     ];
   },
+
+  // =========================================================================
+  // Redirects - Legacy route migrations
+  // =========================================================================
   async redirects() {
     return [
       // Legacy dashboard routes
@@ -338,7 +354,7 @@ const nextConfig = {
         destination: '/lxp360/:path*',
         permanent: true,
       },
-      // LXD to INSPIRE Studio rename (legacy) - Specific route mappings first
+      // LXD to INSPIRE Studio rename (legacy)
       {
         source: '/dashboard/lxd/author',
         destination: '/inspire-studio/course-builder',
@@ -374,7 +390,6 @@ const nextConfig = {
         destination: '/inspire-studio/course-builder',
         permanent: true,
       },
-      // LXD to INSPIRE Studio (generic fallback)
       {
         source: '/dashboard/lxd',
         destination: '/inspire-studio',
@@ -426,15 +441,13 @@ const nextConfig = {
         destination: '/inspire-studio/:path*',
         permanent: true,
       },
-      // Note: /inspire-studio and /lxp360 are now tenant routes
-      // Public product pages are at /products/inspire-studio and /products/lxp360
       // Legacy /waitlist to /vip
       {
         source: '/waitlist',
         destination: '/vip',
         permanent: true,
       },
-      // Legacy client admin to tenant admin route
+      // Legacy client admin routes
       {
         source: '/dashboard/client-admin',
         destination: '/admin',
@@ -445,7 +458,6 @@ const nextConfig = {
         destination: '/admin/:path*',
         permanent: true,
       },
-      // client-admin to admin redirect
       {
         source: '/client-admin',
         destination: '/admin',
@@ -459,19 +471,18 @@ const nextConfig = {
       // Legacy auth routes
       {
         source: '/signin',
-        destination: '/auth/login',
+        destination: '/login',
         permanent: true,
       },
       {
         source: '/signup',
-        destination: '/auth/sign-up',
+        destination: '/sign-up',
         permanent: true,
       },
-      // Employee login shortcut
       {
-        source: '/employee-login',
-        destination: '/auth/employee-login',
-        permanent: false,
+        source: '/register',
+        destination: '/sign-up',
+        permanent: true,
       },
       // About to Vision rename
       {
@@ -479,65 +490,16 @@ const nextConfig = {
         destination: '/vision',
         permanent: true,
       },
-      // Solutions sub-routes - redirect to consultation (industry pages pending)
-      // Note: Using :path+ to match one or more segments, so /solutions itself is NOT redirected
+      // Solutions sub-routes
       {
         source: '/solutions/:path+',
         destination: '/consultation',
-        permanent: false, // Not permanent - industry pages may be added later
+        permanent: false,
       },
       {
         source: '/industries/:path*',
         destination: '/consultation',
-        permanent: false, // Not permanent - industry pages may be added later
-      },
-      // =======================================================================
-      // New URL structure redirects (2025-12 restructure)
-      // =======================================================================
-      // Old dashboard routes → platform
-      {
-        source: '/dashboard',
-        destination: '/app/lxp360',
-        permanent: true,
-      },
-      {
-        source: '/dashboard/:path*',
-        destination: '/app/:path*',
-        permanent: true,
-      },
-      // Ensure /admin goes to /internal/admin
-      {
-        source: '/admin',
-        destination: '/internal/admin',
-        permanent: true,
-      },
-      {
-        source: '/admin/:path*',
-        destination: '/internal/admin/:path*',
-        permanent: true,
-      },
-      // Command center redirect
-      {
-        source: '/command-center',
-        destination: '/internal/command-center',
-        permanent: true,
-      },
-      {
-        source: '/command-center/:path*',
-        destination: '/internal/command-center/:path*',
-        permanent: true,
-      },
-      // Old auth routes - redirect to existing auth pages
-      {
-        source: '/login',
-        destination: '/auth/login',
-        permanent: true,
-      },
-      // NOTE: /auth/login page EXISTS - do NOT redirect it away
-      {
-        source: '/register',
-        destination: '/auth/sign-up',
-        permanent: true,
+        permanent: false,
       },
       // Old marketing routes
       {
@@ -574,41 +536,35 @@ const nextConfig = {
       },
     ];
   },
+
+  // =========================================================================
+  // Headers - Caching and Security
+  // =========================================================================
   async headers() {
     return [
-      // =========================================================================
       // Static Asset Caching Headers
-      // =========================================================================
       {
-        // Immutable assets (with hash in filename)
         source: '/_next/static/:path*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
       {
-        // Static files in public folder
         source: '/static/:path*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
       {
-        // Images - cache for 1 year
         source: '/:path*.(ico|jpg|jpeg|png|gif|webp|avif|svg)',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
       {
-        // Fonts - cache for 1 year
         source: '/:path*.(woff|woff2|ttf|otf|eot)',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
       {
-        // JS/CSS bundles (already versioned by Next.js)
         source: '/:path*.(js|css)',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
-      // =========================================================================
       // Security Headers
-      // =========================================================================
       {
-        // Global security headers for all routes EXCEPT /studio (which needs iframe embedding)
         source: '/((?!studio).*)',
         headers: [
           { key: 'X-Frame-Options', value: 'DENY' },
@@ -620,6 +576,23 @@ const nextConfig = {
           },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://*.firebaseio.com https://*.googleapis.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "img-src 'self' data: blob: https: http:",
+              "font-src 'self' https://fonts.gstatic.com",
+              "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebase.google.com wss://*.firebaseio.com https://api.stripe.com https://firestore.googleapis.com",
+              "frame-src 'self' https://*.firebaseapp.com https://*.stripe.com https://js.stripe.com",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'none'",
+              'upgrade-insecure-requests',
+            ].join('; '),
+          },
         ],
       },
     ];

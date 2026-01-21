@@ -8,12 +8,14 @@ export type { BlockComponentProps } from './BlockRenderer';
 export { BlockList, BlockRenderer } from './BlockRenderer';
 export { BlockToolbar } from './BlockToolbar';
 export { BlockWrapper } from './BlockWrapper';
+export { ContextualAudioBlock } from './ContextualAudio';
 // Character blocks
 export {
   CharacterBlock,
   ConversationBlock,
   DialogueBlock,
 } from './character';
+export { DynamicVideoBlock } from './DynamicVideo';
 // Interactive blocks
 export { AccordionBlock } from './interactive/AccordionBlock';
 export { FlipCardBlock } from './interactive/FlipCardBlock';
@@ -21,8 +23,8 @@ export { HotspotBlock } from './interactive/HotspotBlock';
 export { TabsBlock } from './interactive/TabsBlock';
 export { TimelineBlock } from './interactive/TimelineBlock';
 export { type CanvasBlock, LessonCanvas, type LessonCanvasProps } from './LessonCanvas';
+export { LogicQuizBlock } from './LogicQuiz';
 export { CardBlock } from './layout/CardBlock';
-
 // Layout blocks
 export { ColumnsBlock } from './layout/ColumnsBlock';
 export { ContainerBlock } from './layout/ContainerBlock';
@@ -32,6 +34,10 @@ export { EmbedBlock } from './media/EmbedBlock';
 // Media blocks
 export { ImageBlock } from './media/ImageBlock';
 export { VideoBlock } from './media/VideoBlock';
+// Smart Block Suites (INSPIRE Assimilation)
+export { SmartTextBlock } from './SmartText';
+export { SocialHubBlock } from './SocialHub';
+export { SpatialContainerBlock } from './SpatialContainer';
 export type { ScenarioAnalyticsData } from './scenario';
 // Scenario blocks
 export {
@@ -49,3 +55,4 @@ export { ListBlock } from './text/ListBlock';
 export { QuoteBlock } from './text/QuoteBlock';
 // Text blocks
 export { TextBlock } from './text/TextBlock';
+export { UnifiedMediaBlock } from './UnifiedMedia';

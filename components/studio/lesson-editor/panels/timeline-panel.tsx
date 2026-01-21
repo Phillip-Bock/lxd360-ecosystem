@@ -66,8 +66,7 @@ interface TimelinePanelProps {
 
 const TRACK_HEIGHT = 32;
 const PROPERTY_TRACK_HEIGHT = 24;
-const _HEADER_HEIGHT = 48;
-const _CONTROLS_HEIGHT = 48;
+// HEADER_HEIGHT and CONTROLS_HEIGHT reserved for future layout calculations
 const RULER_HEIGHT = 24;
 const TRACK_LIST_WIDTH = 220;
 

@@ -416,8 +416,7 @@ export function StatementBuilder({
     setExtensions((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Notify parent of changes
-  const _statement = buildStatement();
+  // Build statement is available via buildStatement() when needed
 
   return (
     <div className={cn('space-y-4', className)}>

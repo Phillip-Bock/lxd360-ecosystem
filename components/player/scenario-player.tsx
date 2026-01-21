@@ -392,7 +392,12 @@ function DecisionRenderer({ data, onChoose, timeRemaining }: DecisionRendererPro
           >
             {choice.imageUrl && (
               <div className="relative w-full h-32 mb-3">
-                <Image src={choice.imageUrl} alt="" fill className="object-cover rounded-lg" />
+                <Image
+                  src={choice.imageUrl}
+                  alt={choice.label || 'Choice option'}
+                  fill
+                  className="object-cover rounded-lg"
+                />
               </div>
             )}
             <h4 className="font-medium text-white text-lg">{choice.label}</h4>
@@ -839,14 +844,8 @@ function PlayerHUD({
 // MAIN COMPONENT
 // =============================================================================
 
-export function ScenarioPlayer({
-  scenario,
-  startNodeId,
-  onComplete,
-  onExit,
-  _trackingEnabled = false,
-  _onStatement,
-}: ScenarioPlayerProps) {
+export function ScenarioPlayer({ scenario, startNodeId, onComplete, onExit }: ScenarioPlayerProps) {
+  // Note: trackingEnabled and onStatement will be implemented in future sprint
   // State
   const [playbackState, setPlaybackState] = useState<ScenarioPlaybackState>(() =>
     createInitialState(scenario, startNodeId),

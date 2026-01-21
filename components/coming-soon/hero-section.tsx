@@ -1,20 +1,20 @@
-"use client"
+'use client';
 
-import { motion, AnimatePresence } from "framer-motion"
-import { WaitlistForm } from "./waitlist-form"
-import { ChevronDown } from "lucide-react"
-import Image from "next/image"
-import { useState, useRef } from "react"
-import { TextShimmer } from "@/components/animations/text/shimmer"
-import { AnimatedLinesBadge } from "@/components/ui/animated-lines-badge"
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
+import Image from 'next/image';
+import { useRef, useState } from 'react';
+import { TextShimmer } from '@/components/animations/text/shimmer';
+import { AnimatedLinesBadge } from '@/components/ui/animated-lines-badge';
+import { WaitlistForm } from './waitlist-form';
 
 export function HeroSection() {
-  const [videoEnded, setVideoEnded] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const [videoEnded, setVideoEnded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleVideoEnd = () => {
-    setVideoEnded(true)
-  }
+    setVideoEnded(true);
+  };
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black">
@@ -24,7 +24,7 @@ export function HeroSection() {
           <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
+            transition={{ duration: 1.2, ease: 'easeInOut' }}
             className="absolute inset-0 z-20 flex items-center justify-center bg-black"
           >
             <video
@@ -96,8 +96,8 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="mx-auto mb-10 max-w-2xl text-pretty text-lg text-white/70 sm:text-xl"
         >
-          LXD360 LLC is pioneering the future of Learning Experience Design with AI-powered platforms, immersive
-          experiences, and a thriving professional community.
+          LXD360 LLC is pioneering the future of Learning Experience Design with AI-powered
+          platforms, immersive experiences, and a thriving professional community.
         </motion.p>
 
         {/* Waitlist Form */}
@@ -138,5 +138,5 @@ export function HeroSection() {
         </motion.div>
       </motion.div>
     </section>
-  )
+  );
 }

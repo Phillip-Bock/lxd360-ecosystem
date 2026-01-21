@@ -86,8 +86,8 @@ export {
   ContentModality,
   extractInspireExtensions,
   FunctionalLearningState,
-  inferFunctionalState,
   InspireExtensions,
+  inferFunctionalState,
 } from './inspire-extensions';
 
 // ============================================================================
@@ -96,9 +96,9 @@ export {
 
 export type {
   ModalityRecommendation,
+  ModalitySwapPromptProps,
   ModalitySwapperConfig,
   ModalitySwapperState,
-  ModalitySwapPromptProps,
 } from './modality-swapper';
 
 export {
@@ -332,11 +332,11 @@ export type {
 } from './cognitive-utils';
 
 export {
+  CognitiveUtils,
   calculateCognitiveLoad,
   calculateCognitiveLoadFactors,
   calculateMasteryDecay,
   classifyFluencyZone,
-  CognitiveUtils,
   DEFAULT_INTERVENTION_THRESHOLDS,
   estimateGuessProbability,
   FLUENCY_THRESHOLDS,
@@ -358,8 +358,8 @@ export type {
 export {
   formatForAccessibility,
   formatForHUD,
-  generateGlassBoxExplanation,
   GlassBox,
+  generateGlassBoxExplanation,
 } from './glass-box';
 
 // ============================================================================
@@ -395,3 +395,59 @@ export {
   useIdleHesitation,
   useVisibilityHesitation,
 } from './hooks/use-hesitation-tracker';
+
+// ============================================================================
+// INSPIRE STUDIO xAPI (Content Authoring Tracking)
+// ============================================================================
+
+export type {
+  A11yCompliance,
+  AISuggestionOutcome,
+  AuthoringVerb,
+  BlockActionOptions,
+  ExportFormat,
+  InspirePhase,
+  StudioActivityType,
+  StudioExtensionIRI,
+  StudioExtensionKey,
+  StudioStatementOptions,
+  UseBlockXAPIOptions,
+  UseBlockXAPIReturn,
+  UseCanvasXAPIOptions,
+  UseCanvasXAPIReturn,
+  UseStudioXAPIOptions,
+  UseStudioXAPIReturn,
+} from './studio';
+
+export {
+  A11yComplianceSchema,
+  AISuggestionOutcomeSchema,
+  AuthoringVerbSchema,
+  buildAIGenerationStatement,
+  buildAuditActivity,
+  buildAuditStatement,
+  buildBlockActivity,
+  buildBlockCreatedStatement,
+  buildBlockDeletedStatement,
+  buildBlockEditedStatement,
+  buildBlockMovedStatement,
+  buildBlockResizedStatement,
+  buildCanvasActivity,
+  buildExportActivity,
+  buildExportStatement,
+  buildMissionActivity,
+  buildPhaseActivity,
+  buildPhaseCompletedStatement,
+  buildStepActivity,
+  buildStudioContextExtensions,
+  buildStudioStatement,
+  ExportFormatSchema,
+  getStudioVerb,
+  InspirePhaseSchema,
+  STUDIO_ACTIVITY_TYPES,
+  STUDIO_EXTENSIONS,
+  STUDIO_VERBS,
+  useBlockXAPI,
+  useCanvasXAPI,
+  useStudioXAPI,
+} from './studio';

@@ -46,7 +46,11 @@ export function getPublicUrl(bucket: 'COMPANY' | 'SHARED', path: string): string
 /**
  * Build a tenant-scoped storage path
  */
-export function getTenantPath(bucket: 'STUDIO' | 'IGNITE', orgId: string, subPath: string): string {
+export function getTenantPath(
+  _bucket: 'STUDIO' | 'IGNITE',
+  orgId: string,
+  subPath: string,
+): string {
   return `${orgId}/${subPath}`;
 }
 

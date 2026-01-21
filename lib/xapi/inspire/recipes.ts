@@ -6,17 +6,17 @@
 // =============================================================================
 
 import { v4 as uuidv4 } from 'uuid';
-import type { Statement, Actor, Verb, Result, Context } from '../types';
-import { 
-  INSPIRE_EXTENSIONS, 
-  type Modality, 
+import type { Actor, Context, Result, Statement } from '../types';
+import {
   type ConsentTier,
-  type DepthLevel,
-  type MasteryLevel,
-  createInspireBehavioralExtensions,
   createInspireAIExtensions,
-  createInspireSkillExtensions,
+  createInspireBehavioralExtensions,
   createInspireContextExtensions,
+  createInspireSkillExtensions,
+  type DepthLevel,
+  INSPIRE_EXTENSIONS,
+  type MasteryLevel,
+  type Modality,
 } from './extensions';
 
 // =============================================================================
@@ -61,7 +61,7 @@ export const INSPIRE_VERBS = {
     id: 'http://adlnet.gov/expapi/verbs/progressed',
     display: { 'en-US': 'progressed' },
   },
-  
+
   // Video/Audio verbs
   PLAYED: {
     id: 'https://w3id.org/xapi/video/verbs/played',
@@ -75,7 +75,7 @@ export const INSPIRE_VERBS = {
     id: 'https://w3id.org/xapi/video/verbs/seeked',
     display: { 'en-US': 'seeked' },
   },
-  
+
   // INSPIRE Custom verbs
   PROBED: {
     id: 'https://inspire.lxd360.com/xapi/verbs/probed',
@@ -115,7 +115,7 @@ export const INSPIRE_ACTIVITY_TYPES = {
   QUESTION: 'http://adlnet.gov/expapi/activities/question',
   INTERACTION: 'http://adlnet.gov/expapi/activities/interaction',
   MEDIA: 'http://adlnet.gov/expapi/activities/media',
-  
+
   // INSPIRE specific
   PROBE: 'https://inspire.lxd360.com/xapi/activities/probe',
   SKILL: 'https://inspire.lxd360.com/xapi/activities/skill',
@@ -134,14 +134,14 @@ export interface IntelligentProbeInput {
   probeName: string;
   skillId: string;
   skillName: string;
-  
+
   // Response data
   correct: boolean;
   responseTimeMs: number;
   confidenceRating?: number;
   selectedAnswer?: string;
   distractorsTouched?: string[];
-  
+
   // Context
   sessionId: string;
   courseId?: string;
@@ -168,7 +168,7 @@ export function createProbeStatement(input: IntelligentProbeInput): Statement {
     distractorsTouched,
     sessionId,
     courseId,
-    tenantId,
+    tenantId: _tenantId,
     consentTier,
     dataResidency,
   } = input;
@@ -208,13 +208,15 @@ export function createProbeStatement(input: IntelligentProbeInput): Statement {
 
   if (courseId) {
     context.contextActivities = {
-      parent: [{
-        objectType: 'Activity',
-        id: `https://inspire.lxd360.com/courses/${courseId}`,
-        definition: {
-          type: INSPIRE_ACTIVITY_TYPES.COURSE,
+      parent: [
+        {
+          objectType: 'Activity',
+          id: `https://inspire.lxd360.com/courses/${courseId}`,
+          definition: {
+            type: INSPIRE_ACTIVITY_TYPES.COURSE,
+          },
         },
-      }],
+      ],
     };
   }
 
@@ -237,6 +239,7 @@ export function createProbeStatement(input: IntelligentProbeInput): Statement {
     result,
     context,
     timestamp: new Date().toISOString(),
+    version: '1.0.3',
   };
 }
 
@@ -251,7 +254,7 @@ export interface AssessmentAnswerInput {
   assessmentId: string;
   assessmentName: string;
   skillId: string;
-  
+
   // Response
   correct: boolean;
   score?: { scaled?: number; raw?: number; min?: number; max?: number };
@@ -260,19 +263,19 @@ export interface AssessmentAnswerInput {
   confidenceRating?: number;
   revisionCount?: number;
   distractorsTouched?: string[];
-  
+
   // Mastery update
   masteryBefore: number;
   masteryAfter: number;
   masteryLevel: MasteryLevel;
-  
+
   // Context
   sessionId: string;
   courseId: string;
   moduleId?: string;
   tenantId: string;
   consentTier: ConsentTier;
-  
+
   // AI
   aiRecommended?: boolean;
   aiModelVersion?: string;
@@ -306,19 +309,23 @@ export function createAssessmentAnswerStatement(input: AssessmentAnswerInput): S
   };
 
   const contextActivities: Context['contextActivities'] = {
-    parent: [{
-      objectType: 'Activity',
-      id: `https://inspire.lxd360.com/assessments/${input.assessmentId}`,
-      definition: {
-        type: INSPIRE_ACTIVITY_TYPES.ASSESSMENT,
-        name: { 'en-US': input.assessmentName },
+    parent: [
+      {
+        objectType: 'Activity',
+        id: `https://inspire.lxd360.com/assessments/${input.assessmentId}`,
+        definition: {
+          type: INSPIRE_ACTIVITY_TYPES.ASSESSMENT,
+          name: { 'en-US': input.assessmentName },
+        },
       },
-    }],
-    grouping: [{
-      objectType: 'Activity',
-      id: `https://inspire.lxd360.com/courses/${input.courseId}`,
-      definition: { type: INSPIRE_ACTIVITY_TYPES.COURSE },
-    }],
+    ],
+    grouping: [
+      {
+        objectType: 'Activity',
+        id: `https://inspire.lxd360.com/courses/${input.courseId}`,
+        definition: { type: INSPIRE_ACTIVITY_TYPES.COURSE },
+      },
+    ],
   };
 
   if (input.moduleId) {
@@ -336,15 +343,19 @@ export function createAssessmentAnswerStatement(input: AssessmentAnswerInput): S
     }),
     // Track mastery change for analytics
     'https://inspire.lxd360.com/xapi/extensions/mastery-before': input.masteryBefore,
-    'https://inspire.lxd360.com/xapi/extensions/mastery-delta': input.masteryAfter - input.masteryBefore,
+    'https://inspire.lxd360.com/xapi/extensions/mastery-delta':
+      input.masteryAfter - input.masteryBefore,
   };
 
   if (input.aiRecommended !== undefined) {
-    Object.assign(contextExtensions, createInspireAIExtensions({
-      recommended: input.aiRecommended,
-      modelVersion: input.aiModelVersion,
-      explanationId: input.aiExplanationId,
-    }));
+    Object.assign(
+      contextExtensions,
+      createInspireAIExtensions({
+        recommended: input.aiRecommended,
+        modelVersion: input.aiModelVersion,
+        explanationId: input.aiExplanationId,
+      }),
+    );
   }
 
   return {
@@ -370,6 +381,7 @@ export function createAssessmentAnswerStatement(input: AssessmentAnswerInput): S
       extensions: contextExtensions,
     },
     timestamp: new Date().toISOString(),
+    version: '1.0.3',
   };
 }
 
@@ -382,21 +394,21 @@ export interface ModalitySwapInput {
   contentBlockId: string;
   contentBlockName: string;
   skillId: string;
-  
+
   // Swap details
   fromModality: Modality;
   toModality: Modality;
   reason: string;
-  
+
   // AI decision
   aiModelVersion: string;
   aiConfidence: number;
   aiExplanationId: string;
-  
+
   // Did learner override?
   learnerOverride?: boolean;
   overrideReason?: string;
-  
+
   // Context
   sessionId: string;
   courseId: string;
@@ -445,11 +457,13 @@ export function createModalitySwapStatement(input: ModalitySwapInput): Statement
       registration: input.sessionId,
       platform: 'INSPIRE Ignite',
       contextActivities: {
-        parent: [{
-          objectType: 'Activity',
-          id: `https://inspire.lxd360.com/courses/${input.courseId}`,
-          definition: { type: INSPIRE_ACTIVITY_TYPES.COURSE },
-        }],
+        parent: [
+          {
+            objectType: 'Activity',
+            id: `https://inspire.lxd360.com/courses/${input.courseId}`,
+            definition: { type: INSPIRE_ACTIVITY_TYPES.COURSE },
+          },
+        ],
       },
       extensions: createInspireContextExtensions({
         sessionId: input.sessionId,
@@ -457,6 +471,7 @@ export function createModalitySwapStatement(input: ModalitySwapInput): Statement
       }),
     },
     timestamp: new Date().toISOString(),
+    version: '1.0.3',
   };
 }
 
@@ -469,7 +484,7 @@ export interface ContentBlockInteractionInput {
   blockId: string;
   blockType: string;
   blockName: string;
-  
+
   // Interaction
   verb: 'launched' | 'completed' | 'experienced' | 'progressed';
   completion?: boolean;
@@ -477,7 +492,7 @@ export interface ContentBlockInteractionInput {
   duration?: number; // ms
   depth?: DepthLevel;
   modality: Modality;
-  
+
   // Context
   sessionId: string;
   courseId: string;
@@ -498,18 +513,21 @@ export function createContentBlockStatement(input: ContentBlockInteractionInput)
     progressed: INSPIRE_VERBS.PROGRESSED,
   };
 
-  const result: Result | undefined = (input.completion !== undefined || input.progress !== undefined || input.duration !== undefined) ? {
-    completion: input.completion,
-    extensions: {
-      ...createInspireBehavioralExtensions({
-        depth: input.depth,
-        modality: input.modality,
-      }),
-      ...(input.progress !== undefined && {
-        'https://inspire.lxd360.com/xapi/extensions/progress': input.progress,
-      }),
-    },
-  } : undefined;
+  const result: Result | undefined =
+    input.completion !== undefined || input.progress !== undefined || input.duration !== undefined
+      ? {
+          completion: input.completion,
+          extensions: {
+            ...createInspireBehavioralExtensions({
+              depth: input.depth,
+              modality: input.modality,
+            }),
+            ...(input.progress !== undefined && {
+              'https://inspire.lxd360.com/xapi/extensions/progress': input.progress,
+            }),
+          },
+        }
+      : undefined;
 
   if (result && input.duration) {
     result.duration = `PT${(input.duration / 1000).toFixed(2)}S`;
@@ -537,16 +555,20 @@ export function createContentBlockStatement(input: ContentBlockInteractionInput)
       registration: input.sessionId,
       platform: 'INSPIRE Ignite',
       contextActivities: {
-        parent: [{
-          objectType: 'Activity',
-          id: `https://inspire.lxd360.com/lessons/${input.lessonId}`,
-          definition: { type: INSPIRE_ACTIVITY_TYPES.LESSON },
-        }],
-        grouping: [{
-          objectType: 'Activity',
-          id: `https://inspire.lxd360.com/courses/${input.courseId}`,
-          definition: { type: INSPIRE_ACTIVITY_TYPES.COURSE },
-        }],
+        parent: [
+          {
+            objectType: 'Activity',
+            id: `https://inspire.lxd360.com/lessons/${input.lessonId}`,
+            definition: { type: INSPIRE_ACTIVITY_TYPES.LESSON },
+          },
+        ],
+        grouping: [
+          {
+            objectType: 'Activity',
+            id: `https://inspire.lxd360.com/courses/${input.courseId}`,
+            definition: { type: INSPIRE_ACTIVITY_TYPES.COURSE },
+          },
+        ],
       },
       extensions: createInspireContextExtensions({
         sessionId: input.sessionId,
@@ -554,6 +576,7 @@ export function createContentBlockStatement(input: ContentBlockInteractionInput)
       }),
     },
     timestamp: new Date().toISOString(),
+    version: '1.0.3',
   };
 }
 
@@ -565,18 +588,18 @@ export interface SkillMasteryInput {
   actor: Actor;
   skillId: string;
   skillName: string;
-  
+
   // Mastery
   masteryLevel: MasteryLevel;
   masteryProbability: number;
   totalAttempts: number;
   successRate: number;
-  
+
   // SM-2
   easinessFactor: number;
   intervalDays: number;
   nextReviewDue: string;
-  
+
   // Context
   sessionId: string;
   courseId: string;
@@ -623,11 +646,13 @@ export function createSkillMasteryStatement(input: SkillMasteryInput): Statement
       registration: input.sessionId,
       platform: 'INSPIRE Ignite',
       contextActivities: {
-        grouping: [{
-          objectType: 'Activity',
-          id: `https://inspire.lxd360.com/courses/${input.courseId}`,
-          definition: { type: INSPIRE_ACTIVITY_TYPES.COURSE },
-        }],
+        grouping: [
+          {
+            objectType: 'Activity',
+            id: `https://inspire.lxd360.com/courses/${input.courseId}`,
+            definition: { type: INSPIRE_ACTIVITY_TYPES.COURSE },
+          },
+        ],
       },
       extensions: createInspireContextExtensions({
         sessionId: input.sessionId,
@@ -635,5 +660,6 @@ export function createSkillMasteryStatement(input: SkillMasteryInput): Statement
       }),
     },
     timestamp: new Date().toISOString(),
+    version: '1.0.3',
   };
 }

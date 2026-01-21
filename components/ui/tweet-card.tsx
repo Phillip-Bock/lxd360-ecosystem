@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { type EnrichedTweet, enrichTweet, type TweetProps } from 'react-tweet';
 import { getTweet, type Tweet } from 'react-tweet/api';
 
+import { sanitizeHtml } from '@/lib/sanitize';
 import { cn } from '@/lib/utils';
 
 interface TwitterIconProps {
@@ -95,7 +96,7 @@ export const TweetNotFound = ({
 export const TweetHeader = ({ tweet }: { tweet: EnrichedTweet }) => (
   <div className="flex flex-row justify-between tracking-tight">
     <div className="flex items-center space-x-2">
-      <a href={tweet.user.url} target="_blank" rel="noreferrer">
+      <a href={tweet.user.url} target="_blank" rel="noopener noreferrer">
         <Image
           title={`Profile picture of ${tweet.user.name}`}
           alt={tweet.user.screen_name}
@@ -110,7 +111,7 @@ export const TweetHeader = ({ tweet }: { tweet: EnrichedTweet }) => (
         <a
           href={tweet.user.url}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="flex items-center font-semibold whitespace-nowrap"
         >
           {truncate(tweet.user.name, 20)}
@@ -123,7 +124,7 @@ export const TweetHeader = ({ tweet }: { tweet: EnrichedTweet }) => (
           <a
             href={tweet.user.url}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="text-sm text-gray-500 transition-all duration-75"
           >
             @{truncate(tweet.user.screen_name, 16)}
@@ -131,7 +132,7 @@ export const TweetHeader = ({ tweet }: { tweet: EnrichedTweet }) => (
         </div>
       </div>
     </div>
-    <a href={tweet.url} target="_blank" rel="noreferrer">
+    <a href={tweet.url} target="_blank" rel="noopener noreferrer">
       <span className="sr-only">Link to tweet</span>
       <Twitter className="size-5 items-start text-lxd-secondary transition-all ease-in-out hover:scale-105" />
     </a>
@@ -162,7 +163,7 @@ export const TweetBody = ({ tweet }: { tweet: EnrichedTweet }) => (
             <span
               key={idx}
               className="text-sm font-normal"
-              dangerouslySetInnerHTML={{ __html: entity.text }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(entity.text) }}
             />
           );
         default:

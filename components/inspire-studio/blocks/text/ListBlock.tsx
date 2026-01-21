@@ -16,7 +16,7 @@ const LIST_TYPES = {
  */
 export function ListBlock({ block, isEditing, onUpdate }: BlockComponentProps<ListBlockContent>) {
   const content = block.content as ListBlockContent;
-  const [editingItem, setEditingItem] = useState<string | null>(null);
+  const [, setEditingItem] = useState<string | null>(null);
 
   const listType = content.type || 'bullet';
   // Wrapped in useMemo to maintain stable reference
@@ -116,8 +116,6 @@ export function ListBlock({ block, isEditing, onUpdate }: BlockComponentProps<Li
 
   // Render list item
   const renderItem = (item: ListItem, index: number, depth: number = 0) => {
-    const _isEditing_ = editingItem === item.id;
-
     return (
       <li
         key={item.id}

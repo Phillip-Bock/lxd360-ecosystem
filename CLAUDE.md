@@ -1,7 +1,7 @@
 # CLAUDE.md — LXP360-SaaS Development Standards
 
-**Version:** 12.0  
-**Last Updated:** January 11, 2026  
+**Version:** 13.0
+**Last Updated:** January 20, 2026  
 **Classification:** Technical Specification — Investor / Compliance Ready  
 **Company:** LXD360, LLC (SDVOSB)  
 **Migration Status:** ✅ COMPLETE - 100% GCP
@@ -251,14 +251,14 @@ cd C:\GitHub\LXP360-SaaS  # ✅ Correct
 cd ../src                  # ❌ Never assume current directory
 ```
 
-### 2.2 Project Structure (Single Next.js App — NOT a Monorepo)
+### 2.2 Project Structure (TurboRepo Monorepo)
 
-**This is a single Next.js application, NOT a monorepo.**
+**This is a TurboRepo monorepo with shared packages.**
 
-There is no `packages/`, `apps/`, or workspace structure. The `.turbo` folder is build cache only.
+The project uses npm workspaces with TurboRepo for build orchestration. Shared packages live in `packages/` and are consumed by the main Next.js app.
 
 ```
-LXP360-SaaS/
+lxd360-ecosystem/
 ├── .claude/               # Claude Code guardrails (enforced)
 │   ├── settings.json      # Hooks and permissions
 │   └── commands/          # Custom slash commands
@@ -272,13 +272,35 @@ LXP360-SaaS/
 ├── lib/                   # Utilities and services
 │   ├── firebase/          # Firebase client & admin
 │   ├── stripe/            # Stripe integration
-│   └── xapi/              # xAPI/LRS integration
+│   └── xapi/              # xAPI/LRS integration (legacy, use packages)
 ├── hooks/                 # Custom React hooks
 ├── providers/             # React context providers
 ├── types/                 # TypeScript type definitions
 ├── public/                # Static assets
-├── .claude/               # Claude Code configuration
+├── packages/              # Shared monorepo packages
+│   ├── types/             # @inspire/types - Firestore & BigQuery schemas
+│   ├── xapi-client/       # @inspire/xapi-client - xAPI 1.0.3 validation & builder
+│   └── ml/                # @inspire/ml - BKT & SM-2 algorithms
+├── infrastructure/        # Terraform & deployment configs
+│   └── terraform/         # GCP infrastructure as code
+├── functions/             # Cloud Functions
+│   └── process-statement/ # Pub/Sub statement processor
+├── turbo.json             # TurboRepo configuration
 └── CLAUDE.md              # This file (source of truth)
+```
+
+**Monorepo Packages:**
+
+- `@inspire/types` — Zod schemas for Firestore learner data and BigQuery analytics
+- `@inspire/xapi-client` — xAPI 1.0.3 statement validation, builder, and recipes
+- `@inspire/ml` — BKT (Bayesian Knowledge Tracing) and SM-2 (Spaced Repetition) algorithms
+
+**Build Commands:**
+
+```bash
+npm run build:packages    # Build all packages
+npm run build             # Build packages + Next.js app
+npm run dev               # Development mode with turbo
 ```
 
 **Route Group Naming Convention:**
@@ -574,15 +596,19 @@ Region: us-central1
 
 ### 5.2 Firebase Web App Config
 
+> ⚠️ **SECURITY NOTE:** Never hardcode API keys in documentation or code.
+> All Firebase configuration values should come from environment variables.
+
 ```typescript
+// Firebase configuration - values loaded from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyAofpfEisG-fZy6feF_QF2HviP7yRKG9YI",
-  authDomain: "lxd-saas-dev-644bf.firebaseapp.com",
-  projectId: "lxd-saas-dev-644bf",
-  storageBucket: "lxd-saas-dev-644bf.firebasestorage.app",
-  messagingSenderId: "266906655404",
-  appId: "1:266906655404:web:c1900e3d823c5417c31d09",
-  measurementId: "G-3BGJ0WWTBM",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 ```
 
@@ -1388,6 +1414,8 @@ Every session must end with:
 | 2026-01 | Remove Vercel | Cloud Run deploy | — |
 | 2026-01 | "Nice not Twice" | Zero tolerance for shortcuts | — |
 | 2026-01 | Never --no-verify | Hooks are the airlock | — |
+| 2026-01 | TurboRepo Monorepo | Shared packages for LRS | ADR-007 |
+| 2026-01 | INSPIRE LRS | xAPI 1.0.3 + BKT + SM-2 | ADR-008 |
 
 ---
 
@@ -1395,6 +1423,7 @@ Every session must end with:
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 13.0 | 2026-01-20 | Claude + Phill | TurboRepo monorepo conversion, INSPIRE LRS packages (@inspire/types, @inspire/xapi-client, @inspire/ml) |
 | 11.0 | 2026-01-09 | Claude + Phill | "Nice not Twice" philosophy, --no-verify prohibition, archive policy, npm only, Biome linter, a11y requirements |
 | 10.0 | 2026-01-09 | Claude + Phill | Investor/compliance-ready + GCP migration complete |
 | 8.0 | 2026-01-09 | Claude + Phill | GCP migration, removed Supabase |

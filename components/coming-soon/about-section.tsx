@@ -1,15 +1,14 @@
-"use client"
+'use client';
 
-import { motion } from "framer-motion"
-import { useInView } from "framer-motion"
-import { useRef } from "react"
-import { Shield, Award, Lightbulb } from "lucide-react"
-import { GlowingEffect } from "@/components/ui/glowing-effect"
-import { AnimatedLinesBadge } from "@/components/ui/animated-lines-badge"
+import { motion, useInView } from 'framer-motion';
+import { Award, Lightbulb, Shield } from 'lucide-react';
+import { useRef } from 'react';
+import { AnimatedLinesBadge } from '@/components/ui/animated-lines-badge';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 export function AboutSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -19,19 +18,19 @@ export function AboutSection() {
         staggerChildren: 0.2,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  }
+  };
 
   return (
     <section ref={ref} className="bg-black py-24 sm:py-32">
       <motion.div
         variants={containerVariants}
         initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
+        animate={isInView ? 'visible' : 'hidden'}
         className="mx-auto max-w-6xl px-6"
       >
         {/* Section header */}
@@ -43,9 +42,9 @@ export function AboutSection() {
             Transforming How Organizations Learn
           </h2>
           <p className="mx-auto max-w-3xl text-pretty text-lg text-gray-400">
-            LXD360 LLC is a Service-Disabled Veteran-Owned Small Business (SDVOSB) dedicated to revolutionizing
-            corporate learning through innovative technology, neuroscience-based methodologies, and immersive
-            experiences.
+            LXD360 LLC is a Service-Disabled Veteran-Owned Small Business (SDVOSB) dedicated to
+            revolutionizing corporate learning through innovative technology, neuroscience-based
+            methodologies, and immersive experiences.
           </p>
         </motion.div>
 
@@ -60,8 +59,8 @@ export function AboutSection() {
                 </div>
                 <h3 className="mb-3 text-xl font-semibold text-white">Veteran-Owned Excellence</h3>
                 <p className="text-gray-400">
-                  As a certified SDVOSB, we bring military precision, discipline, and commitment to every learning
-                  solution we deliver.
+                  As a certified SDVOSB, we bring military precision, discipline, and commitment to
+                  every learning solution we deliver.
                 </p>
               </div>
             </div>
@@ -76,8 +75,8 @@ export function AboutSection() {
                 </div>
                 <h3 className="mb-3 text-xl font-semibold text-white">Innovation First</h3>
                 <p className="text-gray-400">
-                  We combine cutting-edge AI/ML technology with proven learning science to create experiences that drive
-                  real business outcomes.
+                  We combine cutting-edge AI/ML technology with proven learning science to create
+                  experiences that drive real business outcomes.
                 </p>
               </div>
             </div>
@@ -92,8 +91,8 @@ export function AboutSection() {
                 </div>
                 <h3 className="mb-3 text-xl font-semibold text-white">Measurable Impact</h3>
                 <p className="text-gray-400">
-                  Our integrated analytics and xAPI compliance ensure you can track, measure, and demonstrate the ROI of
-                  your learning investments.
+                  Our integrated analytics and xAPI compliance ensure you can track, measure, and
+                  demonstrate the ROI of your learning investments.
                 </p>
               </div>
             </div>
@@ -101,5 +100,5 @@ export function AboutSection() {
         </motion.div>
       </motion.div>
     </section>
-  )
+  );
 }

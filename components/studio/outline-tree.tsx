@@ -54,16 +54,8 @@ const ITEM_ICONS: Record<OutlineItemType, React.ComponentType<{ className?: stri
   'survey-bank': ClipboardList,
 };
 
-const _ITEM_LABELS: Record<OutlineItemType, string> = {
-  module: 'Module',
-  lesson: 'Lesson',
-  'check-on-learning': 'Check on Learning',
-  scenario: 'Scenario',
-  assessment: 'Assessment',
-  'question-bank': 'Question Bank',
-  survey: 'Survey',
-  'survey-bank': 'Survey Bank',
-};
+// Item labels for type display - used in tooltips/aria-labels
+// module: 'Module', lesson: 'Lesson', etc.
 
 interface SortableModuleProps {
   module: ModuleItem;

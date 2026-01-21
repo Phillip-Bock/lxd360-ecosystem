@@ -145,13 +145,12 @@ export class DesignerAgent {
   private model: ModelId;
   private temperature: number;
   private maxRetries: number;
-  private baseUrl: string;
 
   constructor(config: DesignerAgentConfig = {}) {
     this.model = (config.model as ModelId) ?? DEFAULT_MODEL;
     this.temperature = config.temperature ?? DEFAULT_TEMPERATURE;
     this.maxRetries = config.maxRetries ?? DEFAULT_MAX_RETRIES;
-    this.baseUrl = config.baseUrl ?? 'https://lxd360.com';
+    // Note: config.baseUrl available for future API endpoint customization
   }
 
   /**

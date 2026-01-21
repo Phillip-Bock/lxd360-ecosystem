@@ -1,0 +1,38 @@
+{
+  "name": "@inspire/ml",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./bkt": {
+      "types": "./dist/bkt/index.d.ts",
+      "import": "./dist/bkt/index.js",
+      "require": "./dist/bkt/index.js"
+    },
+    "./sm2": {
+      "types": "./dist/sm2/index.d.ts",
+      "import": "./dist/sm2/index.js",
+      "require": "./dist/sm2/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@inspire/types": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.9"
+  }
+}

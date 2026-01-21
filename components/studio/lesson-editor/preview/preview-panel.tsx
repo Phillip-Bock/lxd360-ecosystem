@@ -98,7 +98,6 @@ export function PreviewPanel({ blocks, lessonTitle, onClose }: PreviewPanelProps
   const [isRotated, setIsRotated] = useState(false);
 
   const currentDevice = DEVICES[device];
-  const _DeviceIcon = currentDevice.icon;
 
   const frameDimensions = useMemo(() => {
     const baseWidth = isRotated ? currentDevice.height : currentDevice.width;

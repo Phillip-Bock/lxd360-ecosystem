@@ -12,16 +12,16 @@
 
 import { getFirestore } from 'firebase-admin/firestore';
 import type { FluencyZone, Modality } from './cognitive-utils';
-import { 
-  shouldTriggerCognitiveLoadIntervention,
+import {
   DEFAULT_INTERVENTION_THRESHOLDS,
+  shouldTriggerCognitiveLoadIntervention,
 } from './cognitive-utils';
 
 // ----------------------------------------------------------------------------
 // TYPE DEFINITIONS
 // ----------------------------------------------------------------------------
 
-export type InterventionType = 
+export type InterventionType =
   | 'modality_swap'
   | 'difficulty_adjust'
   | 'break_suggestion'
@@ -79,21 +79,21 @@ const INTERVENTION_CONFIG = {
   struggle_streak_critical: 4,
   incorrect_streak_warning: 3,
   incorrect_streak_critical: 5,
-  
+
   // Session thresholds
   session_duration_break_suggest: 45, // minutes
   interactions_before_break_check: 30,
-  
+
   // Cognitive thresholds
   cognitive_load_high: 7,
   cognitive_load_critical: 9,
   frustration_index_warning: 0.6,
   frustration_index_critical: 0.8,
-  
+
   // Cooldown periods (prevent intervention spam)
   min_interval_same_type_minutes: 5,
   min_interval_any_type_minutes: 2,
-  
+
   // Encouragement triggers
   correct_streak_for_encouragement: 5,
   score_threshold_for_praise: 0.9,
@@ -105,47 +105,44 @@ const INTERVENTION_CONFIG = {
 
 /**
  * Check if an intervention should be triggered based on current learner state
- * 
+ *
  * This function evaluates multiple signals:
  * 1. Cognitive load levels
  * 2. Fluency zone patterns
  * 3. Streak patterns (struggle, incorrect)
  * 4. Session duration and fatigue
  * 5. Frustration signals
- * 
+ *
  * @param input - Current interaction context
  * @returns Intervention to trigger, or null if none needed
  */
 export async function checkInterventionTriggers(
-  input: InterventionCheckInput
+  input: InterventionCheckInput,
 ): Promise<Intervention | null> {
   // Get learner's current session state
-  const learnerState = await getLearnerSessionState(
-    input.tenantId, 
-    input.learnerId
-  );
-  
+  const learnerState = await getLearnerSessionState(input.tenantId, input.learnerId);
+
   // Update state with current interaction
   const updatedState = updateStateWithInteraction(learnerState, input);
-  
+
   // Check if we're in cooldown from recent intervention
   if (await isInCooldown(input.tenantId, input.learnerId)) {
     // Still save the updated state
     await saveLearnerSessionState(input.tenantId, input.learnerId, updatedState);
     return null;
   }
-  
+
   // Evaluate intervention triggers in priority order
   const intervention = evaluateInterventionTriggers(input, updatedState);
-  
+
   // Save updated state
   await saveLearnerSessionState(input.tenantId, input.learnerId, updatedState);
-  
+
   // Log intervention if triggered
   if (intervention) {
     await logInterventionTrigger(input, intervention);
   }
-  
+
   return intervention;
 }
 
@@ -154,20 +151,20 @@ export async function checkInterventionTriggers(
  */
 function evaluateInterventionTriggers(
   input: InterventionCheckInput,
-  state: LearnerState
+  state: LearnerState,
 ): Intervention | null {
   const candidates: Intervention[] = [];
-  
+
   // 1. CRITICAL: Cognitive overload check
   const cognitiveCheck = shouldTriggerCognitiveLoadIntervention(
     input.cognitiveLoad,
-    DEFAULT_INTERVENTION_THRESHOLDS
+    DEFAULT_INTERVENTION_THRESHOLDS,
   );
-  
+
   if (cognitiveCheck.level === 'critical') {
     candidates.push({
       type: 'cognitive_offload',
-      reason: 'Your cognitive load is very high. Let\'s simplify.',
+      reason: "Your cognitive load is very high. Let's simplify.",
       priority: 'critical',
       suggested_action: 'break_content_into_chunks',
     });
@@ -178,7 +175,7 @@ function evaluateInterventionTriggers(
       priority: 'high',
     });
   }
-  
+
   // 2. HIGH: Struggle streak detection
   if (state.struggle_streak >= INTERVENTION_CONFIG.struggle_streak_critical) {
     candidates.push({
@@ -190,11 +187,11 @@ function evaluateInterventionTriggers(
   } else if (state.struggle_streak >= INTERVENTION_CONFIG.struggle_streak_warning) {
     candidates.push({
       type: 'scaffold',
-      reason: 'Let\'s slow down and review the foundations.',
+      reason: "Let's slow down and review the foundations.",
       priority: 'medium',
     });
   }
-  
+
   // 3. HIGH: Incorrect streak detection
   if (state.incorrect_streak >= INTERVENTION_CONFIG.incorrect_streak_critical) {
     candidates.push({
@@ -206,11 +203,11 @@ function evaluateInterventionTriggers(
   } else if (state.incorrect_streak >= INTERVENTION_CONFIG.incorrect_streak_warning) {
     candidates.push({
       type: 'difficulty_adjust',
-      reason: 'This might be too challenging right now. Let\'s try something easier.',
+      reason: "This might be too challenging right now. Let's try something easier.",
       priority: 'medium',
     });
   }
-  
+
   // 4. MEDIUM: Frustration detection
   if (state.frustration_index >= INTERVENTION_CONFIG.frustration_index_critical) {
     candidates.push({
@@ -221,17 +218,17 @@ function evaluateInterventionTriggers(
   } else if (state.frustration_index >= INTERVENTION_CONFIG.frustration_index_warning) {
     candidates.push({
       type: 'encouragement',
-      reason: 'Learning takes effort. You\'re making progress even when it feels hard.',
+      reason: "Learning takes effort. You're making progress even when it feels hard.",
       priority: 'medium',
     });
   }
-  
+
   // 5. MEDIUM: Session duration / fatigue check
   if (state.session_duration_minutes >= INTERVENTION_CONFIG.session_duration_break_suggest) {
-    const minutesSinceBreak = state.last_break_at 
-      ? (Date.now() - state.last_break_at.getTime()) / 60000 
+    const minutesSinceBreak = state.last_break_at
+      ? (Date.now() - state.last_break_at.getTime()) / 60000
       : state.session_duration_minutes;
-    
+
     if (minutesSinceBreak >= INTERVENTION_CONFIG.session_duration_break_suggest) {
       candidates.push({
         type: 'break_suggestion',
@@ -240,23 +237,25 @@ function evaluateInterventionTriggers(
       });
     }
   }
-  
+
   // 6. LOW: Positive reinforcement (encouragement)
-  if (input.statement.result?.success && 
-      input.statement.result?.score?.scaled && 
-      input.statement.result.score.scaled >= INTERVENTION_CONFIG.score_threshold_for_praise) {
+  if (
+    input.statement.result?.success &&
+    input.statement.result?.score?.scaled &&
+    input.statement.result.score.scaled >= INTERVENTION_CONFIG.score_threshold_for_praise
+  ) {
     candidates.push({
       type: 'encouragement',
-      reason: 'Excellent work! You\'re demonstrating strong mastery.',
+      reason: "Excellent work! You're demonstrating strong mastery.",
       priority: 'low',
     });
   }
-  
+
   // Return highest priority intervention
   if (candidates.length === 0) {
     return null;
   }
-  
+
   // Sort by priority
   const priorityOrder: Record<Intervention['priority'], number> = {
     critical: 0,
@@ -264,9 +263,9 @@ function evaluateInterventionTriggers(
     medium: 2,
     low: 3,
   };
-  
+
   candidates.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
-  
+
   return candidates[0];
 }
 
@@ -277,19 +276,16 @@ function evaluateInterventionTriggers(
 /**
  * Get learner's current session state from Firestore
  */
-async function getLearnerSessionState(
-  tenantId: string,
-  learnerId: string
-): Promise<LearnerState> {
+async function getLearnerSessionState(tenantId: string, learnerId: string): Promise<LearnerState> {
   const db = getFirestore();
   const sessionRef = db
     .collection('tenants')
     .doc(tenantId)
     .collection('learner_sessions')
     .doc(learnerId);
-  
+
   const doc = await sessionRef.get();
-  
+
   if (!doc.exists) {
     // Return default state for new session
     return {
@@ -301,7 +297,7 @@ async function getLearnerSessionState(
       frustration_index: 0,
     };
   }
-  
+
   return doc.data() as LearnerState;
 }
 
@@ -310,58 +306,55 @@ async function getLearnerSessionState(
  */
 function updateStateWithInteraction(
   state: LearnerState,
-  input: InterventionCheckInput
+  input: InterventionCheckInput,
 ): LearnerState {
   const newState = { ...state };
-  
+
   // Update interaction count
   newState.interactions_this_session++;
-  
+
   // Update streaks based on fluency zone
   if (input.fluencyZone === 'struggle') {
     newState.struggle_streak++;
   } else {
     newState.struggle_streak = 0;
   }
-  
+
   // Update incorrect streak
   if (input.statement.result?.success === false) {
     newState.incorrect_streak++;
   } else if (input.statement.result?.success === true) {
     newState.incorrect_streak = 0;
   }
-  
+
   // Update rolling average cognitive load
   const alpha = 0.2; // Exponential smoothing factor
-  newState.avg_cognitive_load_session = 
+  newState.avg_cognitive_load_session =
     alpha * input.cognitiveLoad + (1 - alpha) * newState.avg_cognitive_load_session;
-  
+
   // Update frustration index (based on struggle streaks and cognitive load)
   newState.frustration_index = calculateFrustrationIndex(newState, input);
-  
+
   return newState;
 }
 
 /**
  * Calculate frustration index based on multiple signals
  */
-function calculateFrustrationIndex(
-  state: LearnerState,
-  input: InterventionCheckInput
-): number {
+function calculateFrustrationIndex(state: LearnerState, input: InterventionCheckInput): number {
   let index = 0;
-  
+
   // Struggle streak contribution
   index += Math.min(state.struggle_streak * 0.15, 0.45);
-  
+
   // Incorrect streak contribution
   index += Math.min(state.incorrect_streak * 0.1, 0.3);
-  
+
   // Cognitive load contribution
   if (input.cognitiveLoad > 7) {
     index += (input.cognitiveLoad - 7) * 0.1;
   }
-  
+
   return Math.min(1, index);
 }
 
@@ -371,7 +364,7 @@ function calculateFrustrationIndex(
 async function saveLearnerSessionState(
   tenantId: string,
   learnerId: string,
-  state: LearnerState
+  state: LearnerState,
 ): Promise<void> {
   const db = getFirestore();
   const sessionRef = db
@@ -379,35 +372,31 @@ async function saveLearnerSessionState(
     .doc(tenantId)
     .collection('learner_sessions')
     .doc(learnerId);
-  
+
   await sessionRef.set(state, { merge: true });
 }
 
 /**
  * Check if learner is in intervention cooldown
  */
-async function isInCooldown(
-  tenantId: string,
-  learnerId: string
-): Promise<boolean> {
+async function isInCooldown(tenantId: string, learnerId: string): Promise<boolean> {
   const db = getFirestore();
   const recentRef = db
     .collection('tenants')
     .doc(tenantId)
     .collection('recent_interventions')
     .doc(learnerId);
-  
+
   const doc = await recentRef.get();
   if (!doc.exists) return false;
-  
+
   const data = doc.data();
   const lastInterventionAt = data?.last_intervention_at?.toDate();
-  
+
   if (!lastInterventionAt) return false;
-  
-  const minutesSinceLastIntervention = 
-    (Date.now() - lastInterventionAt.getTime()) / 60000;
-  
+
+  const minutesSinceLastIntervention = (Date.now() - lastInterventionAt.getTime()) / 60000;
+
   return minutesSinceLastIntervention < INTERVENTION_CONFIG.min_interval_any_type_minutes;
 }
 
@@ -416,29 +405,29 @@ async function isInCooldown(
  */
 async function logInterventionTrigger(
   input: InterventionCheckInput,
-  intervention: Intervention
+  intervention: Intervention,
 ): Promise<void> {
   const db = getFirestore();
-  
+
   // Update cooldown tracker
   const recentRef = db
     .collection('tenants')
     .doc(input.tenantId)
     .collection('recent_interventions')
     .doc(input.learnerId);
-  
+
   await recentRef.set({
     last_intervention_at: new Date(),
     last_intervention_type: intervention.type,
   });
-  
+
   // Log to intervention history
   const historyRef = db
     .collection('tenants')
     .doc(input.tenantId)
     .collection('intervention_history')
     .doc();
-  
+
   await historyRef.set({
     learner_id: input.learnerId,
     intervention_type: intervention.type,
@@ -470,7 +459,7 @@ function suggestAlternativeModality(current?: Modality): Modality {
     reflective: 'social_async',
     contextual_situated: 'visual',
   };
-  
+
   return current ? modalityFallbacks[current] : 'visual';
 }
 

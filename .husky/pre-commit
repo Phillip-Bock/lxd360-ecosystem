@@ -115,19 +115,20 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# 3. Run Biome check on staged files only
+# 3. Run Biome check on staged files only (batched to avoid command line length limits)
 echo ""
 echo "Running Biome on staged files..."
 
 if [ -n "$STAGED_FILES" ]; then
-  echo "$STAGED_FILES" | xargs npx biome check --no-errors-on-unmatched
+  # Use xargs with -n to batch files and avoid command line too long error
+  echo "$STAGED_FILES" | xargs -n 50 npx biome check --no-errors-on-unmatched
 
   if [ $? -ne 0 ]; then
     echo ""
     echo "COMMIT BLOCKED: Biome errors found in staged files!"
     echo ""
     echo "Fix all lint errors before committing."
-    echo "Run: pnpm lint:fix"
+    echo "Run: npm run lint:fix"
     exit 1
   fi
 else

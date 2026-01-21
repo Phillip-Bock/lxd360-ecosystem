@@ -7,7 +7,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Eye, Headphones, FileText, Hand, RefreshCw } from 'lucide-react';
+import { Eye, FileText, Hand, Headphones, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Modality } from '@/lib/xapi/cognitive-utils';
 
@@ -32,8 +32,8 @@ export interface ModalitySwapperProps {
 // CONFIGURATION
 // ----------------------------------------------------------------------------
 
-const MODALITY_CONFIG: Record<
-  'visual' | 'auditory' | 'textual' | 'kinesthetic', 
+export const MODALITY_CONFIG: Record<
+  'visual' | 'auditory' | 'textual' | 'kinesthetic',
   { icon: typeof Eye; label: string; color: string }
 > = {
   visual: { icon: Eye, label: 'Visual', color: 'text-blue-500' },
@@ -55,11 +55,11 @@ export function ModalitySwapper({
 }: ModalitySwapperProps) {
   // Filter to only supported modalities for display
   const displayModalities = availableModalities.filter(
-    (m): m is keyof typeof MODALITY_CONFIG => m in MODALITY_CONFIG
+    (m): m is keyof typeof MODALITY_CONFIG => m in MODALITY_CONFIG,
   );
 
   return (
-    <div 
+    <div
       className={cn('flex items-center gap-2', className)}
       role="radiogroup"
       aria-label="Learning modality selection"
@@ -69,7 +69,7 @@ export function ModalitySwapper({
         const Icon = config.icon;
         const isActive = modality === currentModality;
         const isSuggested = modality === suggestedModality && !isActive;
-        
+
         return (
           <button
             key={modality}
@@ -84,17 +84,14 @@ export function ModalitySwapper({
                 ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/30'
                 : isSuggested
                   ? 'border-dashed border-yellow-400 bg-yellow-50 dark:bg-yellow-900/20'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600',
             )}
           >
-            <Icon 
-              className={cn(
-                'h-5 w-5 transition-colors',
-                isActive ? config.color : 'text-gray-400'
-              )} 
+            <Icon
+              className={cn('h-5 w-5 transition-colors', isActive ? config.color : 'text-gray-400')}
               aria-hidden="true"
             />
-            
+
             {/* Suggested badge */}
             {isSuggested && (
               <motion.div

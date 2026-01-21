@@ -3,7 +3,8 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'LXD Nexus | Community Hub',
-  description: 'Join the LXD360 community. Connect with learning experience designers, share insights, and grow together.',
+  description:
+    'Join the LXD360 community. Connect with learning experience designers, share insights, and grow together.',
 };
 
 export default function NexusPage() {
@@ -20,8 +21,8 @@ export default function NexusPage() {
           LXD Nexus
         </h1>
         <p className="text-xl text-lxd-text-dark/70 dark:text-lxd-text-light/70 mb-12 max-w-2xl mx-auto">
-          The professional community for learning experience designers. 
-          Connect, collaborate, and elevate your craft.
+          The professional community for learning experience designers. Connect, collaborate, and
+          elevate your craft.
         </p>
 
         {/* Features Preview */}

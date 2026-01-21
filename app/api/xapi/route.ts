@@ -2,9 +2,9 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 const DEPRECATION_HEADERS = {
   'X-API-Deprecation': 'This endpoint is deprecated. Use /api/v1/xapi',
-  'X-API-Sunset': '2025-06-01',
+  'X-API-Sunset': '2026-06-01',
   Deprecation: 'true',
-  Sunset: 'Sun, 01 Jun 2025 00:00:00 GMT',
+  Sunset: 'Mon, 01 Jun 2026 00:00:00 GMT',
   'X-Experience-API-Version': '1.0.3',
 };
 

@@ -1,74 +1,65 @@
-"use client"
+'use client';
 
-import { motion } from "framer-motion"
-import { useInView } from "framer-motion"
-import { useRef } from "react"
-import {
-  Shield,
-  FileCheck,
-  Eye,
-  Scale,
-  Server,
-  KeyRound,
-  CheckCircle2,
-} from "lucide-react"
-import { AnimatedLinesBadge } from "@/components/ui/animated-lines-badge"
-import { GlowingEffect } from "@/components/ui/glowing-effect"
+import { motion, useInView } from 'framer-motion';
+import { CheckCircle2, Eye, FileCheck, KeyRound, Scale, Server, Shield } from 'lucide-react';
+import { useRef } from 'react';
+import { AnimatedLinesBadge } from '@/components/ui/animated-lines-badge';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 const complianceItems = [
   {
     icon: Shield,
-    title: "SOC 2 Type II Ready",
-    description: "Built with SOC 2 Type II compliance architecture from day one",
+    title: 'SOC 2 Type II Ready',
+    description: 'Built with SOC 2 Type II compliance architecture from day one',
   },
   {
     icon: Server,
-    title: "FedRAMP Ready",
-    description: "Enterprise-grade security with FedRAMP-ready architecture",
+    title: 'FedRAMP Ready',
+    description: 'Enterprise-grade security with FedRAMP-ready architecture',
   },
   {
     icon: Eye,
-    title: "WCAG 2.2 AA",
-    description: "Full accessibility compliance for inclusive learning",
+    title: 'WCAG 2.2 AA',
+    description: 'Full accessibility compliance for inclusive learning',
   },
   {
     icon: FileCheck,
-    title: "Section 508",
-    description: "Federal accessibility standards compliance",
+    title: 'Section 508',
+    description: 'Federal accessibility standards compliance',
   },
   {
     icon: Scale,
-    title: "GDPR/CCPA",
-    description: "Privacy-first design meeting global data regulations",
+    title: 'GDPR/CCPA',
+    description: 'Privacy-first design meeting global data regulations',
   },
   {
     icon: KeyRound,
-    title: "HIPAA Support",
-    description: "Healthcare-ready with HIPAA compliance capabilities",
+    title: 'HIPAA Support',
+    description: 'Healthcare-ready with HIPAA compliance capabilities',
   },
-]
+];
 
 const standards = [
-  "xAPI (Experience API)",
-  "SCORM 1.2 & 2004",
-  "cmi5",
-  "LTI 1.3",
-  "SSO/SAML 2.0",
-  "OAuth 2.0",
-]
+  'xAPI (Experience API)',
+  'SCORM 1.2 & 2004',
+  'cmi5',
+  'LTI 1.3',
+  'SSO/SAML 2.0',
+  'OAuth 2.0',
+];
 
 const techStack = [
-  "Google Cloud Platform",
-  "Firebase Auth",
-  "Cloud SQL",
-  "Firestore",
-  "BigQuery Analytics",
-  "Vertex AI",
-]
+  'Google Cloud Platform',
+  'Firebase Auth',
+  'Cloud SQL',
+  'Firestore',
+  'BigQuery Analytics',
+  'Vertex AI',
+];
 
 export function ComplianceSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -78,19 +69,19 @@ export function ComplianceSection() {
         staggerChildren: 0.08,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  }
+  };
 
   return (
     <section ref={ref} className="bg-black py-24 sm:py-32">
       <motion.div
         variants={containerVariants}
         initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
+        animate={isInView ? 'visible' : 'hidden'}
         className="mx-auto max-w-6xl px-6"
       >
         {/* Section header */}
@@ -102,12 +93,16 @@ export function ComplianceSection() {
             Built for SOC 2 Compliance
           </h2>
           <p className="mx-auto max-w-3xl text-pretty text-lg text-gray-400">
-            Enterprise-grade security with FedRAMP-ready architecture, comprehensive compliance support, and modern tech stack that eliminates technical debt.
+            Enterprise-grade security with FedRAMP-ready architecture, comprehensive compliance
+            support, and modern tech stack that eliminates technical debt.
           </p>
         </motion.div>
 
         {/* Compliance grid */}
-        <motion.div variants={containerVariants} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-12">
+        <motion.div
+          variants={containerVariants}
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-12"
+        >
           {complianceItems.map((item) => (
             <motion.div key={item.title} variants={itemVariants}>
               <div className="relative h-full rounded-2xl border border-blue-900/30 p-2 md:rounded-3xl md:p-2">
@@ -171,5 +166,5 @@ export function ComplianceSection() {
         </motion.div>
       </motion.div>
     </section>
-  )
+  );
 }

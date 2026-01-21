@@ -1,23 +1,27 @@
-"use client"
+'use client';
 
-import type React from "react"
-
-import { cn } from "@/lib/utils"
-import { motion } from "framer-motion"
+import { motion } from 'framer-motion';
+import type React from 'react';
+import { cn } from '@/lib/utils';
 
 interface TextShimmerProps {
-  children: React.ReactNode
-  className?: string
-  shimmerColor?: string
-  duration?: number
+  children: React.ReactNode;
+  className?: string;
+  shimmerColor?: string;
+  duration?: number;
 }
 
-export function TextShimmer({ children, className, shimmerColor = "#3b82f6", duration = 2.5 }: TextShimmerProps) {
+export function TextShimmer({
+  children,
+  className,
+  shimmerColor = '#3b82f6',
+  duration = 2.5,
+}: TextShimmerProps) {
   return (
     <motion.span
       className={cn(
-        "relative inline-block bg-clip-text text-transparent",
-        "bg-gradient-to-r from-white via-white to-white",
+        'relative inline-block bg-clip-text text-transparent',
+        'bg-gradient-to-r from-white via-white to-white',
         className,
       )}
       style={{
@@ -31,18 +35,18 @@ export function TextShimmer({ children, className, shimmerColor = "#3b82f6", dur
           #fff 65%,
           #fff 100%
         )`,
-        backgroundSize: "200% 100%",
+        backgroundSize: '200% 100%',
       }}
       animate={{
-        backgroundPosition: ["100% 0%", "-100% 0%"],
+        backgroundPosition: ['100% 0%', '-100% 0%'],
       }}
       transition={{
         duration,
         repeat: Number.POSITIVE_INFINITY,
-        ease: "linear",
+        ease: 'linear',
       }}
     >
       {children}
     </motion.span>
-  )
+  );
 }

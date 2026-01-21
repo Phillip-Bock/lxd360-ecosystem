@@ -73,7 +73,6 @@ export class XRManager {
   // Comfort
   private vignette: THREE.Mesh | null = null;
   private vignetteIntensity = 0;
-  private snapTurnAngle = 0;
 
   constructor(
     renderer: THREE.WebGLRenderer,

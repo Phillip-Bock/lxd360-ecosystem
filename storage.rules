@@ -1,0 +1,184 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ========================================
+    // Helper Functions
+    // ========================================
+
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Get user's tenant ID from custom claims
+    function getUserTenantId() {
+      return request.auth.token.tenantId;
+    }
+
+    // Check if user belongs to the tenant
+    function belongsToTenant(tenantId) {
+      return isAuthenticated() && getUserTenantId() == tenantId;
+    }
+
+    // Check user role level
+    function getRoleLevel() {
+      return request.auth.token.roleLevel;
+    }
+
+    // Check if user is author or above (role level 50+)
+    function isAuthor() {
+      return isAuthenticated() && getRoleLevel() >= 50;
+    }
+
+    // Check if user is super admin
+    function isSuperAdmin() {
+      return isAuthenticated() && getRoleLevel() >= 100;
+    }
+
+    // Validate file size (max 100MB)
+    function isValidSize() {
+      return request.resource.size < 100 * 1024 * 1024;
+    }
+
+    // Validate image content type
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    // Validate video content type
+    function isVideo() {
+      return request.resource.contentType.matches('video/.*');
+    }
+
+    // Validate audio content type
+    function isAudio() {
+      return request.resource.contentType.matches('audio/.*');
+    }
+
+    // Validate document content type
+    function isDocument() {
+      return request.resource.contentType.matches('application/pdf')
+             || request.resource.contentType.matches('application/msword')
+             || request.resource.contentType.matches('application/vnd.*');
+    }
+
+    // Validate allowed content types
+    function isAllowedType() {
+      return isImage() || isVideo() || isAudio() || isDocument();
+    }
+
+    // ========================================
+    // Default Deny
+    // ========================================
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // ========================================
+    // Tenant-Scoped Media Assets
+    // Pattern: {tenantId}/{assetType}/{year}/{month}/{filename}
+    // ========================================
+
+    match /{tenantId}/{assetType}/{year}/{month}/{filename} {
+      // Tenant members can read their own assets
+      allow read: if belongsToTenant(tenantId) || isSuperAdmin();
+
+      // Authors can upload to their tenant
+      allow create: if belongsToTenant(tenantId)
+                    && isAuthor()
+                    && isValidSize()
+                    && isAllowedType();
+
+      // Authors can update (replace) files
+      allow update: if belongsToTenant(tenantId)
+                    && isAuthor()
+                    && isValidSize()
+                    && isAllowedType();
+
+      // Authors can delete their tenant's assets
+      allow delete: if belongsToTenant(tenantId) && isAuthor();
+    }
+
+    // ========================================
+    // Course-Scoped Assets
+    // Pattern: {tenantId}/{courseId}/{filename}
+    // ========================================
+
+    match /{tenantId}/{courseId}/{filename} {
+      allow read: if belongsToTenant(tenantId) || isSuperAdmin();
+
+      allow create: if belongsToTenant(tenantId)
+                    && isAuthor()
+                    && isValidSize()
+                    && isAllowedType();
+
+      allow update: if belongsToTenant(tenantId)
+                    && isAuthor()
+                    && isValidSize()
+                    && isAllowedType();
+
+      allow delete: if belongsToTenant(tenantId) && isAuthor();
+    }
+
+    // ========================================
+    // User Profile Pictures
+    // Pattern: users/{userId}/profile/{filename}
+    // ========================================
+
+    match /users/{userId}/profile/{filename} {
+      // Anyone can read profile pictures
+      allow read: if true;
+
+      // Users can upload their own profile picture
+      allow create, update: if isAuthenticated()
+                            && request.auth.uid == userId
+                            && isImage()
+                            && request.resource.size < 5 * 1024 * 1024; // 5MB max for profile pics
+
+      // Users can delete their own profile picture
+      allow delete: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ========================================
+    // Organization Branding
+    // Pattern: organizations/{orgId}/branding/{filename}
+    // ========================================
+
+    match /organizations/{orgId}/branding/{filename} {
+      // Anyone can read organization branding (logos, etc.)
+      allow read: if true;
+
+      // Only org admins can manage branding
+      allow create, update: if belongsToTenant(orgId)
+                            && getRoleLevel() >= 80
+                            && isImage()
+                            && request.resource.size < 10 * 1024 * 1024; // 10MB max
+
+      allow delete: if belongsToTenant(orgId) && getRoleLevel() >= 80;
+    }
+
+    // ========================================
+    // Temporary Uploads (Processing Queue)
+    // Pattern: temp/{userId}/{filename}
+    // ========================================
+
+    match /temp/{userId}/{filename} {
+      // Users can read their own temp files
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+
+      // Users can upload to their temp folder
+      allow create: if isAuthenticated()
+                    && request.auth.uid == userId
+                    && isValidSize()
+                    && isAllowedType();
+
+      // Users can delete their temp files
+      allow delete: if isAuthenticated() && request.auth.uid == userId;
+
+      // No updates to temp files
+      allow update: if false;
+    }
+  }
+}

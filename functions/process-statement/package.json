@@ -1,0 +1,19 @@
+{
+  "name": "@inspire/function-process-statement",
+  "version": "1.0.0",
+  "description": "Cloud Function for processing xAPI statements",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "deploy": "gcloud functions deploy process-xapi-statement --gen2 --runtime=nodejs20 --trigger-topic=xapi-statements --entry-point=processStatement"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^7.0.0",
+    "@google-cloud/pubsub": "^4.0.0",
+    "@google-cloud/functions-framework": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

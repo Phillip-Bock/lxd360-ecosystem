@@ -3,7 +3,8 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Cortex | LXD360 Blog',
-  description: 'Insights on learning experience design, neuroscience, and educational technology from LXD360.',
+  description:
+    'Insights on learning experience design, neuroscience, and educational technology from LXD360.',
 };
 
 export default function CortexPage() {
@@ -20,8 +21,8 @@ export default function CortexPage() {
           INSPIRE Cortex
         </h1>
         <p className="text-xl text-lxd-text-dark/70 dark:text-lxd-text-light/70 mb-12 max-w-2xl mx-auto">
-          Thought leadership on learning experience design, cognitive science, and the future of education.
-          Powered by our Medium publication.
+          Thought leadership on learning experience design, cognitive science, and the future of
+          education. Powered by our Medium publication.
         </p>
 
         {/* Placeholder Categories */}
