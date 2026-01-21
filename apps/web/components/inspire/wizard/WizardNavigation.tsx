@@ -6,12 +6,12 @@ import type { ExperienceLevel } from '@/lib/inspire/types/inspire-types';
 
 import {
   calculateProgress,
+  type ExtendedWizardStep,
   estimateTimeRemaining,
   getPhaseForStep,
   WIZARD_PHASES,
   WIZARD_STEPS,
   type WizardPhase,
-  type WizardStepConfig,
 } from '@/lib/inspire/types/wizard-config';
 import { useAccessibility } from '../accessibility/AccessibilityProvider';
 
@@ -188,7 +188,7 @@ function determineStepStatus(
   stepNumber: number,
   stepStatuses: Map<number, StepStatusData>,
   currentStep: number,
-  stepConfig: WizardStepConfig,
+  stepConfig: ExtendedWizardStep,
 ): StepStatus {
   // Check if this is the current step
   if (stepNumber === currentStep) {
@@ -205,7 +205,7 @@ function determineStepStatus(
   }
 
   // Check prerequisites
-  const prerequisitesMet = stepConfig.prerequisites.every((prereq) => {
+  const prerequisitesMet = stepConfig.prerequisites.every((prereq: number) => {
     const prereqStatus = stepStatuses.get(prereq);
     return prereqStatus?.status === 'completed' || prereqStatus?.status === 'skipped';
   });
@@ -225,13 +225,26 @@ function calculatePhaseProgress(
   phase: WizardPhase,
   stepStatuses: Map<number, StepStatusData>,
 ): number {
-  const phaseSteps = WIZARD_STEPS.filter((step) => step.phase === phase.number);
+  const phaseSteps = WIZARD_STEPS.filter((step) => step.phase === phase.phaseNumber);
   const completedSteps = phaseSteps.filter((step) => {
-    const status = stepStatuses.get(step.number);
+    const status = stepStatuses.get(step.stepNumber);
     return status?.status === 'completed' || status?.status === 'skipped';
   });
 
-  return (completedSteps.length / phaseSteps.length) * 100;
+  return phaseSteps.length > 0 ? (completedSteps.length / phaseSteps.length) * 100 : 0;
+}
+
+/**
+ * Convert step statuses map to completed steps array for helper functions
+ */
+function getCompletedStepsArray(stepStatuses: Map<number, StepStatusData>): number[] {
+  const completed: number[] = [];
+  stepStatuses.forEach((data, stepNum) => {
+    if (data.status === 'completed' || data.status === 'skipped') {
+      completed.push(stepNum);
+    }
+  });
+  return completed;
 }
 
 // ============================================================================
@@ -243,7 +256,7 @@ function calculatePhaseProgress(
  * Shows the status of a single step with accessibility support
  */
 interface StepIndicatorProps {
-  step: WizardStepConfig;
+  step: ExtendedWizardStep;
   status: StepStatus;
   isActive: boolean;
   onClick: () => void;
@@ -266,14 +279,14 @@ function StepIndicator({
   compact = false,
 }: StepIndicatorProps): React.JSX.Element {
   const styles = STATUS_STYLES[status];
-  const phase = getPhaseForStep(step.number);
-  const phaseColors = PHASE_COLORS[phase?.number || 1];
+  const phase = getPhaseForStep(step.stepNumber);
+  const phaseColors = PHASE_COLORS[phase?.phaseNumber || 1];
 
   // Determine if clickable
   const isClickable = !disabled && status !== 'locked';
 
   // Get time estimate for this step
-  const timeEstimate = step.estimatedMinutes[experienceLevel];
+  const timeEstimate = step.timeByLevel[experienceLevel];
 
   return (
     <button
@@ -288,7 +301,7 @@ function StepIndicator({
         ${status === 'locked' ? 'opacity-60' : ''}
         focus:outline-hidden focus:ring-2 focus:ring-brand-primary focus:ring-offset-2
       `}
-      aria-label={`Step ${step.number}: ${step.title}. ${styles.label}`}
+      aria-label={`Step ${step.stepNumber}: ${step.name}. ${styles.label}`}
       aria-current={isActive ? 'step' : undefined}
     >
       {/* Step number circle */}
@@ -313,7 +326,7 @@ function StepIndicator({
         ) : status === 'skipped' ? (
           <span aria-hidden="true">⏭️</span>
         ) : (
-          <span className={status === 'locked' ? 'text-brand-muted' : ''}>{step.number}</span>
+          <span>{step.stepNumber}</span>
         )}
       </div>
 
@@ -326,23 +339,27 @@ function StepIndicator({
             ${status === 'locked' ? 'text-brand-muted' : 'text-brand-primary dark:text-brand-primary'}
           `}
           >
-            {step.title}
+            {step.name}
           </div>
 
           {!compact && (
             <div className="flex items-center gap-2 text-sm text-brand-muted dark:text-lxd-muted">
               {/* ILA Tools badge */}
-              <span className="truncate">{step.ilaTools.join(', ')}</span>
+              <span className="truncate">{step.tools.join(', ')}</span>
 
               {/* Time estimate */}
-              {showTimeEstimate && <span className="shrink-0">• {timeEstimate} min</span>}
+              {showTimeEstimate && (
+                <span className="shrink-0">
+                  • {timeEstimate.min}-{timeEstimate.max} min
+                </span>
+              )}
             </div>
           )}
         </div>
       )}
 
       {/* Optional indicator */}
-      {step.isOptional && (
+      {!step.required && (
         <span
           className="px-2 py-1 text-xs bg-gray-200 dark:bg-brand-surface-hover rounded-full"
           title="This step is optional"
@@ -373,7 +390,7 @@ function PhaseHeader({
   onToggle,
   isCurrentPhase,
 }: PhaseHeaderProps): React.JSX.Element {
-  const colors = PHASE_COLORS[phase.number];
+  const colors = PHASE_COLORS[phase.phaseNumber];
 
   return (
     <button
@@ -388,7 +405,7 @@ function PhaseHeader({
         ${isCurrentPhase ? `border-2 ${colors.border}` : ''}
       `}
       aria-expanded={isExpanded}
-      aria-controls={`phase-${phase.number}-content`}
+      aria-controls={`phase-${phase.phaseNumber}-content`}
     >
       {/* Phase icon */}
       <span className="text-2xl" aria-hidden="true">
@@ -398,7 +415,7 @@ function PhaseHeader({
       {/* Phase info */}
       <div className="flex-1 text-left">
         <div className={`font-semibold ${colors.text}`}>
-          Phase {phase.number}: {phase.name}
+          Phase {phase.phaseNumber}: {phase.name}
         </div>
         <div className="text-sm text-brand-secondary dark:text-lxd-muted">
           Steps {phase.steps[0]} - {phase.steps[phase.steps.length - 1]}
@@ -440,7 +457,7 @@ interface ProgressSummaryProps {
   totalSteps: number;
   completedSteps: number;
   currentStep: number;
-  timeRemaining: number; // minutes
+  timeRemaining: { min: number; max: number };
   experienceLevel: ExperienceLevel;
 }
 
@@ -476,7 +493,7 @@ function ProgressSummary({
             Est. time remaining:
           </span>
           <div className="font-semibold text-brand-primary dark:text-brand-primary">
-            {formatTime(timeRemaining)}
+            {formatTime(timeRemaining.min)} - {formatTime(timeRemaining.max)}
           </div>
         </div>
       </div>
@@ -551,20 +568,23 @@ export function WizardNavigation({
   // Track which phases are expanded (for collapsible view)
   const [expandedPhases, setExpandedPhases] = useState<Set<number>>(
     // Default to expanding the current phase
-    new Set([getPhaseForStep(currentStep)?.number || 1]),
+    new Set([getPhaseForStep(currentStep)?.phaseNumber || 1]),
   );
 
+  // Convert step statuses to completed array for helper functions
+  const completedStepsArray = useMemo(() => getCompletedStepsArray(stepStatuses), [stepStatuses]);
+
   // Calculate overall progress
-  const progress = useMemo(() => calculateProgress(stepStatuses), [stepStatuses]);
+  const progress = useMemo(() => calculateProgress(completedStepsArray), [completedStepsArray]);
 
   // Calculate time remaining
   const timeRemaining = useMemo(
-    () => estimateTimeRemaining(stepStatuses, experienceLevel),
-    [stepStatuses, experienceLevel],
+    () => estimateTimeRemaining(completedStepsArray, experienceLevel),
+    [completedStepsArray, experienceLevel],
   );
 
   // Count completed steps
-  const completedSteps = useMemo(() => {
+  const completedStepsCount = useMemo(() => {
     let count = 0;
     stepStatuses.forEach((status) => {
       if (status.status === 'completed' || status.status === 'skipped') {
@@ -610,14 +630,14 @@ export function WizardNavigation({
         {/* Current and next step */}
         <div className="space-y-1">
           {WIZARD_STEPS.filter(
-            (step) => step.number >= currentStep && step.number <= currentStep + 2,
+            (step) => step.stepNumber >= currentStep && step.stepNumber <= currentStep + 2,
           ).map((step) => (
             <StepIndicator
-              key={step.number}
+              key={step.stepNumber}
               step={step}
-              status={determineStepStatus(step.number, stepStatuses, currentStep, step)}
-              isActive={step.number === currentStep}
-              onClick={() => onStepClick(step.number)}
+              status={determineStepStatus(step.stepNumber, stepStatuses, currentStep, step)}
+              isActive={step.stepNumber === currentStep}
+              onClick={() => onStepClick(step.stepNumber)}
               disabled={disabled}
               showLabel={true}
               showTimeEstimate={false}
@@ -642,12 +662,12 @@ export function WizardNavigation({
 
           return (
             <PhaseHeader
-              key={phase.number}
+              key={phase.phaseNumber}
               phase={phase}
               progress={phaseProgress}
               isExpanded={false}
               onToggle={() => {}} // No-op in phases-only mode
-              isCurrentPhase={currentPhase?.number === phase.number}
+              isCurrentPhase={currentPhase?.phaseNumber === phase.phaseNumber}
             />
           );
         })}
@@ -663,7 +683,7 @@ export function WizardNavigation({
       {/* Progress Summary */}
       <ProgressSummary
         totalSteps={WIZARD_STEPS.length}
-        completedSteps={completedSteps}
+        completedSteps={completedStepsCount}
         currentStep={currentStep}
         timeRemaining={timeRemaining}
         experienceLevel={experienceLevel}
@@ -674,21 +694,21 @@ export function WizardNavigation({
         {WIZARD_PHASES.map((phase) => {
           const phaseProgress = calculatePhaseProgress(phase, stepStatuses);
           const currentPhase = getPhaseForStep(currentStep);
-          const isCurrentPhase = currentPhase?.number === phase.number;
-          const isExpanded = showAllSteps || expandedPhases.has(phase.number);
+          const isCurrentPhase = currentPhase?.phaseNumber === phase.phaseNumber;
+          const isExpanded = showAllSteps || expandedPhases.has(phase.phaseNumber);
 
           // Get steps in this phase
-          const phaseSteps = WIZARD_STEPS.filter((step) => step.phase === phase.number);
+          const phaseSteps = WIZARD_STEPS.filter((step) => step.phase === phase.phaseNumber);
 
           return (
-            <div key={phase.number} className="space-y-2">
+            <div key={phase.phaseNumber} className="space-y-2">
               {/* Phase header */}
               {showPhases && (
                 <PhaseHeader
                   phase={phase}
                   progress={phaseProgress}
                   isExpanded={isExpanded}
-                  onToggle={() => togglePhase(phase.number)}
+                  onToggle={() => togglePhase(phase.phaseNumber)}
                   isCurrentPhase={isCurrentPhase}
                 />
               )}
@@ -696,15 +716,15 @@ export function WizardNavigation({
               {/* Steps in this phase */}
               {(isExpanded || !showPhases) && (
                 <div
-                  id={`phase-${phase.number}-content`}
+                  id={`phase-${phase.phaseNumber}-content`}
                   className={`
                     space-y-1 ${showPhases ? 'ml-4 pl-4 border-l-2' : ''}
-                    ${PHASE_COLORS[phase.number].border}
+                    ${PHASE_COLORS[phase.phaseNumber].border}
                   `}
                 >
                   {phaseSteps.map((step) => {
                     const status = determineStepStatus(
-                      step.number,
+                      step.stepNumber,
                       stepStatuses,
                       currentStep,
                       step,
@@ -712,11 +732,11 @@ export function WizardNavigation({
 
                     return (
                       <StepIndicator
-                        key={step.number}
+                        key={step.stepNumber}
                         step={step}
                         status={status}
-                        isActive={step.number === currentStep}
-                        onClick={() => onStepClick(step.number)}
+                        isActive={step.stepNumber === currentStep}
+                        onClick={() => onStepClick(step.stepNumber)}
                         disabled={disabled}
                         showLabel={true}
                         showTimeEstimate={showTimeEstimates}
@@ -736,7 +756,7 @@ export function WizardNavigation({
       <div className="text-xs text-brand-muted dark:text-lxd-muted p-3 bg-brand-page dark:bg-brand-surface rounded-lg">
         <p className="flex items-center gap-2">
           <span aria-hidden="true">💡</span>
-          Click on unknown completed or available step to navigate. Locked steps require completing
+          Click on any completed or available step to navigate. Locked steps require completing
           prerequisites first.
         </p>
       </div>

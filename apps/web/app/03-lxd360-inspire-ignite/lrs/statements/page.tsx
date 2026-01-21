@@ -146,16 +146,10 @@ export default function StatementBrowserPage() {
             key={stmt.id}
             className="bg-lxd-dark-surface border-lxd-dark-border overflow-hidden"
           >
-            <div
-              className="p-4 cursor-pointer hover:bg-lxd-dark-bg/30 transition-colors"
+            <button
+              type="button"
+              className="w-full text-left p-4 cursor-pointer hover:bg-lxd-dark-bg/30 transition-colors"
               onClick={() => setExpandedId(expandedId === stmt.id ? null : stmt.id)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  setExpandedId(expandedId === stmt.id ? null : stmt.id);
-                }
-              }}
-              role="button"
-              tabIndex={0}
               aria-expanded={expandedId === stmt.id}
             >
               <div className="flex items-center justify-between">
@@ -203,7 +197,7 @@ export default function StatementBrowserPage() {
                   />
                 </div>
               </div>
-            </div>
+            </button>
 
             {/* Expanded Details */}
             {expandedId === stmt.id && (

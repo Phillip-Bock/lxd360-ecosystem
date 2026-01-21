@@ -283,9 +283,21 @@ documentation requirements, recertification planning.`,
 career path alignment, skill gap addressing, 
 networking opportunities, recognition systems.`,
 
-    'change-management': `Change management training requires: Stakeholder engagement, 
-resistance addressing, communication planning, 
+    'change-management': `Change management training requires: Stakeholder engagement,
+resistance addressing, communication planning,
 success metrics, reinforcement mechanisms.`,
+
+    'product-training': `Product training requires: Feature demonstrations,
+hands-on practice with products, competitive comparisons,
+customer scenario simulations, update mechanisms.`,
+
+    'process-training': `Process training requires: Step-by-step procedures,
+decision trees, exception handling, quality checkpoints,
+documentation requirements, compliance integration.`,
+
+    custom: `Custom training requires: Flexible design approach,
+tailored objectives, specific audience considerations,
+unique assessment methods, organizational alignment.`,
   };
 
   return courseContexts[courseType] || '';
@@ -295,10 +307,16 @@ success metrics, reinforcement mechanisms.`,
  * Build complete context for AI prompt
  */
 function buildFullContext(request: AIAssistanceRequest): string {
-  const stepContext = buildStepContext(request.currentStep);
-  const industryContext = buildIndustryContext(request.context.industry);
-  const courseTypeContext = buildCourseTypeContext(request.context.courseType);
-  const experienceContext = EXPERIENCE_LEVEL_PROMPTS[request.experienceLevel];
+  const stepContext = request.currentStep ? buildStepContext(request.currentStep) : '';
+  const industryContext = request.context?.industry
+    ? buildIndustryContext(request.context.industry)
+    : '';
+  const courseTypeContext = request.context?.courseType
+    ? buildCourseTypeContext(request.context.courseType)
+    : '';
+  const experienceContext = request.experienceLevel
+    ? EXPERIENCE_LEVEL_PROMPTS[request.experienceLevel]
+    : EXPERIENCE_LEVEL_PROMPTS.intermediate;
 
   return `
 ${experienceContext}
@@ -312,9 +330,9 @@ COURSE TYPE CONTEXT:
 ${courseTypeContext}
 
 USER'S CURRENT CONTENT:
-${request.context.currentContent || 'No content yet'}
+${request.context?.currentContent || 'No content yet'}
 
-${request.context.specificQuestion ? `USER'S SPECIFIC QUESTION: ${request.context.specificQuestion}` : ''}
+${request.context?.specificQuestion ? `USER'S SPECIFIC QUESTION: ${request.context.specificQuestion}` : ''}
 `;
 }
 
@@ -329,12 +347,17 @@ function generatePrompt(request: AIAssistanceRequest): {
   systemPrompt: string;
   userPrompt: string;
 } {
+  const currentStep = request.currentStep ?? 1;
+  const industry = request.context?.industry ?? 'corporate';
+  const courseType = request.context?.courseType ?? 'compliance';
+  const currentContent = request.context?.currentContent ?? '';
+
   const assistancePrompt = ASSISTANCE_PROMPTS[request.type]
-    .replace('{{industry}}', request.context.industry)
-    .replace('{{courseType}}', request.context.courseType)
-    .replace('{{currentStep}}', request.currentStep.toString())
-    .replace('{{stepName}}', getStep(request.currentStep)?.name || '')
-    .replace('{{context}}', request.context.currentContent);
+    .replace('{{industry}}', industry)
+    .replace('{{courseType}}', courseType)
+    .replace('{{currentStep}}', currentStep.toString())
+    .replace('{{stepName}}', getStep(currentStep)?.name || '')
+    .replace('{{context}}', currentContent);
 
   const fullContext = buildFullContext(request);
 
@@ -417,10 +440,11 @@ function generateFollowUpSuggestions(type: AIAssistanceType, currentStep: number
  */
 function getRelatedResources(request: AIAssistanceRequest): AIAssistanceResponse['resources'] {
   const resources: AIAssistanceResponse['resources'] = [];
+  const currentStep = request.currentStep ?? 1;
 
   // Add pillar references based on step
-  const step = getStep(request.currentStep);
-  const phase = getPhaseForStep(request.currentStep);
+  const step = getStep(currentStep);
+  const phase = getPhaseForStep(currentStep);
 
   if (phase) {
     phase.inspireEmphasis.forEach((pillarId) => {
@@ -489,11 +513,16 @@ export async function getAIAssistance(request: AIAssistanceRequest): Promise<AIA
 
   // For now, return a structured placeholder
   // The actual implementation would be in the API route
+  const currentStep = request.currentStep ?? 1;
+  const experienceLevel = request.experienceLevel ?? 'intermediate';
+  const industry = request.context?.industry ?? 'corporate';
+  const courseType = request.context?.courseType ?? 'compliance';
+
   const response: AIAssistanceResponse = {
     id: `response-${Date.now()}`,
-    requestId: request.id,
+    requestId: request.id ?? 'unknown',
     content: `[AI Response would be generated here by Gemini]
-    
+
 This is a placeholder for the actual AI response. In production:
 1. The request is sent to the API route (/api/inspire/ai-assist)
 2. The API route authenticates with Google Cloud using GOOGLE_CREDENTIALS
@@ -501,16 +530,16 @@ This is a placeholder for the actual AI response. In production:
 4. The response is formatted and returned
 
 Request Type: ${request.type}
-Current Step: ${request.currentStep}
-Experience Level: ${request.experienceLevel}
+Current Step: ${currentStep}
+Experience Level: ${experienceLevel}
 
 The AI would respond with context-aware guidance based on:
 - The INSPIRE methodology
 - Neuroscience-informed design principles
-- Industry-specific considerations (${request.context.industry})
-- Course type requirements (${request.context.courseType})`,
+- Industry-specific considerations (${industry})
+- Course type requirements (${courseType})`,
     resources: getRelatedResources(request),
-    followUpSuggestions: generateFollowUpSuggestions(request.type, request.currentStep),
+    followUpSuggestions: generateFollowUpSuggestions(request.type, currentStep),
     confidence: 0.85,
     model: AI_CONFIG.model,
     tokensUsed: 0, // Would be populated by actual API call

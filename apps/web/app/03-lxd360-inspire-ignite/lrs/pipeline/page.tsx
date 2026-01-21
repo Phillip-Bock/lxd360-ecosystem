@@ -130,13 +130,14 @@ export default function PipelineStatusPage() {
             {pipelineData.components.map((component, index) => (
               <div key={component.id}>
                 <div className="flex items-center gap-4 p-4 rounded-lg bg-lxd-dark-bg/50">
-                  <div
+                  <span
                     className={cn(
-                      'w-3 h-3 rounded-full',
+                      'w-3 h-3 rounded-full block',
                       component.status === 'healthy' && 'bg-green-500',
                       component.status === 'warning' && 'bg-yellow-500',
                       component.status === 'error' && 'bg-red-500',
                     )}
+                    role="img"
                     aria-label={`Status: ${component.status}`}
                   />
                   <div className="flex-1">

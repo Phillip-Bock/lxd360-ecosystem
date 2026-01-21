@@ -115,7 +115,15 @@ interface PanelState {
  * Using a custom hook centralizes this logic and ensures
  * consistent breakpoint detection across the application.
  */
-function useBreakpoint(): { breakpoint: keyof typeof BREAKPOINTS | 'xs'; width: number } {
+function useBreakpoint(): {
+  breakpoint: keyof typeof BREAKPOINTS | 'xs';
+  width: number;
+  isMobile: boolean;
+  isTablet: boolean;
+  isDesktop: boolean;
+  isLargeDesktop: boolean;
+  isVRCapable: boolean;
+} {
   const [breakpoint, setBreakpoint] = useState<keyof typeof BREAKPOINTS | 'xs'>('lg');
   const [width, setWidth] = useState(1024);
 
@@ -339,11 +347,11 @@ function Header({
           className="inspire-header__phase"
           style={
             {
-              '--phase-color': currentPhase.primaryColor,
+              '--phase-color': currentPhase.colorTheme.primary,
             } as CSSProperties
           }
         >
-          <span className="inspire-header__phase-number">Phase {currentPhase.id}</span>
+          <span className="inspire-header__phase-number">Phase {currentPhase.phaseNumber}</span>
           <span className="inspire-header__phase-name">{currentPhase.name}</span>
         </div>
 
@@ -449,7 +457,9 @@ function NavigationSidebar({ state, onClose, onCollapse, isMobile }: NavigationS
     for (let i = 1; i <= 17; i++) {
       const step = i as WizardStepNumber;
       const phase = getPhaseForStep(step);
-      grouped[phase.id].push(step);
+      if (phase) {
+        grouped[phase.phaseNumber].push(step);
+      }
     }
 
     return grouped;
@@ -563,23 +573,23 @@ function NavigationSidebar({ state, onClose, onCollapse, isMobile }: NavigationS
             <div className="inspire-nav__phases">
               {WIZARD_PHASES.map((phase) => (
                 <div
-                  key={phase.id}
+                  key={phase.phaseNumber}
                   className="inspire-nav__phase"
                   style={
                     {
-                      '--phase-color': phase.primaryColor,
+                      '--phase-color': phase.colorTheme.primary,
                     } as CSSProperties
                   }
                 >
                   {/* Phase header */}
                   <h3 className="inspire-nav__phase-title">
-                    <span className="inspire-nav__phase-number">{phase.id}</span>
+                    <span className="inspire-nav__phase-number">{phase.phaseNumber}</span>
                     {phase.name}
                   </h3>
 
                   {/* Steps in this phase */}
                   <ul className="inspire-nav__steps">
-                    {stepsByPhase[phase.id].map((stepNum) => {
+                    {stepsByPhase[phase.phaseNumber].map((stepNum) => {
                       const step = WIZARD_STEPS[stepNum];
                       const isCompleted = completedSteps.has(stepNum);
                       const isCurrent = stepNum === currentStep;
@@ -604,10 +614,10 @@ function NavigationSidebar({ state, onClose, onCollapse, isMobile }: NavigationS
                             </span>
 
                             {/* Step name */}
-                            <span className="inspire-nav__step-name">{step.shortName}</span>
+                            <span className="inspire-nav__step-name">{step.shortTitle}</span>
 
                             {/* Optional indicator */}
-                            {step.isOptional && (
+                            {!step.required && (
                               <span className="inspire-nav__step-optional" title="Optional step">
                                 opt
                               </span>
@@ -665,24 +675,22 @@ function AssistantSidebar({ state, onClose, onExpand, isMobile }: AssistantSideb
 
   const [inputValue, setInputValue] = useState('');
 
-  const currentStepConfig = WIZARD_STEPS[currentStep];
-
   // Handle asking the AI a question
   const handleAsk = useCallback(async () => {
     if (!inputValue.trim() || isProcessing) return;
 
     await askAI({
-      requestId: `user-${Date.now()}`,
-      assistanceType: 'explain-better',
+      id: `user-${Date.now()}`,
+      type: 'explain-better',
+      currentStep,
       context: {
-        currentStep,
-        stepName: currentStepConfig.name,
-        userQuestion: inputValue.trim(),
+        stepNumber: currentStep,
+        specificQuestion: inputValue.trim(),
       },
     });
 
     setInputValue('');
-  }, [inputValue, isProcessing, askAI, currentStep, currentStepConfig.name]);
+  }, [inputValue, isProcessing, askAI, currentStep]);
 
   // Quick action buttons for common requests
   const quickActions = useMemo(
@@ -718,15 +726,15 @@ function AssistantSidebar({ state, onClose, onExpand, isMobile }: AssistantSideb
   const handleQuickAction = useCallback(
     async (actionType: (typeof quickActions)[number]['type']) => {
       await askAI({
-        requestId: `quick-${actionType}-${Date.now()}`,
-        assistanceType: actionType,
+        id: `quick-${actionType}-${Date.now()}`,
+        type: actionType,
+        currentStep,
         context: {
-          currentStep,
-          stepName: currentStepConfig.name,
+          stepNumber: currentStep,
         },
       });
     },
-    [askAI, currentStep, currentStepConfig.name],
+    [askAI, currentStep],
   );
 
   if (state === 'hidden') {
@@ -1001,7 +1009,7 @@ export function WizardLayout({
           <div className="inspire-layout__step-header">
             <span className="inspire-layout__step-number">Step {currentStep}</span>
             <h2 className="inspire-layout__step-name">{currentStepConfig.name}</h2>
-            {currentStepConfig.isOptional && (
+            {!currentStepConfig.required && (
               <span className="inspire-layout__step-optional">Optional</span>
             )}
           </div>
