@@ -56,37 +56,13 @@ const baseConfig = {
   generateEtags: true,
 
   async rewrites() {
+    // SAFE MODE: Minimal rewrites only - old numbered paths are DELETED
+    // The new structure uses route groups: (auth), (marketing), (tenant)
     return [
       { source: '/favicon.ico', destination: '/icon.svg' },
-      { source: '/login', destination: '/00-lxd360-auth/login' },
-      { source: '/sign-up', destination: '/00-lxd360-auth/sign-up' },
-      { source: '/reset-password', destination: '/00-lxd360-auth/reset-password' },
-      { source: '/callback/:path*', destination: '/00-lxd360-auth/callback/:path*' },
-      { source: '/vision', destination: '/01-lxd360-llc/vision' },
-      { source: '/studio', destination: '/01-lxd360-llc/studio' },
-      { source: '/ignite', destination: '/01-lxd360-llc/ignite' },
-      { source: '/neuro', destination: '/01-lxd360-llc/neuro' },
-      { source: '/kinetix', destination: '/01-lxd360-llc/kinetix' },
-      { source: '/contact', destination: '/01-lxd360-llc/contact' },
-      { source: '/legal/:path*', destination: '/01-lxd360-llc/legal/:path*' },
-      { source: '/inspire-studio', destination: '/02-lxd360-inspire-studio' },
-      { source: '/inspire-studio/:path*', destination: '/02-lxd360-inspire-studio/:path*' },
-      { source: '/ignite/dashboard/:path*', destination: '/03-lxd360-inspire-ignite/dashboard/:path*' },
-      { source: '/ignite/learn/:path*', destination: '/03-lxd360-inspire-ignite/learner/:path*' },
-      { source: '/ignite/manage/:path*', destination: '/03-lxd360-inspire-ignite/manage/:path*' },
-      { source: '/cognitive/:path*', destination: '/04-lxd360-inspire-cognitive/:path*' },
-      { source: '/cortex', destination: '/05-lxd360-inspire-cortex' },
-      { source: '/cortex/:path*', destination: '/05-lxd360-inspire-cortex/:path*' },
-      { source: '/media', destination: '/06-lxd360-inspire-media-center' },
-      { source: '/media/:path*', destination: '/06-lxd360-inspire-media-center/:path*' },
-      { source: '/nexus', destination: '/07-lxd360-inspire-lxd-nexus' },
-      { source: '/nexus/:path*', destination: '/07-lxd360-inspire-lxd-nexus/:path*' },
-      { source: '/consultation', destination: '/01-lxd360-llc/neuro' },
-      { source: '/store', destination: '/01-lxd360-llc/kinetix' },
-      { source: '/coming-soon', destination: '/10-lxd360-coming-soon' },
-      { source: '/status', destination: '/11-lxd360-maintenance' },
-      { source: '/faq', destination: '/11-lxd360-maintenance/faq' },
-      { source: '/maintenance/:path*', destination: '/11-lxd360-maintenance/:path*' },
+      // Auth routes now live in (auth) route group - no rewrite needed
+      // Marketing routes now live in (marketing) route group - no rewrite needed
+      // Tenant routes (ignite) now live in (tenant) route group - no rewrite needed
     ];
   },
 
