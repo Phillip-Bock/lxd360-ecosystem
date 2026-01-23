@@ -156,7 +156,7 @@ export function IgniteHeader({ user = defaultUser }: IgniteHeaderProps) {
                   </div>
                   <div className="p-3 border-t border-lxd-dark-border">
                     <Link
-                      href="/03-lxd360-inspire-ignite/learn/notifications"
+                      href="/(tenant)/ignite/learn/notifications"
                       className="text-sm text-lxd-purple hover:underline"
                       onClick={() => setNotificationsOpen(false)}
                     >
@@ -216,7 +216,7 @@ export function IgniteHeader({ user = defaultUser }: IgniteHeaderProps) {
                   </div>
                   <div className="py-2">
                     <Link
-                      href="/03-lxd360-inspire-ignite/learn/profile"
+                      href="/(tenant)/ignite/learn/profile"
                       className="flex items-center gap-3 px-4 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-lxd-dark-card transition-colors"
                       onClick={() => setUserMenuOpen(false)}
                       role="menuitem"
@@ -225,7 +225,7 @@ export function IgniteHeader({ user = defaultUser }: IgniteHeaderProps) {
                       My Profile
                     </Link>
                     <Link
-                      href="/03-lxd360-inspire-ignite/learn/settings"
+                      href="/(tenant)/ignite/learn/settings"
                       className="flex items-center gap-3 px-4 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-lxd-dark-card transition-colors"
                       onClick={() => setUserMenuOpen(false)}
                       role="menuitem"
@@ -234,7 +234,7 @@ export function IgniteHeader({ user = defaultUser }: IgniteHeaderProps) {
                       Settings
                     </Link>
                     <Link
-                      href="/03-lxd360-inspire-ignite/learn/help"
+                      href="/(tenant)/ignite/learn/help"
                       className="flex items-center gap-3 px-4 py-2 text-sm text-foreground/80 hover:text-foreground hover:bg-lxd-dark-card transition-colors"
                       onClick={() => setUserMenuOpen(false)}
                       role="menuitem"

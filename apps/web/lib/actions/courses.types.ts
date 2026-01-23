@@ -53,7 +53,7 @@ export interface Course {
   type: CourseType;
   instructor?: string;
   estimatedDurationMinutes?: number;
-  status: 'draft' | 'published' | 'archived';
+  status: 'draft' | 'published' | 'archived' | 'processing';
   createdBy: string;
   createdAt?: string;
   updatedAt?: string;
@@ -61,6 +61,8 @@ export interface Course {
   // SCORM-specific fields
   packageUrl?: string;
   scormVersion?: '1.2' | '2004';
+  processingStatus?: 'pending' | 'processing' | 'completed' | 'failed';
+  xapiWrapperStatus?: 'pending' | 'injected' | 'failed';
   // Stats (computed/denormalized)
   enrolledCount?: number;
   completedCount?: number;

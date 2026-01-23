@@ -15,9 +15,6 @@ import {
   type ModuleData,
 } from './courses.types';
 
-// Re-export Course type for consumers
-export type { Course } from './courses.types';
-
 const log = logger.child({ module: 'actions-courses' });
 
 // ============================================================================
@@ -32,7 +29,7 @@ interface CourseDocument {
   type: CourseType;
   instructor?: string;
   estimatedDurationMinutes?: number;
-  status: 'draft' | 'published' | 'archived';
+  status: 'draft' | 'published' | 'archived' | 'processing';
   createdBy: string;
   createdAt: FirebaseFirestore.Timestamp | FieldValue;
   updatedAt: FirebaseFirestore.Timestamp | FieldValue;
@@ -40,6 +37,8 @@ interface CourseDocument {
   // SCORM-specific fields
   packageUrl?: string;
   scormVersion?: '1.2' | '2004';
+  processingStatus?: 'pending' | 'processing' | 'completed' | 'failed';
+  xapiWrapperStatus?: 'pending' | 'injected' | 'failed';
 }
 
 interface ModuleDocument {
@@ -147,6 +146,10 @@ export async function createCourse(data: CourseData, tenantId?: string): Promise
     const coursesRef = adminDb.collection('tenants').doc(effectiveTenantId).collection('courses');
     const courseRef = coursesRef.doc();
 
+    // SCORM courses start in 'processing' status until the package is validated
+    const isScormCourse = validationResult.data.type === 'scorm';
+    const initialStatus = isScormCourse ? 'processing' : 'draft';
+
     const courseDoc: CourseDocument = {
       id: courseRef.id,
       tenantId: effectiveTenantId,
@@ -155,7 +158,7 @@ export async function createCourse(data: CourseData, tenantId?: string): Promise
       type: validationResult.data.type as CourseType,
       instructor: validationResult.data.instructor,
       estimatedDurationMinutes: validationResult.data.estimatedDurationMinutes,
-      status: 'draft',
+      status: initialStatus,
       createdBy: authUser?.uid || 'system',
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
@@ -163,6 +166,11 @@ export async function createCourse(data: CourseData, tenantId?: string): Promise
       ...(validationResult.data.packageUrl && { packageUrl: validationResult.data.packageUrl }),
       ...(validationResult.data.scormVersion && {
         scormVersion: validationResult.data.scormVersion,
+      }),
+      // Processing metadata for SCORM
+      ...(isScormCourse && {
+        processingStatus: 'pending',
+        xapiWrapperStatus: 'pending',
       }),
     };
 

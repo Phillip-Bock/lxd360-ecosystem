@@ -1,7 +1,7 @@
 'use client';
 
 import { ImageOff, Loader2 } from 'lucide-react';
-import Image from 'next/image';
+import NextImage from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -152,7 +152,7 @@ export function PanoramaSphere({
               transition: 'transform 0.05s ease-out',
             }}
           >
-            <Image
+            <NextImage
               src={imageUrl}
               alt="360° panorama"
               fill

@@ -14,13 +14,10 @@ import {
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useCallback, useEffect, useState } from 'react';
 import { logger } from '@/lib/logger';
-import { auth, db } from './client';
+import { getFirebaseAuth, getFirebaseDb } from './client';
 
 const log = logger.child({ module: 'useAuth' });
 
-/**
- * User profile stored in Firestore
- */
 export interface UserProfile {
   uid: string;
   email: string | null;
@@ -33,54 +30,39 @@ export interface UserProfile {
   updatedAt?: Date;
 }
 
-/**
- * Auth hook return type
- */
 interface UseAuthReturn {
   user: User | null;
   profile: UserProfile | null;
   loading: boolean;
   error: Error | null;
-  signIn: (email: string, password: string) => Promise<UserCredential>;
-  signUp: (email: string, password: string) => Promise<UserCredential>;
+  signIn: (email: string, password: string) => Promise<UserCredential | null>;
+  signUp: (email: string, password: string) => Promise<UserCredential | null>;
   signOut: () => Promise<void>;
-  signInWithGoogle: () => Promise<UserCredential>;
+  signInWithGoogle: () => Promise<UserCredential | null>;
   resetPassword: (email: string) => Promise<void>;
   isAuthenticated: boolean;
 }
 
-/**
- * Firebase authentication hook
- *
- * @example
- * ```tsx
- * function LoginComponent() {
- *   const { user, loading, signIn, signOut, isAuthenticated } = useAuth();
- *
- *   if (loading) return <Spinner />;
- *
- *   if (isAuthenticated) {
- *     return (
- *       <div>
- *         <p>Welcome, {user?.email}</p>
- *         <button onClick={signOut}>Sign Out</button>
- *       </div>
- *     );
- *   }
- *
- *   return <LoginForm onSubmit={(email, password) => signIn(email, password)} />;
- * }
- * ```
- */
 export function useAuth(): UseAuthReturn {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // Load user profile from Firestore
   const loadProfile = useCallback(async (firebaseUser: User) => {
     try {
+      const db = getFirebaseDb();
+      if (!db) {
+        setProfile({
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          displayName: firebaseUser.displayName,
+          photoURL: firebaseUser.photoURL,
+          emailVerified: firebaseUser.emailVerified,
+        });
+        return;
+      }
+
       const userRef = doc(db, 'users', firebaseUser.uid);
       const userSnap = await getDoc(userRef);
 
@@ -98,7 +80,6 @@ export function useAuth(): UseAuthReturn {
           updatedAt: data.updatedAt?.toDate(),
         });
       } else {
-        // Create profile if it doesn't exist
         const newProfile: Partial<UserProfile> = {
           uid: firebaseUser.uid,
           email: firebaseUser.email,
@@ -117,7 +98,6 @@ export function useAuth(): UseAuthReturn {
       }
     } catch (err) {
       log.error('Failed to load user profile', { error: err, uid: firebaseUser.uid });
-      // Set basic profile even if Firestore fails
       setProfile({
         uid: firebaseUser.uid,
         email: firebaseUser.email,
@@ -128,8 +108,14 @@ export function useAuth(): UseAuthReturn {
     }
   }, []);
 
-  // Listen for auth state changes
   useEffect(() => {
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      log.warn('Firebase auth not available');
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(
       auth,
       async (firebaseUser) => {
@@ -153,39 +139,60 @@ export function useAuth(): UseAuthReturn {
     return () => unsubscribe();
   }, [loadProfile]);
 
-  // Sign in with email/password
-  const signIn = useCallback(async (email: string, password: string) => {
-    setError(null);
-    try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      log.info('User signed in', { uid: result.user.uid });
-      return result;
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Sign in failed');
-      setError(error);
-      log.error('Sign in failed', { error, email });
-      throw error;
-    }
-  }, []);
+  const signIn = useCallback(
+    async (email: string, password: string): Promise<UserCredential | null> => {
+      setError(null);
+      const auth = getFirebaseAuth();
+      if (!auth) {
+        setError(new Error('Firebase not initialized'));
+        return null;
+      }
 
-  // Sign up with email/password
-  const signUp = useCallback(async (email: string, password: string) => {
-    setError(null);
-    try {
-      const result = await createUserWithEmailAndPassword(auth, email, password);
-      log.info('User signed up', { uid: result.user.uid });
-      return result;
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Sign up failed');
-      setError(error);
-      log.error('Sign up failed', { error, email });
-      throw error;
-    }
-  }, []);
+      try {
+        const result = await signInWithEmailAndPassword(auth, email, password);
+        log.info('User signed in', { uid: result.user.uid });
+        return result;
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error('Sign in failed');
+        setError(error);
+        log.error('Sign in failed', { error, email });
+        throw error;
+      }
+    },
+    [],
+  );
 
-  // Sign out
-  const signOut = useCallback(async () => {
+  const signUp = useCallback(
+    async (email: string, password: string): Promise<UserCredential | null> => {
+      setError(null);
+      const auth = getFirebaseAuth();
+      if (!auth) {
+        setError(new Error('Firebase not initialized'));
+        return null;
+      }
+
+      try {
+        const result = await createUserWithEmailAndPassword(auth, email, password);
+        log.info('User signed up', { uid: result.user.uid });
+        return result;
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error('Sign up failed');
+        setError(error);
+        log.error('Sign up failed', { error, email });
+        throw error;
+      }
+    },
+    [],
+  );
+
+  const signOut = useCallback(async (): Promise<void> => {
     setError(null);
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      setError(new Error('Firebase not initialized'));
+      return;
+    }
+
     try {
       await firebaseSignOut(auth);
       setProfile(null);
@@ -198,9 +205,14 @@ export function useAuth(): UseAuthReturn {
     }
   }, []);
 
-  // Sign in with Google
-  const signInWithGoogle = useCallback(async () => {
+  const signInWithGoogle = useCallback(async (): Promise<UserCredential | null> => {
     setError(null);
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      setError(new Error('Firebase not initialized'));
+      return null;
+    }
+
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
@@ -214,9 +226,14 @@ export function useAuth(): UseAuthReturn {
     }
   }, []);
 
-  // Reset password
-  const resetPassword = useCallback(async (email: string) => {
+  const resetPassword = useCallback(async (email: string): Promise<void> => {
     setError(null);
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      setError(new Error('Firebase not initialized'));
+      return;
+    }
+
     try {
       await sendPasswordResetEmail(auth, email);
       log.info('Password reset email sent', { email });

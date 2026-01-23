@@ -10,7 +10,7 @@ import {
   type Timestamp,
 } from 'firebase/firestore';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { db } from '@/lib/firebase/client';
+import { getFirebaseDb } from '@/lib/firebase/client';
 
 // =============================================================================
 // Types
@@ -90,6 +90,7 @@ export function useDraftLock(
 
   // Get lock document reference
   const getLockRef = useCallback(() => {
+    const db = getFirebaseDb();
     return doc(db, 'tenants', tenantId, 'courses', courseId, 'lock', 'current');
   }, [tenantId, courseId]);
 

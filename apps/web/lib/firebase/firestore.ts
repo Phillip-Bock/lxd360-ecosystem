@@ -24,7 +24,7 @@ import {
   where,
 } from 'firebase/firestore';
 import { logger } from '@/lib/logger';
-import { db } from './client';
+import { getFirebaseDb } from './client';
 
 const log = logger.child({ module: 'firestore' });
 
@@ -61,6 +61,7 @@ export async function getDocument<T extends BaseDocument>(
   id: string,
 ): Promise<T | null> {
   try {
+    const db = getFirebaseDb();
     const docRef = doc(db, collectionName, id);
     const docSnap = await getDoc(docRef);
 
@@ -91,6 +92,7 @@ export async function getDocuments<T extends BaseDocument>(
   constraints: QueryConstraint[] = [],
 ): Promise<T[]> {
   try {
+    const db = getFirebaseDb();
     const collectionRef = collection(db, collectionName);
     const q = query(collectionRef, ...constraints);
     const querySnap = await getDocs(q);
@@ -118,6 +120,7 @@ export async function createDocument<T extends Omit<BaseDocument, 'id'>>(
   data: Omit<T, 'id' | 'createdAt' | 'updatedAt'>,
 ): Promise<DocumentReference> {
   try {
+    const db = getFirebaseDb();
     const collectionRef = collection(db, collectionName);
     const docRef = await addDoc(collectionRef, {
       ...data,
@@ -147,6 +150,7 @@ export async function setDocument<T extends BaseDocument>(
   merge = true,
 ): Promise<void> {
   try {
+    const db = getFirebaseDb();
     const docRef = doc(db, collectionName, id);
     await setDoc(
       docRef,
@@ -177,6 +181,7 @@ export async function updateDocument(
   data: Partial<DocumentData>,
 ): Promise<void> {
   try {
+    const db = getFirebaseDb();
     const docRef = doc(db, collectionName, id);
     await updateDoc(docRef, {
       ...data,
@@ -197,6 +202,7 @@ export async function updateDocument(
  */
 export async function deleteDocument(collectionName: string, id: string): Promise<void> {
   try {
+    const db = getFirebaseDb();
     const docRef = doc(db, collectionName, id);
     await deleteDoc(docRef);
 
@@ -225,6 +231,7 @@ export async function queryWithPagination<T extends BaseDocument>(
   constraints: QueryConstraint[] = [],
 ): Promise<PaginatedResult<T>> {
   try {
+    const db = getFirebaseDb();
     const collectionRef = collection(db, collectionName);
     const queryConstraints = [...constraints, limit(pageSize + 1)];
 
@@ -304,6 +311,7 @@ export function subscribeToDocument<T extends BaseDocument>(
   id: string,
   callback: (data: T | null) => void,
 ): Unsubscribe {
+  const db = getFirebaseDb();
   const docRef = doc(db, collectionName, id);
 
   return onSnapshot(
@@ -339,6 +347,7 @@ export function subscribeToCollection<T extends BaseDocument>(
   callback: (data: T[]) => void,
   constraints: QueryConstraint[] = [],
 ): Unsubscribe {
+  const db = getFirebaseDb();
   const collectionRef = collection(db, collectionName);
   const q = query(collectionRef, ...constraints);
 

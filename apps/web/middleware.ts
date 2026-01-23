@@ -3,24 +3,21 @@ import { NextResponse } from 'next/server';
 
 /**
  * Routes that require authentication
- * Maps to actual app directory structure with numbered prefixes
+ * Note: Route groups like (tenant) are NOT part of the URL path
  */
 const PROTECTED_ROUTES = [
-  '/03-lxd360-inspire-ignite/dashboard',
-  '/03-lxd360-inspire-ignite/learner',
-  '/03-lxd360-inspire-ignite/manage',
-  '/02-lxd360-inspire-studio',
+  '/ignite/dashboard',
+  '/ignite/learner',
+  '/ignite/manage',
+  '/ignite/teach',
+  '/inspire',
 ];
 
 /**
  * Auth routes that should redirect to dashboard if already authenticated
- * Maps to actual app/00-lxd360-auth/ directory structure
+ * Note: Route groups like (auth) are NOT part of the URL path
  */
-const AUTH_ROUTES = [
-  '/00-lxd360-auth/login',
-  '/00-lxd360-auth/sign-up',
-  '/00-lxd360-auth/reset-password',
-];
+const AUTH_ROUTES = ['/login', '/sign-up', '/reset-password'];
 
 /**
  * Cookie name for Firebase auth session token
@@ -57,7 +54,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   // Protected routes - redirect to login if not authenticated
   if (isProtectedRoute(pathname)) {
     if (!isAuthenticated) {
-      const loginUrl = new URL('/00-lxd360-auth/login', request.url);
+      const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
@@ -66,7 +63,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   // Auth routes - redirect to dashboard if already authenticated
   if (isAuthRoute(pathname)) {
     if (isAuthenticated) {
-      const dashboardUrl = new URL('/03-lxd360-inspire-ignite/dashboard', request.url);
+      const dashboardUrl = new URL('/ignite/dashboard', request.url);
       return NextResponse.redirect(dashboardUrl);
     }
   }

@@ -17,7 +17,7 @@ export type {
   User,
   UserCredential,
 } from './client';
-export { app, auth, db, storage } from './client';
+export { getFirebaseAuth, getFirebaseDb, getFirebaseStorage } from './client';
 
 // =============================================================================
 // Auth Context & Hooks

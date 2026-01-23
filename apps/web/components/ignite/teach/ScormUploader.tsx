@@ -5,7 +5,7 @@ import { AlertCircle, CheckCircle2, FileArchive, Loader2, Upload, X } from 'luci
 import { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { storage } from '@/lib/firebase/client';
+import { getFirebaseStorage } from '@/lib/firebase/client';
 import { cn } from '@/lib/utils';
 
 export interface ScormUploadResult {
@@ -99,6 +99,7 @@ export function ScormUploader({
       const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
       const storagePath = `tenants/${tenantId}/scorm/${effectiveCourseId}/${timestamp}_${sanitizedFileName}`;
 
+      const storage = getFirebaseStorage();
       const storageRef = ref(storage, storagePath);
 
       const uploadTask = uploadBytesResumable(storageRef, file, {
@@ -108,6 +109,8 @@ export function ScormUploader({
           courseId: effectiveCourseId,
           originalFileName: file.name,
           uploadedAt: new Date().toISOString(),
+          xapiWrapper: 'pending', // Flag for Strike 3 processing
+          processingStatus: 'uploaded', // Will be updated by Cloud Function
         },
       });
 

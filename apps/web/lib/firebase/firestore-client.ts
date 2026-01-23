@@ -17,7 +17,7 @@ import {
   type WhereFilterOp,
   where,
 } from 'firebase/firestore';
-import { db } from './client';
+import { getFirebaseDb } from './client';
 
 // =============================================================================
 // Types
@@ -70,6 +70,7 @@ export async function getDocumentById<T>(
   documentId: string,
 ): Promise<FirestoreResult<T>> {
   try {
+    const db = getFirebaseDb();
     const docRef = doc(db, collectionName, documentId);
     const docSnap = await getDoc(docRef);
 
@@ -103,6 +104,7 @@ export async function getDocumentsList<T>(
   constraints: QueryConstraint[] = [],
 ): Promise<FirestoreListResult<T>> {
   try {
+    const db = getFirebaseDb();
     const collectionRef = collection(db, collectionName);
     const q = query(collectionRef, ...constraints);
     const querySnapshot = await getDocs(q);
@@ -141,6 +143,7 @@ export async function getDocumentsPaginated<T>(
   lastDocument?: DocumentSnapshot<DocumentData> | null,
 ): Promise<FirestorePaginatedResult<T>> {
   try {
+    const db = getFirebaseDb();
     const collectionRef = collection(db, collectionName);
     const baseConstraints = [...constraints, limit(pageSize + 1)];
 
@@ -201,6 +204,7 @@ export async function createDocument<T extends Record<string, unknown>>(
     const documentId = crypto.randomUUID();
     const now = new Date().toISOString();
 
+    const db = getFirebaseDb();
     const docRef = doc(db, collectionName, documentId);
     const documentData = {
       ...data,
@@ -235,6 +239,7 @@ export async function setDocumentById<T extends Record<string, unknown>>(
 ): Promise<FirestoreResult<T>> {
   try {
     const now = new Date().toISOString();
+    const db = getFirebaseDb();
     const docRef = doc(db, collectionName, documentId);
 
     const documentData = {
@@ -269,6 +274,7 @@ export async function updateDocumentById<T>(
   updates: Partial<T>,
 ): Promise<FirestoreResult<T>> {
   try {
+    const db = getFirebaseDb();
     const docRef = doc(db, collectionName, documentId);
 
     const updateData = {
@@ -299,6 +305,7 @@ export async function deleteDocumentById(
   documentId: string,
 ): Promise<{ error: Error | null }> {
   try {
+    const db = getFirebaseDb();
     const docRef = doc(db, collectionName, documentId);
     await deleteDoc(docRef);
     return { error: null };

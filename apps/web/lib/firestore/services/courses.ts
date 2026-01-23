@@ -12,7 +12,7 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase/client';
+import { getFirebaseDb } from '@/lib/firebase/client';
 import type {
   Course,
   CourseFilters,
@@ -288,7 +288,7 @@ export async function createCourse(
 ): Promise<Course> {
   try {
     // Use raw collection for write (serverTimestamp() returns FieldValue, not Timestamp)
-    const coursesRef = collection(db, COLLECTIONS.COURSES);
+    const coursesRef = collection(getFirebaseDb(), COLLECTIONS.COURSES);
     const now = serverTimestamp();
 
     const courseData = {

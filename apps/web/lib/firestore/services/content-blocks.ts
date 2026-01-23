@@ -11,7 +11,7 @@ import {
   where,
   writeBatch,
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase/client';
+import { getFirebaseDb } from '@/lib/firebase/client';
 import type {
   ContentBlock,
   ContentBlockData,
@@ -163,7 +163,7 @@ export async function createContentBlock(
 ): Promise<ContentBlock> {
   try {
     // Use raw collection for write (serverTimestamp() returns FieldValue, not Timestamp)
-    const blocksRef = collection(db, COLLECTIONS.CONTENT_BLOCKS);
+    const blocksRef = collection(getFirebaseDb(), COLLECTIONS.CONTENT_BLOCKS);
     const now = serverTimestamp();
 
     const blockData = {
@@ -308,7 +308,7 @@ export async function deleteContentBlock(blockId: string): Promise<void> {
 export async function deleteBlocksByLesson(lessonId: string): Promise<void> {
   try {
     const blocks = await getBlocksByLesson(lessonId);
-    const batch = writeBatch(db);
+    const batch = writeBatch(getFirebaseDb());
 
     for (const block of blocks) {
       const docRef = getContentBlockRef(block.id);
@@ -329,7 +329,7 @@ export async function deleteBlocksByLesson(lessonId: string): Promise<void> {
  */
 export async function reorderBlocks(lessonId: string, blockIds: string[]): Promise<void> {
   try {
-    const batch = writeBatch(db);
+    const batch = writeBatch(getFirebaseDb());
 
     blockIds.forEach((blockId, index) => {
       const docRef = getContentBlockRef(blockId);
@@ -371,7 +371,7 @@ export async function moveBlock(
     const allBlocks = await getBlocksByLesson(lessonId);
 
     // Reorder blocks
-    const batch = writeBatch(db);
+    const batch = writeBatch(getFirebaseDb());
     const now = serverTimestamp();
 
     for (const b of allBlocks) {
@@ -451,7 +451,7 @@ export async function publishBlock(blockId: string, userId: string): Promise<Con
 export async function publishAllBlocks(lessonId: string, userId: string): Promise<void> {
   try {
     const blocks = await getBlocksByLesson(lessonId);
-    const batch = writeBatch(db);
+    const batch = writeBatch(getFirebaseDb());
     const now = serverTimestamp();
 
     for (const block of blocks) {

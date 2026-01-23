@@ -29,7 +29,7 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { AssetCategory } from '@/lib/assets/mimeTypes';
 import type { AssetMetadata } from '@/lib/assets/storage';
-import { db } from '@/lib/firebase/client';
+import { getFirebaseDb } from '@/lib/firebase/client';
 import { cn } from '@/lib/utils';
 import { AIAutoTagger } from './AIAutoTagger';
 import { AssetGrid } from './AssetGrid';
@@ -100,7 +100,7 @@ export function AssetLibraryModal({
     if (!isOpen || !tenantId) return;
 
     setIsLoading(true);
-    const assetsRef = collection(db, 'tenants', tenantId, 'assets');
+    const assetsRef = collection(getFirebaseDb(), 'tenants', tenantId, 'assets');
     const q = query(assetsRef, orderBy('uploadedAt', 'desc'));
 
     const unsubscribe = onSnapshot(

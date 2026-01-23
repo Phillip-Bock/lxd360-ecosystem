@@ -4,7 +4,7 @@ import {
   type DocumentReference,
   doc,
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase/client';
+import { getFirebaseDb } from '@/lib/firebase/client';
 import type {
   Assessment,
   ContentBlock,
@@ -49,7 +49,7 @@ export const COLLECTIONS = {
  * Get typed courses collection reference
  */
 export function getCoursesCollection(): CollectionReference<Course> {
-  return collection(db, COLLECTIONS.COURSES).withConverter(courseConverter);
+  return collection(getFirebaseDb(), COLLECTIONS.COURSES).withConverter(courseConverter);
 }
 
 /**
@@ -57,14 +57,14 @@ export function getCoursesCollection(): CollectionReference<Course> {
  * @param courseId - The course document ID
  */
 export function getCourseRef(courseId: string): DocumentReference<Course> {
-  return doc(db, COLLECTIONS.COURSES, courseId).withConverter(courseConverter);
+  return doc(getFirebaseDb(), COLLECTIONS.COURSES, courseId).withConverter(courseConverter);
 }
 
 /**
  * Get typed lessons collection reference
  */
 export function getLessonsCollection(): CollectionReference<Lesson> {
-  return collection(db, COLLECTIONS.LESSONS).withConverter(lessonConverter);
+  return collection(getFirebaseDb(), COLLECTIONS.LESSONS).withConverter(lessonConverter);
 }
 
 /**
@@ -72,14 +72,16 @@ export function getLessonsCollection(): CollectionReference<Lesson> {
  * @param lessonId - The lesson document ID
  */
 export function getLessonRef(lessonId: string): DocumentReference<Lesson> {
-  return doc(db, COLLECTIONS.LESSONS, lessonId).withConverter(lessonConverter);
+  return doc(getFirebaseDb(), COLLECTIONS.LESSONS, lessonId).withConverter(lessonConverter);
 }
 
 /**
  * Get typed content blocks collection reference
  */
 export function getContentBlocksCollection(): CollectionReference<ContentBlock> {
-  return collection(db, COLLECTIONS.CONTENT_BLOCKS).withConverter(contentBlockConverter);
+  return collection(getFirebaseDb(), COLLECTIONS.CONTENT_BLOCKS).withConverter(
+    contentBlockConverter,
+  );
 }
 
 /**
@@ -87,14 +89,16 @@ export function getContentBlocksCollection(): CollectionReference<ContentBlock> 
  * @param blockId - The content block document ID
  */
 export function getContentBlockRef(blockId: string): DocumentReference<ContentBlock> {
-  return doc(db, COLLECTIONS.CONTENT_BLOCKS, blockId).withConverter(contentBlockConverter);
+  return doc(getFirebaseDb(), COLLECTIONS.CONTENT_BLOCKS, blockId).withConverter(
+    contentBlockConverter,
+  );
 }
 
 /**
  * Get typed assessments collection reference
  */
 export function getAssessmentsCollection(): CollectionReference<Assessment> {
-  return collection(db, COLLECTIONS.ASSESSMENTS).withConverter(assessmentConverter);
+  return collection(getFirebaseDb(), COLLECTIONS.ASSESSMENTS).withConverter(assessmentConverter);
 }
 
 /**
@@ -102,14 +106,16 @@ export function getAssessmentsCollection(): CollectionReference<Assessment> {
  * @param assessmentId - The assessment document ID
  */
 export function getAssessmentRef(assessmentId: string): DocumentReference<Assessment> {
-  return doc(db, COLLECTIONS.ASSESSMENTS, assessmentId).withConverter(assessmentConverter);
+  return doc(getFirebaseDb(), COLLECTIONS.ASSESSMENTS, assessmentId).withConverter(
+    assessmentConverter,
+  );
 }
 
 /**
  * Get typed media assets collection reference
  */
 export function getMediaAssetsCollection(): CollectionReference<MediaAsset> {
-  return collection(db, COLLECTIONS.MEDIA_ASSETS).withConverter(mediaAssetConverter);
+  return collection(getFirebaseDb(), COLLECTIONS.MEDIA_ASSETS).withConverter(mediaAssetConverter);
 }
 
 /**
@@ -117,14 +123,16 @@ export function getMediaAssetsCollection(): CollectionReference<MediaAsset> {
  * @param assetId - The media asset document ID
  */
 export function getMediaAssetRef(assetId: string): DocumentReference<MediaAsset> {
-  return doc(db, COLLECTIONS.MEDIA_ASSETS, assetId).withConverter(mediaAssetConverter);
+  return doc(getFirebaseDb(), COLLECTIONS.MEDIA_ASSETS, assetId).withConverter(mediaAssetConverter);
 }
 
 /**
  * Get typed user progress collection reference
  */
 export function getUserProgressCollection(): CollectionReference<UserProgress> {
-  return collection(db, COLLECTIONS.USER_PROGRESS).withConverter(userProgressConverter);
+  return collection(getFirebaseDb(), COLLECTIONS.USER_PROGRESS).withConverter(
+    userProgressConverter,
+  );
 }
 
 /**
@@ -132,14 +140,18 @@ export function getUserProgressCollection(): CollectionReference<UserProgress> {
  * @param progressId - The user progress document ID
  */
 export function getUserProgressRef(progressId: string): DocumentReference<UserProgress> {
-  return doc(db, COLLECTIONS.USER_PROGRESS, progressId).withConverter(userProgressConverter);
+  return doc(getFirebaseDb(), COLLECTIONS.USER_PROGRESS, progressId).withConverter(
+    userProgressConverter,
+  );
 }
 
 /**
  * Get typed organizations collection reference
  */
 export function getOrganizationsCollection(): CollectionReference<Organization> {
-  return collection(db, COLLECTIONS.ORGANIZATIONS).withConverter(organizationConverter);
+  return collection(getFirebaseDb(), COLLECTIONS.ORGANIZATIONS).withConverter(
+    organizationConverter,
+  );
 }
 
 /**
@@ -147,7 +159,9 @@ export function getOrganizationsCollection(): CollectionReference<Organization> 
  * @param organizationId - The organization document ID
  */
 export function getOrganizationRef(organizationId: string): DocumentReference<Organization> {
-  return doc(db, COLLECTIONS.ORGANIZATIONS, organizationId).withConverter(organizationConverter);
+  return doc(getFirebaseDb(), COLLECTIONS.ORGANIZATIONS, organizationId).withConverter(
+    organizationConverter,
+  );
 }
 
 // =============================================================================
@@ -160,7 +174,7 @@ export function getOrganizationRef(organizationId: string): DocumentReference<Or
  */
 export function getOrgCoursesCollection(organizationId: string): CollectionReference<Course> {
   return collection(
-    db,
+    getFirebaseDb(),
     COLLECTIONS.ORGANIZATIONS,
     organizationId,
     COLLECTIONS.COURSES,
@@ -177,7 +191,7 @@ export function getOrgCourseRef(
   courseId: string,
 ): DocumentReference<Course> {
   return doc(
-    db,
+    getFirebaseDb(),
     COLLECTIONS.ORGANIZATIONS,
     organizationId,
     COLLECTIONS.COURSES,
@@ -191,7 +205,7 @@ export function getOrgCourseRef(
  */
 export function getOrgLessonsCollection(organizationId: string): CollectionReference<Lesson> {
   return collection(
-    db,
+    getFirebaseDb(),
     COLLECTIONS.ORGANIZATIONS,
     organizationId,
     COLLECTIONS.LESSONS,
@@ -208,7 +222,7 @@ export function getOrgLessonRef(
   lessonId: string,
 ): DocumentReference<Lesson> {
   return doc(
-    db,
+    getFirebaseDb(),
     COLLECTIONS.ORGANIZATIONS,
     organizationId,
     COLLECTIONS.LESSONS,
