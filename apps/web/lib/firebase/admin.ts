@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { type App, cert, getApps, initializeApp, type ServiceAccount } from 'firebase-admin/app';
 import { type Auth, getAuth } from 'firebase-admin/auth';
 import { type Firestore, getFirestore } from 'firebase-admin/firestore';
@@ -6,12 +8,42 @@ import { logger } from '@/lib/logger';
 
 const log = logger.child({ module: 'firebase-admin' });
 
+// Build-time detection: don't throw during next build
+const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';
+
 /**
  * Get Firebase Admin credentials
- * Supports both JSON string and individual environment variables
+ * Supports multiple credential sources with clear error handling:
+ * 1. FIREBASE_SERVICE_ACCOUNT_KEY (JSON string) - Primary/recommended
+ * 2. GOOGLE_CREDENTIALS (base64 or raw JSON)
+ * 3. Individual env vars (FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY)
+ * 4. Application Default Credentials (ADC) for Cloud Run
+ *
+ * @throws Error if no credentials available at runtime (not during build)
  */
 function getCredentials(): ServiceAccount | undefined {
-  // Option 1: Full JSON credentials in GOOGLE_CREDENTIALS
+  // Option 1: FIREBASE_SERVICE_ACCOUNT_KEY (primary method per user requirements)
+  const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+  if (serviceAccountKey) {
+    try {
+      const parsed = JSON.parse(serviceAccountKey);
+      if (parsed.project_id) {
+        log.debug('Using FIREBASE_SERVICE_ACCOUNT_KEY credentials');
+        return parsed as ServiceAccount;
+      }
+    } catch (error) {
+      log.error('FIREBASE ADMIN INIT ERROR: Invalid JSON in FIREBASE_SERVICE_ACCOUNT_KEY', {
+        error,
+      });
+      if (!isBuildTime) {
+        throw new Error(
+          'FIREBASE_SERVICE_ACCOUNT_KEY contains invalid JSON. Please check your environment configuration.',
+        );
+      }
+    }
+  }
+
+  // Option 2: Full JSON credentials in GOOGLE_CREDENTIALS
   const googleCredentials = process.env.GOOGLE_CREDENTIALS;
   if (googleCredentials) {
     try {
@@ -19,6 +51,7 @@ function getCredentials(): ServiceAccount | undefined {
       const decoded = Buffer.from(googleCredentials, 'base64').toString('utf-8');
       const parsed = JSON.parse(decoded);
       if (parsed.project_id) {
+        log.debug('Using GOOGLE_CREDENTIALS (base64) credentials');
         return parsed as ServiceAccount;
       }
     } catch {
@@ -26,6 +59,7 @@ function getCredentials(): ServiceAccount | undefined {
       try {
         const parsed = JSON.parse(googleCredentials);
         if (parsed.project_id) {
+          log.debug('Using GOOGLE_CREDENTIALS (raw JSON) credentials');
           return parsed as ServiceAccount;
         }
       } catch {
@@ -34,12 +68,13 @@ function getCredentials(): ServiceAccount | undefined {
     }
   }
 
-  // Option 2: Individual environment variables
+  // Option 3: Individual environment variables
   const projectId = process.env.GOOGLE_CLOUD_PROJECT || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
   if (projectId && clientEmail && privateKey) {
+    log.debug('Using individual environment variable credentials');
     return {
       projectId,
       clientEmail,
@@ -47,10 +82,26 @@ function getCredentials(): ServiceAccount | undefined {
     } as ServiceAccount;
   }
 
-  // Option 3: Default credentials (Cloud Run automatically provides these)
-  // When running on Cloud Run, ADC (Application Default Credentials) are available
-  log.debug('Using Application Default Credentials');
-  return undefined;
+  // Option 4: Application Default Credentials (ADC) for Cloud Run
+  // When running on Cloud Run, ADC are automatically available
+  if (process.env.K_SERVICE || process.env.GOOGLE_CLOUD_PROJECT) {
+    log.debug('Using Application Default Credentials (ADC)');
+    return undefined;
+  }
+
+  // No credentials found - warn during build, throw at runtime
+  if (isBuildTime) {
+    log.warn(
+      '⚠️ FIREBASE_SERVICE_ACCOUNT_KEY missing. Admin SDK initialized without credentials for build.',
+    );
+    return undefined;
+  }
+
+  // Runtime with no credentials - throw clear error
+  throw new Error(
+    'CRITICAL: Firebase Admin credentials not configured. ' +
+      'Set FIREBASE_SERVICE_ACCOUNT_KEY or GOOGLE_CREDENTIALS environment variable.',
+  );
 }
 
 /**

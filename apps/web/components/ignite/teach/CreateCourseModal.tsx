@@ -1,317 +1,168 @@
 'use client';
 
-import { BookOpen, FileArchive, Loader2, Plus, Sparkles } from 'lucide-react';
+import { Box, FileText, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { createCourse } from '@/lib/actions/courses';
-import { cn } from '@/lib/utils';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// CRITICAL FIX: Import the Safe Auth Hook
+import { useSafeAuth } from '@/providers/SafeAuthProvider';
 import { ScormUploader, type ScormUploadResult } from './ScormUploader';
 
-type CourseCreationType = 'native' | 'scorm';
-
-export interface CreateCourseModalProps {
-  /** Tenant ID for course creation */
-  tenantId: string;
-  /** Callback when course is created successfully */
-  onCourseCreated?: (courseId: string) => void;
-  /** Custom trigger element (for uncontrolled mode) */
-  trigger?: React.ReactNode;
-  /** Controlled open state */
-  isOpen?: boolean;
-  /** Callback when modal should close (for controlled mode) */
-  onClose?: () => void;
-  /** Additional class names */
-  className?: string;
+interface CreateCourseModalProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  tenantId?: string;
 }
 
-/**
- * CreateCourseModal - Modal for creating new courses
- *
- * Supports two modes:
- * - Native INSPIRE: Standard course creation
- * - SCORM Upload: Import existing SCORM packages
- */
-export function CreateCourseModal({
-  tenantId,
-  onCourseCreated,
-  trigger,
+export default function CreateCourseModal({
   isOpen,
-  onClose,
-  className,
+  onOpenChange,
+  tenantId = 'lxd360-dev',
 }: CreateCourseModalProps) {
-  const [internalOpen, setInternalOpen] = useState(false);
-
-  // Support both controlled and uncontrolled modes
-  const isControlled = isOpen !== undefined;
-  const open = isControlled ? isOpen : internalOpen;
-  const setOpen = (value: boolean) => {
-    if (isControlled) {
-      if (!value && onClose) {
-        onClose();
-      }
-    } else {
-      setInternalOpen(value);
-    }
-  };
-  const [courseType, setCourseType] = useState<CourseCreationType>('native');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('scorm');
+  const [isCreating, setIsCreating] = useState(false);
 
-  // SCORM-specific state
-  const [scormUploadResult, setScormUploadResult] = useState<ScormUploadResult | null>(null);
+  // Use the correct hook that matches our RootLayout provider
+  const { user } = useSafeAuth();
 
-  const handleReset = () => {
-    setTitle('');
-    setDescription('');
-    setCourseType('native');
-    setScormUploadResult(null);
-    setError(null);
-    setIsSubmitting(false);
-  };
-
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
-    if (!newOpen) {
-      handleReset();
-    }
-  };
-
-  const handleScormUploadComplete = (result: ScormUploadResult) => {
-    setScormUploadResult(result);
-    // Auto-fill title from filename if empty
-    if (!title) {
-      const nameWithoutExt = result.fileName.replace(/\.zip$/i, '').replace(/_/g, ' ');
-      setTitle(nameWithoutExt);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    if (!title.trim()) {
-      setError('Title is required');
-      return;
-    }
-
-    if (!description.trim()) {
-      setError('Description is required');
-      return;
-    }
-
-    if (courseType === 'scorm' && !scormUploadResult) {
-      setError('Please upload a SCORM package');
-      return;
-    }
-
-    setIsSubmitting(true);
+  const handleUploadComplete = async (result: ScormUploadResult) => {
+    setIsCreating(true);
 
     try {
-      const result = await createCourse({
-        title: title.trim(),
-        description: description.trim(),
-        type: courseType === 'scorm' ? 'scorm' : 'standard',
-        ...(courseType === 'scorm' &&
-          scormUploadResult && {
-            packageUrl: scormUploadResult.packageUrl,
-            scormVersion: '1.2', // Default, could be detected from package
-          }),
+      // 1. Get Fresh Token for the API
+      const token = await user?.getIdToken();
+      if (!token) throw new Error('Authentication missing');
+
+      // 2. Call the Enterprise API
+      const response = await fetch('/api/ignite/courses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: title,
+          description: description || '',
+          type: 'SCORM',
+          filePath: result.packageUrl,
+          tenantId: tenantId, // Enterprise Standard
+        }),
       });
 
-      if ('error' in result) {
-        setError(result.error);
-        return;
-      }
+      const data = await response.json();
 
-      onCourseCreated?.(result.courseId);
-      handleOpenChange(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create course');
-    } finally {
-      setIsSubmitting(false);
+      if (!response.ok) throw new Error(data.error || 'Failed to create course');
+
+      // 3. Success
+      onOpenChange(false);
+      window.location.reload();
+    } catch (err: unknown) {
+      console.error(err);
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      alert('Error saving course: ' + message);
+      setIsCreating(false);
     }
   };
 
-  const isFormValid =
-    title.trim() && description.trim() && (courseType === 'native' || scormUploadResult);
-
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      {/* Only render trigger in uncontrolled mode */}
-      {!isControlled && (
-        <DialogTrigger asChild>
-          {trigger ?? (
-            <Button
-              type="button"
-              className={cn('gap-2 bg-lxd-purple hover:bg-lxd-purple/90', className)}
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[600px] bg-gray-950 border-gray-800 text-white">
+        <DialogHeader>
+          <DialogTitle className="text-xl">Create New Course</DialogTitle>
+          <DialogDescription className="text-gray-400">
+            Choose how you want to create your course
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="py-4">
+          <Tabs
+            defaultValue="scorm"
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
+            <TabsList className="grid w-full grid-cols-2 bg-gray-900">
+              <TabsTrigger value="native" disabled className="data-[state=active]:bg-gray-800">
+                <Box className="mr-2 h-4 w-4" />
+                Native INSPIRE
+                <span className="ml-2 text-xs text-gray-500">(Coming Soon)</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="scorm"
+                className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                SCORM Upload
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent
+              value="native"
+              className="mt-4 p-8 text-center border border-dashed border-gray-800 rounded"
             >
-              <Plus className="w-4 h-4" aria-hidden="true" />
-              Create Course
-            </Button>
-          )}
-        </DialogTrigger>
-      )}
-      <DialogContent className="sm:max-w-lg">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-lxd-primary" />
-              Create New Course
-            </DialogTitle>
-            <DialogDescription>Choose how you want to create your course</DialogDescription>
-          </DialogHeader>
+              <p className="text-gray-400">Native Course Builder is under development.</p>
+            </TabsContent>
 
-          <div className="space-y-6 py-4">
-            {/* Course Type Toggle */}
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => setCourseType('native')}
-                className={cn(
-                  'flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-all',
-                  courseType === 'native'
-                    ? 'border-lxd-primary bg-lxd-primary/5'
-                    : 'border-border hover:border-lxd-primary/50',
-                )}
-              >
-                <div
-                  className={cn(
-                    'flex h-10 w-10 items-center justify-center rounded-lg',
-                    courseType === 'native' ? 'bg-lxd-primary/20' : 'bg-muted',
-                  )}
-                >
-                  <Sparkles
-                    className={cn(
-                      'h-5 w-5',
-                      courseType === 'native' ? 'text-lxd-primary' : 'text-muted-foreground',
-                    )}
-                  />
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-medium">Native INSPIRE</p>
-                  <p className="text-xs text-muted-foreground">Build from scratch</p>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setCourseType('scorm')}
-                className={cn(
-                  'flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-all',
-                  courseType === 'scorm'
-                    ? 'border-lxd-primary bg-lxd-primary/5'
-                    : 'border-border hover:border-lxd-primary/50',
-                )}
-              >
-                <div
-                  className={cn(
-                    'flex h-10 w-10 items-center justify-center rounded-lg',
-                    courseType === 'scorm' ? 'bg-lxd-primary/20' : 'bg-muted',
-                  )}
-                >
-                  <FileArchive
-                    className={cn(
-                      'h-5 w-5',
-                      courseType === 'scorm' ? 'text-lxd-primary' : 'text-muted-foreground',
-                    )}
-                  />
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-medium">SCORM Upload</p>
-                  <p className="text-xs text-muted-foreground">Import existing package</p>
-                </div>
-              </button>
-            </div>
-
-            {/* SCORM Uploader */}
-            {courseType === 'scorm' && (
-              <ScormUploader
-                tenantId={tenantId}
-                onUploadComplete={handleScormUploadComplete}
-                onUploadError={(err) => setError(err.message)}
-                disabled={isSubmitting}
-              />
-            )}
-
-            {/* Course Details */}
-            <div className="space-y-4">
+            <TabsContent value="scorm" className="mt-4 space-y-4">
+              {/* Metadata Fields */}
               <div className="space-y-2">
-                <Label htmlFor="title">Course Title</Label>
+                <Label>Course Title</Label>
                 <Input
-                  id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g., Leadership Fundamentals"
-                  disabled={isSubmitting}
-                  required
+                  placeholder="e.g. Cybersecurity Basics"
+                  className="bg-gray-900 border-gray-700"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
+                <Label>Description</Label>
+                <Input
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Describe what learners will gain from this course..."
-                  rows={3}
-                  disabled={isSubmitting}
-                  required
+                  placeholder="Brief summary..."
+                  className="bg-gray-900 border-gray-700"
                 />
               </div>
-            </div>
 
-            {/* Error Message */}
-            {error && (
-              <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-500">
-                {error}
-              </div>
-            )}
-          </div>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => handleOpenChange(false)}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={!isFormValid || isSubmitting}
-              className="bg-lxd-purple hover:bg-lxd-purple/90"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Creating...
-                </>
+              {/* The Uploader */}
+              {title.length > 3 ? (
+                <div className="mt-4">
+                  {isCreating ? (
+                    <div className="flex items-center justify-center p-8 border border-gray-800 rounded bg-gray-900">
+                      <Loader2 className="animate-spin mr-2" />
+                      <span>Finalizing Course...</span>
+                    </div>
+                  ) : (
+                    <ScormUploader
+                      tenantId={tenantId}
+                      onUploadComplete={handleUploadComplete}
+                      onUploadError={(err) => alert('Upload failed: ' + err.message)}
+                    />
+                  )}
+                </div>
               ) : (
-                <>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Course
-                </>
+                <div className="p-4 bg-gray-900 text-gray-500 text-sm text-center rounded">
+                  Enter a title to enable upload.
+                </div>
               )}
-            </Button>
-          </DialogFooter>
-        </form>
+            </TabsContent>
+          </Tabs>
+        </div>
       </DialogContent>
     </Dialog>
   );
 }
+
+// Also export the named export for backward compatibility
+export { CreateCourseModal };

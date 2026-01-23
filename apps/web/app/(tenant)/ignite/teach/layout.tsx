@@ -14,32 +14,32 @@ import { cn } from '@/lib/utils';
 const teachNavItems = [
   {
     label: 'Dashboard',
-    href: '/(tenant)/ignite/teach/dashboard',
+    href: '/ignite/teach/dashboard',
     icon: LayoutDashboard,
   },
   {
     label: 'Gradebook',
-    href: '/(tenant)/ignite/teach/gradebook',
+    href: '/ignite/teach/gradebook',
     icon: GraduationCap,
   },
   {
     label: 'Courses',
-    href: '/(tenant)/ignite/teach/courses',
+    href: '/ignite/teach/courses',
     icon: BookOpen,
   },
   {
     label: 'Learners',
-    href: '/(tenant)/ignite/teach/learners',
+    href: '/ignite/teach/learners',
     icon: Users,
   },
   {
     label: 'Analytics',
-    href: '/(tenant)/ignite/teach/analytics',
+    href: '/ignite/teach/analytics',
     icon: BarChart3,
   },
   {
     label: 'Settings',
-    href: '/(tenant)/ignite/teach/settings',
+    href: '/ignite/teach/settings',
     icon: Settings,
   },
 ];

@@ -1,23 +1,22 @@
 'use client';
 
-import { Plus, RefreshCw } from 'lucide-react';
-import { useCallback, useState } from 'react';
-import { CreateCourseModal } from '@/components/ignite/teach/CreateCourseModal';
+import { BookOpen, Plus, RefreshCw } from 'lucide-react';
+import { useState } from 'react';
+import CreateCourseModal from '@/components/ignite/teach/CreateCourseModal';
 import { Button } from '@/components/ui/button';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
 
 export default function CoursesPage() {
   const { user, loading } = useSafeAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [courses] = useState<unknown[]>([]);
 
-  const handleCourseCreated = useCallback((_courseId: string) => {
-    setRefreshKey((prev) => prev + 1);
-  }, []);
+  // TODO: Replace with real Firestore listener in next Strike
+  // For now, we just want to fix the Create Flow.
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-black">
+      <div className="flex h-screen items-center justify-center bg-black text-white">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
       </div>
     );
@@ -39,7 +38,7 @@ export default function CoursesPage() {
               type="button"
               variant="outline"
               size="icon"
-              onClick={() => setRefreshKey((prev) => prev + 1)}
+              onClick={() => window.location.reload()}
               aria-label="Refresh courses"
               className="border-gray-700 hover:bg-gray-800"
             >
@@ -47,40 +46,46 @@ export default function CoursesPage() {
             </Button>
             <Button
               type="button"
-              className="bg-blue-600 hover:bg-blue-500 text-white"
               onClick={() => setIsModalOpen(true)}
+              className="bg-blue-600 hover:bg-blue-500 text-white"
             >
               <Plus className="mr-2 h-4 w-4" /> Create Course
             </Button>
           </div>
         </div>
 
-        {/* CONTENT */}
-        <div className="grid gap-4" key={refreshKey}>
-          <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-12 text-center">
-            <h3 className="text-xl font-medium text-gray-300">No courses found</h3>
-            <p className="text-gray-500 mt-2 max-w-sm mx-auto">
-              Get started by creating your first course using the button above. You can upload SCORM
-              packages or build native content.
-            </p>
-            <Button
-              type="button"
-              className="mt-6 bg-white text-black hover:bg-gray-200"
-              onClick={() => setIsModalOpen(true)}
-            >
-              Create Your First Course
-            </Button>
-          </div>
+        {/* CONTENT AREA */}
+        <div className="grid gap-4">
+          {courses.length === 0 ? (
+            <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-12 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="p-4 bg-gray-800 rounded-full">
+                  <BookOpen className="h-8 w-8 text-gray-400" />
+                </div>
+              </div>
+              <h3 className="text-xl font-medium text-gray-300">No courses found</h3>
+              <p className="text-gray-500 mt-2 max-w-sm mx-auto">
+                Get started by creating your first course using the button above.
+              </p>
+              <Button
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                variant="outline"
+                className="mt-6 border-gray-700 text-gray-300 hover:bg-gray-800"
+              >
+                Create Your First Course
+              </Button>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {/* Course cards will go here */}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Create Course Modal */}
-      <CreateCourseModal
-        tenantId="lxd360-dev"
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onCourseCreated={handleCourseCreated}
-      />
+      {/* THE MODAL - WIRED CORRECTLY */}
+      <CreateCourseModal isOpen={isModalOpen} onOpenChange={setIsModalOpen} />
     </div>
   );
 }
