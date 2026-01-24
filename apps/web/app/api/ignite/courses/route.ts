@@ -63,3 +63,42 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+export async function GET(req: Request) {
+  try {
+    // 1. AUTH CHECK
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const idToken = authHeader.split('Bearer ')[1];
+    await adminAuth.verifyIdToken(idToken);
+
+    // 2. HARDCODED TENANT (For now, until strict multi-tenancy)
+    const tenantId = 'lxd360-dev';
+
+    // 3. FETCH
+    const snapshot = await adminDb
+      .collection('tenants')
+      .doc(tenantId)
+      .collection('courses')
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    const courses = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      // Convert Firestore timestamps to ISO strings for JSON serialization
+      createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || null,
+      updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || null,
+    }));
+
+    log.info('Courses fetched', { count: courses.length, tenantId });
+
+    return NextResponse.json({ courses });
+  } catch (error: unknown) {
+    log.error('Failed to fetch courses', { error });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
 import { ScormUploader, type ScormUploadResult } from './ScormUploader';
 
-interface CreateCourseModalProps {
+export interface CreateCourseModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   tenantId?: string;
@@ -69,7 +69,7 @@ export default function CreateCourseModal({
     } catch (err: unknown) {
       console.error(err);
       const message = err instanceof Error ? err.message : 'Unknown error';
-      alert('Error saving course: ' + message);
+      alert(`Error saving course: ${message}`);
       setIsCreating(false);
     }
   };
@@ -147,7 +147,7 @@ export default function CreateCourseModal({
                     <ScormUploader
                       tenantId={tenantId}
                       onUploadComplete={handleUploadComplete}
-                      onUploadError={(err) => alert('Upload failed: ' + err.message)}
+                      onUploadError={(err) => alert(`Upload failed: ${err.message}`)}
                     />
                   )}
                 </div>

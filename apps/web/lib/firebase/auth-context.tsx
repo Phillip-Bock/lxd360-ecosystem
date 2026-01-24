@@ -12,10 +12,10 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   error: Error | null;
-  signIn: (email: string, password: string) => Promise<UserCredential>;
-  signUp: (email: string, password: string) => Promise<UserCredential>;
+  signIn: (email: string, password: string) => Promise<UserCredential | null>;
+  signUp: (email: string, password: string) => Promise<UserCredential | null>;
   signOut: () => Promise<void>;
-  signInWithGoogle: () => Promise<UserCredential>;
+  signInWithGoogle: () => Promise<UserCredential | null>;
   resetPassword: (email: string) => Promise<void>;
   isAuthenticated: boolean;
 }

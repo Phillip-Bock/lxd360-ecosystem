@@ -32,7 +32,7 @@
 
 import { doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getFirebaseDb } from '@/lib/firebase/client';
+import { requireDb } from '@/lib/firebase/client';
 import {
   ContentModality,
   type ContentModalityType,
@@ -197,7 +197,7 @@ export function useModalitySwapper(config: ModalitySwapperConfig): ModalitySwapp
     if (recommendedModality) {
       // Log acceptance to Firestore
       const recommendationPath = getModalityRecommendationPath(tenantId, learnerId, skillId);
-      const db = getFirebaseDb();
+      const db = requireDb();
       setDoc(
         doc(db, recommendationPath),
         {
@@ -222,7 +222,7 @@ export function useModalitySwapper(config: ModalitySwapperConfig): ModalitySwapp
     (reason?: string) => {
       // Log rejection to Firestore (EU AI Act: learner override tracking)
       const recommendationPath = getModalityRecommendationPath(tenantId, learnerId, skillId);
-      const db = getFirebaseDb();
+      const db = requireDb();
       setDoc(
         doc(db, recommendationPath),
         {
@@ -306,7 +306,7 @@ export function useModalitySwapper(config: ModalitySwapperConfig): ModalitySwapp
 
     // Subscribe to modality recommendations
     const recommendationPath = getModalityRecommendationPath(tenantId, learnerId, skillId);
-    const db = getFirebaseDb();
+    const db = requireDb();
     const recommendationRef = doc(db, recommendationPath);
 
     unsubscribeRef.current = onSnapshot(

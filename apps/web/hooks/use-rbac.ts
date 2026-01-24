@@ -2,7 +2,7 @@
 
 import { onIdTokenChanged, type User } from 'firebase/auth';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getFirebaseAuth } from '@/lib/firebase/client';
+import { requireAuth } from '@/lib/firebase/client';
 import {
   hasMinimumRole as checkMinimumRole,
   hasPermission as checkPermission,
@@ -128,7 +128,7 @@ export function useRole(): UseRoleReturn {
 
   // Listen for auth state and token changes
   useEffect(() => {
-    const auth = getFirebaseAuth();
+    const auth = requireAuth();
     const unsubscribe = onIdTokenChanged(auth, (firebaseUser) => {
       extractClaims(firebaseUser);
     });

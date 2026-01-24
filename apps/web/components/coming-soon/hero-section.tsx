@@ -1,8 +1,9 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, LogIn } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { TextShimmer } from '@/components/animations/text/shimmer';
 import { AnimatedLinesBadge } from '@/components/ui/animated-lines-badge';
@@ -18,6 +19,22 @@ export function HeroSection() {
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black">
+      {/* Employee Log In Button - Top Right */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: videoEnded ? 1 : 0 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+        className="absolute top-6 right-6 z-30"
+      >
+        <Link
+          href="/login"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white/80 hover:text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-lg transition-all"
+        >
+          <LogIn className="h-4 w-4" />
+          Employee Log In
+        </Link>
+      </motion.div>
+
       {/* Video - Only content initially */}
       <AnimatePresence>
         {!videoEnded && (

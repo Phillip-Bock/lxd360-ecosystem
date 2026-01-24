@@ -73,10 +73,10 @@ export class InternalLRSClient implements ILRSClient {
   async sendStatements(statements: XAPIStatement[]): Promise<LRSResponse> {
     try {
       // Import Firebase Firestore dynamically to avoid circular dependencies
-      const { getFirebaseDb } = await import('@/lib/firebase/client');
+      const { requireDb } = await import('@/lib/firebase/client');
       const { collection, addDoc } = await import('firebase/firestore');
 
-      const statementsRef = collection(getFirebaseDb(), 'xapi_statements');
+      const statementsRef = collection(requireDb(), 'xapi_statements');
       const ids: string[] = [];
 
       for (const statement of statements) {
@@ -195,10 +195,10 @@ export class InternalLRSClient implements ILRSClient {
 
   async ping(): Promise<boolean> {
     try {
-      const { getFirebaseDb } = await import('@/lib/firebase/client');
+      const { requireDb } = await import('@/lib/firebase/client');
       const { collection, getDocs, query, limit } = await import('firebase/firestore');
 
-      const statementsRef = collection(getFirebaseDb(), 'xapi_statements');
+      const statementsRef = collection(requireDb(), 'xapi_statements');
       await getDocs(query(statementsRef, limit(1)));
       return true;
     } catch {

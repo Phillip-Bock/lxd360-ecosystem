@@ -99,6 +99,11 @@ export default function ResetPasswordPage(): React.JSX.Element | null {
 
       try {
         const auth = getFirebaseAuth();
+        if (!auth) {
+          setIsValidSession(false);
+          setCheckingSession(false);
+          return;
+        }
         await verifyPasswordResetCode(auth, code);
         setOobCode(code);
         setIsValidSession(true);

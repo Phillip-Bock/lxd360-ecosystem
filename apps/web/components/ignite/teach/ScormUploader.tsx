@@ -5,7 +5,7 @@ import { AlertCircle, CheckCircle2, FileArchive, Loader2, Upload, X } from 'luci
 import { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { getFirebaseStorage } from '@/lib/firebase/client';
+import { requireStorage } from '@/lib/firebase/client';
 import { cn } from '@/lib/utils';
 
 export interface ScormUploadResult {
@@ -99,7 +99,7 @@ export function ScormUploader({
       const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
       const storagePath = `tenants/${tenantId}/scorm/${effectiveCourseId}/${timestamp}_${sanitizedFileName}`;
 
-      const storage = getFirebaseStorage();
+      const storage = requireStorage();
       const storageRef = ref(storage, storagePath);
 
       const uploadTask = uploadBytesResumable(storageRef, file, {

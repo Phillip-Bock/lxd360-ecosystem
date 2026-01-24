@@ -158,6 +158,11 @@ export default function SignUpPage(): React.JSX.Element | null {
 
     try {
       const auth = getFirebaseAuth();
+      if (!auth) {
+        setError('Authentication service unavailable');
+        setIsLoading(false);
+        return;
+      }
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, {
         displayName: `${firstName} ${lastName}`.trim(),
@@ -185,6 +190,11 @@ export default function SignUpPage(): React.JSX.Element | null {
     try {
       const provider = new GoogleAuthProvider();
       const auth = getFirebaseAuth();
+      if (!auth) {
+        setError('Authentication service unavailable');
+        setIsLoading(false);
+        return;
+      }
       await signInWithPopup(auth, provider);
       router.push('/dashboard');
       router.refresh();
@@ -208,6 +218,11 @@ export default function SignUpPage(): React.JSX.Element | null {
     try {
       const provider = new OAuthProvider('microsoft.com');
       const auth = getFirebaseAuth();
+      if (!auth) {
+        setError('Authentication service unavailable');
+        setIsLoading(false);
+        return;
+      }
       await signInWithPopup(auth, provider);
       router.push('/dashboard');
       router.refresh();

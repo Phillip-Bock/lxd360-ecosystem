@@ -2,22 +2,30 @@
 // Client SDK
 // =============================================================================
 
+export type { FirebaseApp } from 'firebase/app';
+// Re-export types from Firebase SDK
+export type { User, UserCredential } from 'firebase/auth';
+export type { FirebaseStorage, StorageReference } from 'firebase/storage';
 export type {
   Auth,
   CollectionReference,
   DocumentData,
   DocumentReference,
   DocumentSnapshot,
-  FirebaseApp,
-  FirebaseStorage,
   Firestore,
   Query,
   QuerySnapshot,
-  StorageReference,
-  User,
-  UserCredential,
 } from './client';
-export { getFirebaseAuth, getFirebaseDb, getFirebaseStorage } from './client';
+
+// Export client functions
+export {
+  getFirebaseAuth,
+  getFirebaseDb,
+  getFirebaseStorage,
+  requireAuth,
+  requireDb,
+  requireStorage,
+} from './client';
 
 // =============================================================================
 // Auth Context & Hooks

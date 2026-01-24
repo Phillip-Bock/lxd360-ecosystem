@@ -1,7 +1,5 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
 import { Mail, MoreVertical, Search, UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -67,9 +65,6 @@ const learnersData = [
   },
 ];
 
-/**
- * Learners management page - View and manage enrolled learners
- */
 export default function LearnersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -83,14 +78,14 @@ export default function LearnersPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-brand-primary">Learners</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Learners</h1>
           <p className="text-muted-foreground mt-1">Manage and monitor your learners</p>
         </div>
-        <Button className="gap-2 bg-lxd-purple hover:bg-lxd-purple/90">
+        <Button className="gap-2 bg-[var(--color-lxd-primary)] hover:bg-[var(--color-lxd-primary)]/90">
           <UserPlus className="w-4 h-4" aria-hidden="true" />
           Invite Learners
         </Button>
@@ -109,7 +104,7 @@ export default function LearnersPage() {
             placeholder="Search learners..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-lxd-dark-surface border border-lxd-dark-border rounded-lg text-brand-primary placeholder-muted-foreground focus:outline-hidden focus:border-lxd-purple/50"
+            className="w-full pl-10 pr-4 py-2 bg-card border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:border-[var(--color-lxd-primary)]/50"
             aria-label="Search learners"
           />
         </div>
@@ -118,7 +113,7 @@ export default function LearnersPage() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2 bg-lxd-dark-surface border border-lxd-dark-border rounded-lg text-brand-primary"
+          className="px-4 py-2 bg-card border border-border rounded-lg text-foreground"
           aria-label="Filter by status"
         >
           <option value="all">All Status</option>
@@ -138,12 +133,12 @@ export default function LearnersPage() {
         {filteredLearners.map((learner) => (
           <Card
             key={learner.id}
-            className="bg-lxd-dark-surface border-lxd-dark-border hover:border-lxd-purple/50 transition-colors"
+            className="bg-card/80 backdrop-blur-sm border-border/50 hover:border-[var(--color-lxd-primary)]/50 transition-colors"
           >
             <CardContent className="p-4">
               <div className="flex items-center gap-4">
                 {/* Avatar */}
-                <div className="w-12 h-12 rounded-full bg-lxd-purple/20 flex items-center justify-center text-lxd-purple font-medium">
+                <div className="w-12 h-12 rounded-full bg-[var(--color-lxd-primary)]/20 flex items-center justify-center text-[var(--color-lxd-primary)] font-medium">
                   {learner.name
                     .split(' ')
                     .map((n) => n[0])
@@ -153,15 +148,15 @@ export default function LearnersPage() {
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-medium text-brand-primary truncate">
-                      {learner.name}
-                    </h3>
+                    <h3 className="text-sm font-medium text-foreground truncate">{learner.name}</h3>
                     <span
                       className={cn(
                         'px-2 py-0.5 text-xs rounded-full',
-                        learner.status === 'active' && 'bg-green-500/20 text-green-400',
-                        learner.status === 'at_risk' && 'bg-red-500/20 text-red-400',
-                        learner.status === 'inactive' && 'bg-gray-500/20 text-gray-400',
+                        learner.status === 'active' &&
+                          'bg-[var(--color-lxd-success)]/20 text-[var(--color-lxd-success)]',
+                        learner.status === 'at_risk' &&
+                          'bg-[var(--color-lxd-error)]/20 text-[var(--color-lxd-error)]',
+                        learner.status === 'inactive' && 'bg-muted text-muted-foreground',
                       )}
                     >
                       {learner.status.replace('_', ' ')}
@@ -173,17 +168,17 @@ export default function LearnersPage() {
                 {/* Stats */}
                 <div className="hidden md:flex items-center gap-8 text-center">
                   <div>
-                    <p className="text-sm font-medium text-brand-primary">
+                    <p className="text-sm font-medium text-foreground">
                       {learner.completedCourses}/{learner.enrolledCourses}
                     </p>
                     <p className="text-xs text-muted-foreground">Courses</p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-brand-primary">{learner.avgProgress}%</p>
+                    <p className="text-sm font-medium text-foreground">{learner.avgProgress}%</p>
                     <p className="text-xs text-muted-foreground">Progress</p>
                   </div>
                   <div>
-                    <p className="text-sm text-brand-primary">
+                    <p className="text-sm text-foreground">
                       {new Date(learner.lastActive).toLocaleDateString()}
                     </p>
                     <p className="text-xs text-muted-foreground">Last Active</p>
@@ -194,14 +189,14 @@ export default function LearnersPage() {
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    className="p-2 rounded-lg hover:bg-lxd-dark-border/50 transition-colors"
+                    className="p-2 rounded-lg hover:bg-muted transition-colors"
                     aria-label={`Send email to ${learner.name}`}
                   >
                     <Mail className="w-4 h-4 text-muted-foreground" />
                   </button>
                   <button
                     type="button"
-                    className="p-2 rounded-lg hover:bg-lxd-dark-border/50 transition-colors"
+                    className="p-2 rounded-lg hover:bg-muted transition-colors"
                     aria-label={`More options for ${learner.name}`}
                   >
                     <MoreVertical className="w-4 h-4 text-muted-foreground" />

@@ -11,7 +11,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { getFirebaseAuth, getFirebaseDb } from '@/lib/firebase/client';
+import { requireAuth, requireDb } from '@/lib/firebase/client';
 import { logger } from '@/lib/logger';
 import type { RoleCategory, Tenant, TenantFeatures, UserProfile, UserRole } from '@/types/domain';
 
@@ -329,7 +329,7 @@ export const RoleProvider = ({ children }: RoleProviderProps) => {
   const loadUserProfile = useCallback(
     async (uid: string, userTenantId: string) => {
       try {
-        const db = getFirebaseDb();
+        const db = requireDb();
         const learnerRef = doc(db, 'tenants', userTenantId, 'learners', uid);
         const learnerDoc = await getDoc(learnerRef);
 
@@ -372,7 +372,7 @@ export const RoleProvider = ({ children }: RoleProviderProps) => {
   // Load tenant data from Firestore
   const loadTenant = useCallback(async (loadTenantId: string) => {
     try {
-      const db = getFirebaseDb();
+      const db = requireDb();
       const tenantRef = doc(db, 'tenants', loadTenantId);
       const tenantDoc = await getDoc(tenantRef);
 
@@ -424,7 +424,7 @@ export const RoleProvider = ({ children }: RoleProviderProps) => {
 
   // Set up Firebase Auth listener
   useEffect(() => {
-    const auth = getFirebaseAuth();
+    const auth = requireAuth();
 
     const unsubscribe = onIdTokenChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
@@ -506,7 +506,7 @@ export const RoleProvider = ({ children }: RoleProviderProps) => {
   useEffect(() => {
     if (!user || !tenantId) return;
 
-    const db = getFirebaseDb();
+    const db = requireDb();
     const learnerRef = doc(db, 'tenants', tenantId, 'learners', user.uid);
 
     const unsubscribe = onSnapshot(

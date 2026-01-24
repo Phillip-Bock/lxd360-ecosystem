@@ -15,7 +15,7 @@ import {
   type Timestamp,
 } from 'firebase/firestore';
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { getFirebaseDb, getFirebaseStorage } from '@/lib/firebase/client';
+import { requireDb, requireStorage } from '@/lib/firebase/client';
 import {
   type AssetCategory,
   getAssetCategory,
@@ -128,8 +128,8 @@ export async function uploadAsset(
   // Generate unique filename and path
   const fileName = generateUniqueFileName(originalFileName, mimeType);
   const storagePath = getStoragePath(tenantId, fileName);
-  const db = getFirebaseDb();
-  const storage = getFirebaseStorage();
+  const db = requireDb();
+  const storage = requireStorage();
   const assetId = doc(collection(db, 'temp')).id; // Generate unique ID
 
   // Create storage reference
@@ -202,8 +202,8 @@ export async function deleteAsset(
   assetId: string,
   storagePath: string,
 ): Promise<void> {
-  const db = getFirebaseDb();
-  const storage = getFirebaseStorage();
+  const db = requireDb();
+  const storage = requireStorage();
   // Delete from Storage
   const storageRef = ref(storage, storagePath);
   await deleteObject(storageRef);
@@ -221,7 +221,7 @@ export async function updateAssetMetadata(
   assetId: string,
   updates: Partial<Pick<AssetMetadata, 'altText' | 'tags' | 'aiProcessed' | 'dominantColors'>>,
 ): Promise<void> {
-  const db = getFirebaseDb();
+  const db = requireDb();
   const assetRef = doc(db, 'tenants', tenantId, 'assets', assetId);
   await setDoc(
     assetRef,

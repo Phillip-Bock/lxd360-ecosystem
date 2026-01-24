@@ -12,7 +12,7 @@ import {
   where,
   writeBatch,
 } from 'firebase/firestore';
-import { getFirebaseDb } from '@/lib/firebase/client';
+import { requireDb } from '@/lib/firebase/client';
 import type {
   CreateLessonInput,
   Lesson,
@@ -282,7 +282,7 @@ export async function createLesson(
 ): Promise<Lesson> {
   try {
     // Use raw collection for write (serverTimestamp() returns FieldValue, not Timestamp)
-    const lessonsRef = collection(getFirebaseDb(), COLLECTIONS.LESSONS);
+    const lessonsRef = collection(requireDb(), COLLECTIONS.LESSONS);
     const now = serverTimestamp();
 
     const lessonData = {
@@ -413,7 +413,7 @@ export async function deleteLesson(lessonId: string): Promise<void> {
  */
 export async function reorderLessons(courseId: string, lessonIds: string[]): Promise<void> {
   try {
-    const batch = writeBatch(getFirebaseDb());
+    const batch = writeBatch(requireDb());
 
     lessonIds.forEach((lessonId, index) => {
       const docRef = getLessonRef(lessonId);

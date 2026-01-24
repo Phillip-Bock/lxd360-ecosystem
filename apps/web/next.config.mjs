@@ -11,10 +11,7 @@ const baseConfig = {
   },
 
   compiler: {
-    removeConsole:
-      process.env.NODE_ENV === 'production'
-        ? { exclude: ['error', 'warn'] }
-        : false,
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
   },
 
   transpilePackages: ['@tanstack/react-table', '@tanstack/table-core'],
@@ -69,34 +66,110 @@ const baseConfig = {
   async redirects() {
     return [
       { source: '/dashboard/system-admin', destination: '/dashboard/super-admin', permanent: true },
-      { source: '/dashboard/system-admin/:path*', destination: '/dashboard/super-admin/:path*', permanent: true },
-      { source: '/dashboard/tenant-admin', destination: '/dashboard/organization-admin', permanent: true },
-      { source: '/dashboard/tenant-admin/:path*', destination: '/dashboard/organization-admin/:path*', permanent: true },
+      {
+        source: '/dashboard/system-admin/:path*',
+        destination: '/dashboard/super-admin/:path*',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/tenant-admin',
+        destination: '/dashboard/organization-admin',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/tenant-admin/:path*',
+        destination: '/dashboard/organization-admin/:path*',
+        permanent: true,
+      },
       { source: '/dashboard/manager', destination: '/dashboard/program-admin', permanent: true },
-      { source: '/dashboard/manager/:path*', destination: '/dashboard/program-admin/:path*', permanent: true },
+      {
+        source: '/dashboard/manager/:path*',
+        destination: '/dashboard/program-admin/:path*',
+        permanent: true,
+      },
       { source: '/dashboard/inspire-studio', destination: '/inspire-studio', permanent: true },
-      { source: '/dashboard/inspire-studio/:path*', destination: '/inspire-studio/:path*', permanent: true },
+      {
+        source: '/dashboard/inspire-studio/:path*',
+        destination: '/inspire-studio/:path*',
+        permanent: true,
+      },
       { source: '/inspire-studio-app', destination: '/inspire-studio', permanent: true },
-      { source: '/inspire-studio-app/:path*', destination: '/inspire-studio/:path*', permanent: true },
+      {
+        source: '/inspire-studio-app/:path*',
+        destination: '/inspire-studio/:path*',
+        permanent: true,
+      },
       { source: '/dashboard/lxp360', destination: '/lxp360', permanent: true },
       { source: '/dashboard/lxp360/:path*', destination: '/lxp360/:path*', permanent: true },
-      { source: '/dashboard/lxd/author', destination: '/inspire-studio/course-builder', permanent: true },
-      { source: '/dashboard/lxd/encoding', destination: '/inspire-studio/developer-tools', permanent: true },
-      { source: '/dashboard/lxd/synthesization', destination: '/inspire-studio/developer-tools', permanent: true },
-      { source: '/dashboard/lxd/assimilation', destination: '/inspire-studio/developer-tools', permanent: true },
-      { source: '/dashboard/lxd/storyboard/course', destination: '/inspire-studio/storyboard', permanent: true },
-      { source: '/dashboard/lxd/lesson', destination: '/inspire-studio/course-builder', permanent: true },
-      { source: '/dashboard/lxd/player-editor', destination: '/inspire-studio/course-builder', permanent: true },
+      {
+        source: '/dashboard/lxd/author',
+        destination: '/inspire-studio/course-builder',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/lxd/encoding',
+        destination: '/inspire-studio/developer-tools',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/lxd/synthesization',
+        destination: '/inspire-studio/developer-tools',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/lxd/assimilation',
+        destination: '/inspire-studio/developer-tools',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/lxd/storyboard/course',
+        destination: '/inspire-studio/storyboard',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/lxd/lesson',
+        destination: '/inspire-studio/course-builder',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/lxd/player-editor',
+        destination: '/inspire-studio/course-builder',
+        permanent: true,
+      },
       { source: '/dashboard/lxd', destination: '/inspire-studio', permanent: true },
       { source: '/dashboard/lxd/:path*', destination: '/inspire-studio/:path*', permanent: true },
       { source: '/dashboard/internal-learner', destination: '/lxp360/learner', permanent: true },
-      { source: '/dashboard/internal-learner/:path*', destination: '/lxp360/learner/:path*', permanent: true },
-      { source: '/dashboard/internal-instructor', destination: '/lxp360/instructor', permanent: true },
-      { source: '/dashboard/internal-instructor/:path*', destination: '/lxp360/instructor/:path*', permanent: true },
-      { source: '/dashboard/internal-lms-admin', destination: '/lxp360/lms-admin', permanent: true },
-      { source: '/dashboard/internal-lms-admin/:path*', destination: '/lxp360/lms-admin/:path*', permanent: true },
+      {
+        source: '/dashboard/internal-learner/:path*',
+        destination: '/lxp360/learner/:path*',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/internal-instructor',
+        destination: '/lxp360/instructor',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/internal-instructor/:path*',
+        destination: '/lxp360/instructor/:path*',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/internal-lms-admin',
+        destination: '/lxp360/lms-admin',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/internal-lms-admin/:path*',
+        destination: '/lxp360/lms-admin/:path*',
+        permanent: true,
+      },
       { source: '/dashboard/internal-designer', destination: '/inspire-studio', permanent: true },
-      { source: '/dashboard/internal-designer/:path*', destination: '/inspire-studio/:path*', permanent: true },
+      {
+        source: '/dashboard/internal-designer/:path*',
+        destination: '/inspire-studio/:path*',
+        permanent: true,
+      },
       { source: '/waitlist', destination: '/vip', permanent: true },
       { source: '/dashboard/client-admin', destination: '/admin', permanent: true },
       { source: '/dashboard/client-admin/:path*', destination: '/admin/:path*', permanent: true },
@@ -145,7 +218,10 @@ const baseConfig = {
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-XSS-Protection', value: '1; mode=block' },
-          { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains; preload' },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
           {

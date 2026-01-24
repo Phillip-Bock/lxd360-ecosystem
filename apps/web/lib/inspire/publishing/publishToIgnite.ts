@@ -16,7 +16,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { z } from 'zod';
-import { getFirebaseDb } from '@/lib/firebase/client';
+import { requireDb } from '@/lib/firebase/client';
 
 // =============================================================================
 // Types
@@ -295,7 +295,7 @@ export async function publishToIgnite(
     }
 
     // Step 2: Get current published version
-    const courseRef = doc(getFirebaseDb(), 'tenants', manifest.tenantId, 'courses', manifest.id);
+    const courseRef = doc(requireDb(), 'tenants', manifest.tenantId, 'courses', manifest.id);
     const courseSnap = await getDoc(courseRef);
     const currentVersion = courseSnap.exists()
       ? ((courseSnap.data()?.publishedVersion as string | undefined) ?? '1.0')
@@ -323,7 +323,7 @@ export async function publishToIgnite(
 
     // Step 6: Create version snapshot
     const versionRef = doc(
-      getFirebaseDb(),
+      requireDb(),
       'tenants',
       manifest.tenantId,
       'courses',
@@ -377,7 +377,7 @@ export async function unpublishCourse(
   courseId: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const courseRef = doc(getFirebaseDb(), 'tenants', tenantId, 'courses', courseId);
+    const courseRef = doc(requireDb(), 'tenants', tenantId, 'courses', courseId);
     await updateDoc(courseRef, {
       status: 'draft',
       updatedAt: serverTimestamp(),

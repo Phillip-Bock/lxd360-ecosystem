@@ -41,7 +41,7 @@ export default function RawLoginPage() {
 
       addLog('🟢 LOGIN SUCCESSFUL! Redirecting...');
 
-      window.location.href = '/ignite/teach/courses';
+      window.location.href = '/ignite/dashboard';
     } catch (err: unknown) {
       const error = err as Error & { code?: string };
       console.error(err);
@@ -66,8 +66,11 @@ export default function RawLoginPage() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '400px' }}>
         <div>
-          <label style={{ display: 'block', marginBottom: '5px' }}>Email:</label>
+          <label htmlFor="raw-email" style={{ display: 'block', marginBottom: '5px' }}>
+            Email:
+          </label>
           <input
+            id="raw-email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -77,8 +80,11 @@ export default function RawLoginPage() {
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '5px' }}>Password:</label>
+          <label htmlFor="raw-password" style={{ display: 'block', marginBottom: '5px' }}>
+            Password:
+          </label>
           <input
+            id="raw-password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -88,6 +94,7 @@ export default function RawLoginPage() {
         </div>
 
         <button
+          type="button"
           onClick={handleManualLogin}
           style={{
             padding: '15px',

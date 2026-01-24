@@ -55,10 +55,10 @@ export async function storeStatement(
   options?: StoreStatementOptions,
 ): Promise<StoreStatementResult> {
   try {
-    const { getFirebaseDb } = await import('@/lib/firebase/client');
+    const { requireDb } = await import('@/lib/firebase/client');
     const { collection, addDoc, serverTimestamp } = await import('firebase/firestore');
 
-    const statementsRef = collection(getFirebaseDb(), 'xapi_statements');
+    const statementsRef = collection(requireDb(), 'xapi_statements');
 
     const docRef = await addDoc(statementsRef, {
       statement,
@@ -107,10 +107,10 @@ export async function storeStatements(
  */
 export async function getStatement(statementId: string): Promise<Statement | null> {
   try {
-    const { getFirebaseDb } = await import('@/lib/firebase/client');
+    const { requireDb } = await import('@/lib/firebase/client');
     const { collection, query, where, getDocs, limit } = await import('firebase/firestore');
 
-    const statementsRef = collection(getFirebaseDb(), 'xapi_statements');
+    const statementsRef = collection(requireDb(), 'xapi_statements');
     const q = query(statementsRef, where('id', '==', statementId), limit(1));
     const snapshot = await getDocs(q);
 
@@ -132,12 +132,12 @@ export async function getStatement(statementId: string): Promise<Statement | nul
  */
 export async function getStatements(queryParams: StatementQuery): Promise<StatementResult> {
   try {
-    const { getFirebaseDb } = await import('@/lib/firebase/client');
+    const { requireDb } = await import('@/lib/firebase/client');
     const firestore = await import('firebase/firestore');
     const { collection, query, where, getDocs, orderBy } = firestore;
     const firestoreLimit = firestore.limit;
 
-    const statementsRef = collection(getFirebaseDb(), 'xapi_statements');
+    const statementsRef = collection(requireDb(), 'xapi_statements');
     const constraints = [];
 
     if (queryParams.agent) {
@@ -217,11 +217,11 @@ export async function getState(
   _registration?: string,
 ): Promise<StateDocument | null> {
   try {
-    const { getFirebaseDb } = await import('@/lib/firebase/client');
+    const { requireDb } = await import('@/lib/firebase/client');
     const { doc, getDoc } = await import('firebase/firestore');
 
     const stateDocId = `${activityId}:${agent}:${stateId}`;
-    const stateRef = doc(getFirebaseDb(), 'xapi_state', stateDocId);
+    const stateRef = doc(requireDb(), 'xapi_state', stateDocId);
     const snapshot = await getDoc(stateRef);
 
     if (!snapshot.exists()) {
@@ -247,11 +247,11 @@ export async function setState(
   _registration?: string,
 ): Promise<boolean> {
   try {
-    const { getFirebaseDb } = await import('@/lib/firebase/client');
+    const { requireDb } = await import('@/lib/firebase/client');
     const { doc, setDoc, serverTimestamp } = await import('firebase/firestore');
 
     const stateDocId = `${activityId}:${agent}:${stateId}`;
-    const stateRef = doc(getFirebaseDb(), 'xapi_state', stateDocId);
+    const stateRef = doc(requireDb(), 'xapi_state', stateDocId);
 
     await setDoc(stateRef, {
       activityId,
@@ -278,11 +278,11 @@ export async function deleteState(
   _registration?: string,
 ): Promise<boolean> {
   try {
-    const { getFirebaseDb } = await import('@/lib/firebase/client');
+    const { requireDb } = await import('@/lib/firebase/client');
     const { doc, deleteDoc } = await import('firebase/firestore');
 
     const stateDocId = `${activityId}:${agent}:${stateId}`;
-    const stateRef = doc(getFirebaseDb(), 'xapi_state', stateDocId);
+    const stateRef = doc(requireDb(), 'xapi_state', stateDocId);
 
     await deleteDoc(stateRef);
     return true;
@@ -304,11 +304,11 @@ export async function getActivityProfile(
   profileId: string,
 ): Promise<ActivityProfile | null> {
   try {
-    const { getFirebaseDb } = await import('@/lib/firebase/client');
+    const { requireDb } = await import('@/lib/firebase/client');
     const { doc, getDoc } = await import('firebase/firestore');
 
     const profileDocId = `${activityId}:${profileId}`;
-    const profileRef = doc(getFirebaseDb(), 'xapi_activity_profiles', profileDocId);
+    const profileRef = doc(requireDb(), 'xapi_activity_profiles', profileDocId);
     const snapshot = await getDoc(profileRef);
 
     if (!snapshot.exists()) {
@@ -332,11 +332,11 @@ export async function setActivityProfile(
   profile: Record<string, unknown>,
 ): Promise<boolean> {
   try {
-    const { getFirebaseDb } = await import('@/lib/firebase/client');
+    const { requireDb } = await import('@/lib/firebase/client');
     const { doc, setDoc, serverTimestamp } = await import('firebase/firestore');
 
     const profileDocId = `${activityId}:${profileId}`;
-    const profileRef = doc(getFirebaseDb(), 'xapi_activity_profiles', profileDocId);
+    const profileRef = doc(requireDb(), 'xapi_activity_profiles', profileDocId);
 
     await setDoc(profileRef, {
       activityId,
@@ -360,11 +360,11 @@ export async function getAgentProfile(
   profileId: string,
 ): Promise<AgentProfile | null> {
   try {
-    const { getFirebaseDb } = await import('@/lib/firebase/client');
+    const { requireDb } = await import('@/lib/firebase/client');
     const { doc, getDoc } = await import('firebase/firestore');
 
     const profileDocId = `${agent}:${profileId}`;
-    const profileRef = doc(getFirebaseDb(), 'xapi_agent_profiles', profileDocId);
+    const profileRef = doc(requireDb(), 'xapi_agent_profiles', profileDocId);
     const snapshot = await getDoc(profileRef);
 
     if (!snapshot.exists()) {
@@ -388,11 +388,11 @@ export async function setAgentProfile(
   profile: Record<string, unknown>,
 ): Promise<boolean> {
   try {
-    const { getFirebaseDb } = await import('@/lib/firebase/client');
+    const { requireDb } = await import('@/lib/firebase/client');
     const { doc, setDoc, serverTimestamp } = await import('firebase/firestore');
 
     const profileDocId = `${agent}:${profileId}`;
-    const profileRef = doc(getFirebaseDb(), 'xapi_agent_profiles', profileDocId);
+    const profileRef = doc(requireDb(), 'xapi_agent_profiles', profileDocId);
 
     await setDoc(profileRef, {
       agent,
@@ -420,10 +420,10 @@ export async function getLearnerProgress(
   courseId?: string,
 ): Promise<LearnerProgress> {
   try {
-    const { getFirebaseDb } = await import('@/lib/firebase/client');
+    const { requireDb } = await import('@/lib/firebase/client');
     const { collection, query, where, getDocs } = await import('firebase/firestore');
 
-    const statementsRef = collection(getFirebaseDb(), 'xapi_statements');
+    const statementsRef = collection(requireDb(), 'xapi_statements');
     const constraints = [where('actor_id', '==', userId)];
 
     if (courseId) {

@@ -39,11 +39,11 @@ export default function LoginForm() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // 4. Go
-      window.location.href = '/ignite/teach/courses';
+      window.location.href = '/ignite/dashboard';
     } catch (err: unknown) {
       console.error(err);
       const message = err instanceof Error ? err.message : 'Unknown error';
-      setStatus('Login Failed: ' + message);
+      setStatus(`Login Failed: ${message}`);
     }
   };
 
