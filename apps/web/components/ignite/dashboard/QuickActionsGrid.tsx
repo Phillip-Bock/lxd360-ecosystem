@@ -1,16 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import {
-  BarChart3,
-  FileText,
-  GraduationCap,
-  MessageSquare,
-  Plus,
-  Settings,
-  Upload,
-  Users,
-} from 'lucide-react';
+import { BarChart3, BookOpen, FileText, GraduationCap, Settings, Users } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -31,22 +22,23 @@ export interface QuickAction {
 // QUICK ACTIONS DATA
 // ============================================================================
 
+/**
+ * CV-006: Quick actions with phantom routes removed
+ * Routes that don't have implemented pages have been removed to prevent 404s.
+ * TODO(LXD-302): Re-add when pages are implemented:
+ * - /ignite/courses/new (Create Course)
+ * - /ignite/courses/upload (Upload SCORM) - currently handled by modal
+ * - /ignite/reports (Generate Report)
+ * - /ignite/messages (Send Announcement)
+ */
 const quickActions: QuickAction[] = [
   {
-    id: 'create-course',
-    title: 'Create Course',
-    description: 'Build a new course from scratch',
-    icon: <Plus className="h-5 w-5" />,
-    href: '/ignite/courses/new',
+    id: 'view-courses',
+    title: 'View Courses',
+    description: 'Browse and manage courses',
+    icon: <BookOpen className="h-5 w-5" />,
+    href: '/ignite/courses',
     color: 'var(--color-lxd-primary)',
-  },
-  {
-    id: 'upload-scorm',
-    title: 'Upload SCORM',
-    description: 'Import SCORM/xAPI packages',
-    icon: <Upload className="h-5 w-5" />,
-    href: '/ignite/courses/upload',
-    color: 'var(--color-neural-purple)',
   },
   {
     id: 'manage-learners',
@@ -65,14 +57,6 @@ const quickActions: QuickAction[] = [
     color: 'var(--color-lxd-success)',
   },
   {
-    id: 'generate-report',
-    title: 'Generate Report',
-    description: 'Create custom reports',
-    icon: <FileText className="h-5 w-5" />,
-    href: '/ignite/reports',
-    color: 'var(--color-lxd-caution)',
-  },
-  {
     id: 'grade-assessments',
     title: 'Grade Assessments',
     description: 'Review pending submissions',
@@ -81,12 +65,12 @@ const quickActions: QuickAction[] = [
     color: 'var(--color-neural-cyan)',
   },
   {
-    id: 'send-message',
-    title: 'Send Announcement',
-    description: 'Message your learners',
-    icon: <MessageSquare className="h-5 w-5" />,
-    href: '/ignite/messages',
-    color: 'var(--color-lxd-warning)',
+    id: 'authoring-tool',
+    title: 'Authoring Tool',
+    description: 'Create course content',
+    icon: <FileText className="h-5 w-5" />,
+    href: '/inspire/projects',
+    color: 'var(--color-neural-purple)',
   },
   {
     id: 'settings',

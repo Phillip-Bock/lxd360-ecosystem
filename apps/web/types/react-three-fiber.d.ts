@@ -21,8 +21,10 @@ declare module 'react' {
       mesh: Object3DNode<THREE.Mesh, typeof THREE.Mesh>;
       boxGeometry: { args?: ConstructorParameters<typeof THREE.BoxGeometry> };
       sphereGeometry: { args?: ConstructorParameters<typeof THREE.SphereGeometry> };
+      planeGeometry: { args?: ConstructorParameters<typeof THREE.PlaneGeometry> };
       meshStandardMaterial: { color?: THREE.ColorRepresentation; [key: string]: unknown };
       meshBasicMaterial: { color?: THREE.ColorRepresentation; [key: string]: unknown };
+      shadowMaterial: { opacity?: number; [key: string]: unknown };
       /** R3F color element for scene background */
       color: {
         attach?: string;

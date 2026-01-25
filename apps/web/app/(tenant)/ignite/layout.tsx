@@ -2,33 +2,97 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AiCharacterChat } from '@/components/ai-character';
 import { AppSidebar } from '@/components/ignite/dashboard/AppSidebar';
 import { BreadcrumbsHeader } from '@/components/ignite/dashboard/BreadcrumbsHeader';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { canAccess, getPersonaFromClaims, type Persona } from '@/lib/rbac/personas';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
 
 // Routes that use their own layout (don't apply admin sidebar)
 const EXEMPT_ROUTES = ['/ignite/learn', '/ignite/learner'];
 
+// Routes restricted to specific personas (CV-001: Route-level RBAC)
+const ROUTE_TO_NAV_ID: Record<string, string> = {
+  '/ignite/dashboard': 'dashboard',
+  '/ignite/courses': 'courses',
+  '/ignite/learners': 'learners',
+  '/ignite/analytics': 'analytics',
+  '/ignite/gradebook': 'gradebook',
+  '/ignite/lrs': 'lrs',
+  '/ignite/settings': 'settings',
+  '/ignite/billing': 'billing',
+};
+
 export default function IgniteLayout({ children }: { children: ReactNode }) {
   const { user, loading } = useSafeAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const [_persona, setPersona] = useState<Persona | null>(null);
+  const [rbacChecked, setRbacChecked] = useState(false);
 
   // Check if this route should use its own layout
   const isExemptRoute = EXEMPT_ROUTES.some((route) => pathname.startsWith(route));
 
-  // Auth guard - redirect to login if not authenticated
+  // Auth guard + RBAC enforcement (CV-001: Route-level security)
   useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-  }, [user, loading, router]);
+    async function checkAuthAndRBAC() {
+      // Not loaded yet
+      if (loading) return;
 
-  // Loading state
-  if (loading) {
+      // Not authenticated - redirect to login
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+
+      // Skip RBAC for exempt routes (learner pages have their own layout)
+      if (isExemptRoute) {
+        setRbacChecked(true);
+        return;
+      }
+
+      try {
+        // Get persona from Firebase custom claims
+        const tokenResult = await user.getIdTokenResult(true);
+        const userPersona = getPersonaFromClaims(tokenResult.claims);
+        setPersona(userPersona);
+
+        // Find the nav route ID for the current path
+        const matchingRoute = Object.keys(ROUTE_TO_NAV_ID).find(
+          (route) => pathname === route || pathname.startsWith(`${route}/`),
+        );
+
+        if (matchingRoute) {
+          const navId = ROUTE_TO_NAV_ID[matchingRoute];
+
+          // CV-001: Block access if persona cannot access this route
+          if (!canAccess(userPersona, navId)) {
+            // Redirect learners to learn page, others to dashboard
+            if (userPersona === 'learner') {
+              router.replace('/ignite/learn');
+            } else {
+              router.replace('/ignite/dashboard');
+            }
+            return;
+          }
+        }
+
+        setRbacChecked(true);
+      } catch (error) {
+        console.error('RBAC check failed:', error);
+        // On error, allow access but default to learner restrictions
+        setPersona('learner');
+        setRbacChecked(true);
+      }
+    }
+
+    checkAuthAndRBAC();
+  }, [user, loading, router, pathname, isExemptRoute]);
+
+  // Loading state (includes RBAC check for non-exempt routes)
+  if (loading || (!isExemptRoute && !rbacChecked)) {
     return (
       <div className="flex h-screen w-full bg-background">
         <div className="w-64 bg-sidebar border-r border-sidebar-border animate-pulse" />

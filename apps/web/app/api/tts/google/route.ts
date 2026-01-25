@@ -1,4 +1,5 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import { type AuthenticatedRequest, withAuth } from '@/lib/api/with-auth';
 import { fetchGoogleVoices, synthesizeWithGoogle } from '@/lib/tts/google-cloud';
 import { DEFAULT_GOOGLE_VOICES } from '@/lib/tts/types';
 
@@ -17,9 +18,10 @@ interface GoogleTTSRequestBody {
 }
 
 /**
- * POST /api/tts/google - Synthesize with Google Cloud TTS
+ * POST /api/tts/google - Synthesize with Google Cloud TTS (SECURED)
  */
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
+  const { uid } = req.user;
   const apiKey = process.env.GOOGLE_CLOUD_TTS_API_KEY;
 
   if (!apiKey) {
@@ -30,7 +32,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    const body = (await request.json()) as GoogleTTSRequestBody;
+    const body = (await req.json()) as GoogleTTSRequestBody;
     const { text, voiceId, languageCode, settings } = body;
 
     if (!text || !voiceId) {
@@ -59,7 +61,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json(result, { status: 500 });
     }
 
-    return NextResponse.json(result);
+    return NextResponse.json({ ...result, user: uid });
   } catch (error) {
     console.error('Google TTS API error:', error);
     return NextResponse.json(
@@ -73,7 +75,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 }
 
 /**
- * GET /api/tts/google - Get available voices
+ * GET /api/tts/google - Get available voices (public endpoint for UI)
  */
 export async function GET(): Promise<NextResponse> {
   const apiKey = process.env.GOOGLE_CLOUD_TTS_API_KEY;
@@ -101,3 +103,6 @@ export async function GET(): Promise<NextResponse> {
     });
   }
 }
+
+// POST requires authentication
+export const POST = withAuth(handlePost);

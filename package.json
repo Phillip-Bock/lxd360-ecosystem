@@ -28,7 +28,8 @@
     "test:e2e:report": "playwright show-report",
     "test:all": "vitest run && playwright test",
     "test:a11y": "playwright test tests/accessibility/",
-    "prepare": "husky"
+    "prepare": "husky",
+    "process:cortex": "powershell -ExecutionPolicy Bypass -File scripts/process-models.ps1"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",

@@ -1,9 +1,10 @@
 /**
  * TTS Types - Text-to-Speech configuration and response types
+ * Google Cloud TTS Only - Single provider architecture
  */
 
-/** Supported TTS providers */
-export type TTSProvider = 'elevenlabs' | 'google';
+/** Supported TTS provider (Google Cloud only) */
+export type TTSProvider = 'google';
 
 /** Voice gender options */
 export type VoiceGender = 'male' | 'female' | 'neutral';
@@ -17,7 +18,7 @@ export type VoiceStyle =
   | 'calm'
   | 'energetic';
 
-/** Voice configuration for a specific provider */
+/** Voice configuration */
 export interface Voice {
   id: string;
   name: string;
@@ -29,14 +30,6 @@ export interface Voice {
   style?: VoiceStyle;
   previewUrl?: string;
   isDefault?: boolean;
-}
-
-/** ElevenLabs-specific voice settings */
-export interface ElevenLabsVoiceSettings {
-  stability: number;
-  similarityBoost: number;
-  style?: number;
-  useSpeakerBoost?: boolean;
 }
 
 /** Google Cloud TTS voice settings */
@@ -52,7 +45,7 @@ export interface TTSRequest {
   text: string;
   voiceId: string;
   provider: TTSProvider;
-  settings?: ElevenLabsVoiceSettings | GoogleVoiceSettings;
+  settings?: GoogleVoiceSettings;
 }
 
 /** TTS generation response */
@@ -69,27 +62,27 @@ export interface TTSResponse {
 
 /** Voice library for selection UI */
 export interface VoiceLibrary {
-  elevenlabs: Voice[];
   google: Voice[];
 }
 
-/** Default ElevenLabs voices (commonly available) */
-export const DEFAULT_ELEVENLABS_VOICES: Voice[] = [
+/** Default Google Cloud TTS Neural2 voices - High-fidelity professional voices */
+export const DEFAULT_GOOGLE_VOICES: Voice[] = [
+  // American English - Neural2 (Highest Quality)
   {
-    id: 'EXAVITQu4vr4xnSDxMaL',
-    name: 'Bella',
-    provider: 'elevenlabs',
+    id: 'en-US-Neural2-F',
+    name: 'Aria',
+    provider: 'google',
     gender: 'female',
     language: 'English',
     languageCode: 'en-US',
     accent: 'American',
-    style: 'conversational',
+    style: 'professional',
     isDefault: true,
   },
   {
-    id: 'TxGEqnHWrfWFTfGW9XjX',
-    name: 'Josh',
-    provider: 'elevenlabs',
+    id: 'en-US-Neural2-D',
+    name: 'Marcus',
+    provider: 'google',
     gender: 'male',
     language: 'English',
     languageCode: 'en-US',
@@ -97,9 +90,19 @@ export const DEFAULT_ELEVENLABS_VOICES: Voice[] = [
     style: 'professional',
   },
   {
-    id: 'pNInz6obpgDQGcFmaJgB',
-    name: 'Adam',
-    provider: 'elevenlabs',
+    id: 'en-US-Neural2-C',
+    name: 'Sophie',
+    provider: 'google',
+    gender: 'female',
+    language: 'English',
+    languageCode: 'en-US',
+    accent: 'American',
+    style: 'conversational',
+  },
+  {
+    id: 'en-US-Neural2-J',
+    name: 'James',
+    provider: 'google',
     gender: 'male',
     language: 'English',
     languageCode: 'en-US',
@@ -107,9 +110,9 @@ export const DEFAULT_ELEVENLABS_VOICES: Voice[] = [
     style: 'authoritative',
   },
   {
-    id: 'jBpfuIE2acCO8z3wKNLl',
-    name: 'Gigi',
-    provider: 'elevenlabs',
+    id: 'en-US-Neural2-A',
+    name: 'Emma',
+    provider: 'google',
     gender: 'female',
     language: 'English',
     languageCode: 'en-US',
@@ -117,76 +120,60 @@ export const DEFAULT_ELEVENLABS_VOICES: Voice[] = [
     style: 'friendly',
   },
   {
-    id: 'onwK4e9ZLuTAKqWW03F9',
-    name: 'Daniel',
-    provider: 'elevenlabs',
+    id: 'en-US-Neural2-I',
+    name: 'David',
+    provider: 'google',
+    gender: 'male',
+    language: 'English',
+    languageCode: 'en-US',
+    accent: 'American',
+    style: 'calm',
+  },
+  // British English - Neural2
+  {
+    id: 'en-GB-Neural2-A',
+    name: 'Charlotte',
+    provider: 'google',
+    gender: 'female',
+    language: 'English',
+    languageCode: 'en-GB',
+    accent: 'British',
+    style: 'professional',
+  },
+  {
+    id: 'en-GB-Neural2-B',
+    name: 'Oliver',
+    provider: 'google',
     gender: 'male',
     language: 'English',
     languageCode: 'en-GB',
     accent: 'British',
     style: 'calm',
   },
-];
-
-/** Default Google Cloud TTS voices */
-export const DEFAULT_GOOGLE_VOICES: Voice[] = [
+  // Australian English - Neural2
   {
-    id: 'en-US-Wavenet-D',
-    name: 'Wavenet D',
-    provider: 'google',
-    gender: 'male',
-    language: 'English',
-    languageCode: 'en-US',
-    accent: 'American',
-    isDefault: true,
-  },
-  {
-    id: 'en-US-Wavenet-F',
-    name: 'Wavenet F',
+    id: 'en-AU-Neural2-A',
+    name: 'Olivia',
     provider: 'google',
     gender: 'female',
     language: 'English',
-    languageCode: 'en-US',
-    accent: 'American',
+    languageCode: 'en-AU',
+    accent: 'Australian',
+    style: 'friendly',
   },
   {
-    id: 'en-GB-Wavenet-B',
-    name: 'Wavenet B',
+    id: 'en-AU-Neural2-B',
+    name: 'Liam',
     provider: 'google',
     gender: 'male',
     language: 'English',
-    languageCode: 'en-GB',
-    accent: 'British',
-  },
-  {
-    id: 'en-GB-Wavenet-C',
-    name: 'Wavenet C',
-    provider: 'google',
-    gender: 'female',
-    language: 'English',
-    languageCode: 'en-GB',
-    accent: 'British',
-  },
-  {
-    id: 'en-US-Neural2-J',
-    name: 'Neural2 J',
-    provider: 'google',
-    gender: 'male',
-    language: 'English',
-    languageCode: 'en-US',
-    accent: 'American',
-    style: 'professional',
+    languageCode: 'en-AU',
+    accent: 'Australian',
+    style: 'conversational',
   },
 ];
 
-/** Default voice settings by provider */
-export const DEFAULT_ELEVENLABS_SETTINGS: ElevenLabsVoiceSettings = {
-  stability: 0.5,
-  similarityBoost: 0.75,
-  style: 0,
-  useSpeakerBoost: true,
-};
-
+/** Default voice settings */
 export const DEFAULT_GOOGLE_SETTINGS: GoogleVoiceSettings = {
   speakingRate: 1.0,
   pitch: 0,

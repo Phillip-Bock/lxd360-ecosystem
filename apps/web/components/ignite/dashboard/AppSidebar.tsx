@@ -10,6 +10,7 @@ import {
   ChevronUp,
   ClipboardList,
   CreditCard,
+  Database,
   GraduationCap,
   LayoutDashboard,
   LogOut,
@@ -19,7 +20,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -46,6 +47,7 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import { Skeleton } from '@/components/ui/skeleton';
 import { getFirebaseAuth } from '@/lib/firebase/client';
 import { canAccess, getPersonaFromClaims, PERSONA_CONFIG, type Persona } from '@/lib/rbac/personas';
 import { cn } from '@/lib/utils';
@@ -66,6 +68,11 @@ interface NavItem {
   }[];
 }
 
+/**
+ * CV-006: Navigation items with phantom routes removed
+ * Sub-routes that don't have implemented pages have been removed to prevent 404s.
+ * When pages are implemented, add them back to the subs array.
+ */
 const ALL_NAV_ITEMS: NavItem[] = [
   {
     id: 'dashboard',
@@ -78,39 +85,51 @@ const ALL_NAV_ITEMS: NavItem[] = [
     label: 'Courses',
     icon: BookOpen,
     href: '/ignite/courses',
-    subs: [
-      { label: 'All Courses', href: '/ignite/courses' },
-      { label: 'Create New', href: '/ignite/courses/new' },
-      { label: 'Templates', href: '/ignite/courses/templates' },
-    ],
+    // CV-006: Removed phantom routes - /courses/new and /courses/templates don't exist yet
+    // Re-add when pages are implemented:
+    // subs: [
+    //   { label: 'All Courses', href: '/ignite/courses' },
+    //   { label: 'Create New', href: '/ignite/courses/new' },
+    //   { label: 'Templates', href: '/ignite/courses/templates' },
+    // ],
   },
   {
     id: 'learners',
     label: 'Learners',
     icon: Users,
     href: '/ignite/learners',
-    subs: [
-      { label: 'All Learners', href: '/ignite/learners' },
-      { label: 'Groups', href: '/ignite/learners/groups' },
-      { label: 'Enrollments', href: '/ignite/learners/enrollments' },
-    ],
+    // CV-006: Removed phantom routes - /learners/groups and /learners/enrollments don't exist yet
+    // Re-add when pages are implemented:
+    // subs: [
+    //   { label: 'All Learners', href: '/ignite/learners' },
+    //   { label: 'Groups', href: '/ignite/learners/groups' },
+    //   { label: 'Enrollments', href: '/ignite/learners/enrollments' },
+    // ],
   },
   {
     id: 'analytics',
     label: 'Analytics',
     icon: BarChart3,
     href: '/ignite/analytics',
-    subs: [
-      { label: 'Overview', href: '/ignite/analytics' },
-      { label: 'Engagement', href: '/ignite/analytics/engagement' },
-      { label: 'Completion', href: '/ignite/analytics/completion' },
-    ],
+    // CV-006: Removed phantom routes - /analytics/engagement and /analytics/completion don't exist yet
+    // Re-add when pages are implemented:
+    // subs: [
+    //   { label: 'Overview', href: '/ignite/analytics' },
+    //   { label: 'Engagement', href: '/ignite/analytics/engagement' },
+    //   { label: 'Completion', href: '/ignite/analytics/completion' },
+    // ],
   },
   {
     id: 'gradebook',
     label: 'Gradebook',
     icon: ClipboardList,
     href: '/ignite/gradebook',
+  },
+  {
+    id: 'lrs',
+    label: 'Learning Records',
+    icon: Database,
+    href: '/ignite/lrs',
   },
   {
     id: 'authoring',
@@ -123,11 +142,13 @@ const ALL_NAV_ITEMS: NavItem[] = [
     label: 'Settings',
     icon: Settings,
     href: '/ignite/settings',
-    subs: [
-      { label: 'Profile', href: '/ignite/settings/profile' },
-      { label: 'Notifications', href: '/ignite/settings/notifications' },
-      { label: 'Preferences', href: '/ignite/settings/preferences' },
-    ],
+    // CV-006: Removed phantom routes - settings sub-pages don't exist yet
+    // Re-add when pages are implemented:
+    // subs: [
+    //   { label: 'Profile', href: '/ignite/settings/profile' },
+    //   { label: 'Notifications', href: '/ignite/settings/notifications' },
+    //   { label: 'Preferences', href: '/ignite/settings/preferences' },
+    // ],
   },
   {
     id: 'billing',
@@ -138,22 +159,106 @@ const ALL_NAV_ITEMS: NavItem[] = [
 ];
 
 // ============================================================================
+// SKELETON LOADER
+// ============================================================================
+
+function SidebarSkeleton() {
+  return (
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar">
+      <SidebarHeader className="border-b border-sidebar-border">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <div className="flex items-center gap-2">
+                <Skeleton className="size-8 rounded-lg" />
+                <div className="flex flex-col gap-1">
+                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="h-3 w-12" />
+                </div>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+
+      <SidebarContent className="bg-sidebar">
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-sidebar-foreground/50 uppercase text-xs tracking-wider">
+            Menu
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <SidebarMenuItem key={i}>
+                  <div className="flex items-center gap-2 px-2 py-2">
+                    <Skeleton className="size-4" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+
+      <SidebarFooter className="border-t border-sidebar-border bg-sidebar">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <div className="flex items-center gap-2 px-2 py-2">
+              <Skeleton className="size-8 rounded-lg" />
+              <div className="flex flex-col gap-1">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+            </div>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+
+      <SidebarRail />
+    </Sidebar>
+  );
+}
+
+// ============================================================================
 // COMPONENT
 // ============================================================================
 
 interface AppSidebarProps {
   user: User | null;
-  claims?: Record<string, unknown>;
 }
 
-export function AppSidebar({ user, claims }: AppSidebarProps) {
+export function AppSidebar({ user }: AppSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [openMenus, setOpenMenus] = useState<string[]>(['courses']);
+  const [claimsLoading, setClaimsLoading] = useState(true);
+  const [persona, setPersona] = useState<Persona>('learner');
 
-  // Determine persona - default to 'owner' in development for testing
-  const persona: Persona =
-    process.env.NODE_ENV === 'development' ? 'owner' : getPersonaFromClaims(claims || {});
+  // Load claims from Firebase ID token
+  useEffect(() => {
+    async function loadClaims() {
+      if (!user) {
+        setClaimsLoading(false);
+        return;
+      }
+
+      try {
+        // Force refresh to get latest claims
+        const tokenResult = await user.getIdTokenResult(true);
+        const loadedPersona = getPersonaFromClaims(tokenResult.claims);
+        setPersona(loadedPersona);
+      } catch (error) {
+        console.error('Failed to load claims:', error);
+        // Default to learner on error
+        setPersona('learner');
+      } finally {
+        setClaimsLoading(false);
+      }
+    }
+
+    loadClaims();
+  }, [user]);
 
   const config = PERSONA_CONFIG[persona];
 
@@ -197,6 +302,11 @@ export function AppSidebar({ user, claims }: AppSidebarProps) {
   const toggleMenu = (id: string) => {
     setOpenMenus((prev) => (prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id]));
   };
+
+  // Show skeleton while loading claims
+  if (claimsLoading) {
+    return <SidebarSkeleton />;
+  }
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar">
@@ -366,14 +476,19 @@ export function AppSidebar({ user, claims }: AppSidebarProps) {
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={() => router.push('/ignite/settings')}
-                >
-                  <Settings className="mr-2 h-4 w-4" />
-                  Account Settings
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                {/* CV-003: Only show Account Settings to owners */}
+                {persona === 'owner' && (
+                  <>
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onClick={() => router.push('/ignite/settings')}
+                    >
+                      <Settings className="mr-2 h-4 w-4" />
+                      Account Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
                 <DropdownMenuItem
                   className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
                   onClick={handleSignOut}

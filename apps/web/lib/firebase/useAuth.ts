@@ -122,6 +122,12 @@ export function useAuth(): UseAuthReturn {
         setUser(firebaseUser);
 
         if (firebaseUser) {
+          // Force refresh token on login to get latest custom claims
+          try {
+            await firebaseUser.getIdToken(true);
+          } catch (err) {
+            log.warn('Failed to refresh token on login', { error: err });
+          }
           await loadProfile(firebaseUser);
         } else {
           setProfile(null);
@@ -138,6 +144,26 @@ export function useAuth(): UseAuthReturn {
 
     return () => unsubscribe();
   }, [loadProfile]);
+
+  // Proactive token refresh - refresh every 55 minutes (before 1-hour expiry)
+  useEffect(() => {
+    if (!user) return;
+
+    const REFRESH_INTERVAL = 55 * 60 * 1000; // 55 minutes in ms
+
+    const refreshToken = async () => {
+      try {
+        await user.getIdToken(true);
+        log.debug('Token refreshed proactively');
+      } catch (err) {
+        log.error('Proactive token refresh failed', { error: err });
+      }
+    };
+
+    const interval = setInterval(refreshToken, REFRESH_INTERVAL);
+
+    return () => clearInterval(interval);
+  }, [user]);
 
   const signIn = useCallback(
     async (email: string, password: string): Promise<UserCredential | null> => {
@@ -194,6 +220,10 @@ export function useAuth(): UseAuthReturn {
     }
 
     try {
+      // Clear server-side session cookie
+      await fetch('/api/auth/session', { method: 'DELETE' });
+
+      // Sign out from Firebase
       await firebaseSignOut(auth);
       setProfile(null);
       log.info('User signed out');

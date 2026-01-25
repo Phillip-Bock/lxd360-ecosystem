@@ -1,7 +1,7 @@
 /**
  * TTS Module - Text-to-Speech utilities
+ * Google Cloud TTS Only
  */
 
-export * from './elevenlabs';
 export * from './google-cloud';
 export * from './types';

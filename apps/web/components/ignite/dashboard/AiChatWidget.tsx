@@ -84,13 +84,13 @@ export function AiChatWidget() {
             onClick={() => setIsExpanded(true)}
             className={cn(
               'flex items-center gap-2 px-4 py-2 rounded-full',
-              'bg-gray-900/80 border border-gray-700/50 backdrop-blur-sm',
-              'text-gray-400 hover:text-white hover:border-blue-500/50',
+              'bg-card/80 border border-border/50 backdrop-blur-sm',
+              'text-muted-foreground hover:text-foreground hover:border-lxd-primary/50',
               'transition-all duration-200',
               'shadow-[0_0_15px_rgba(0,0,0,0.3)]',
             )}
           >
-            <Sparkles className="h-4 w-4 text-blue-400" />
+            <Sparkles className="h-4 w-4 text-lxd-primary" />
             <span className="text-sm">Ask AI Assistant...</span>
           </motion.button>
         ) : (
@@ -100,16 +100,16 @@ export function AiChatWidget() {
             animate={{ opacity: 1, y: 0, width: messages.length > 0 ? 400 : 350 }}
             exit={{ opacity: 0, y: -10 }}
             className={cn(
-              'bg-gray-900/95 border border-gray-700/50 backdrop-blur-md rounded-xl',
+              'bg-card/95 border border-border/50 backdrop-blur-md rounded-xl',
               'shadow-[0_0_30px_rgba(0,0,0,0.5)]',
               'overflow-hidden',
             )}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-blue-400" />
-                <span className="text-sm font-medium text-white">AI Assistant</span>
+                <Sparkles className="h-4 w-4 text-lxd-primary" />
+                <span className="text-sm font-medium text-foreground">AI Assistant</span>
               </div>
               <button
                 type="button"
@@ -117,7 +117,7 @@ export function AiChatWidget() {
                   setIsExpanded(false);
                   setMessages([]);
                 }}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -132,15 +132,15 @@ export function AiChatWidget() {
                     className={cn(
                       'text-sm rounded-lg px-3 py-2 max-w-[85%]',
                       message.role === 'user'
-                        ? 'bg-blue-600/20 text-blue-100 ml-auto'
-                        : 'bg-gray-800 text-gray-200',
+                        ? 'bg-lxd-primary/20 text-primary-foreground ml-auto'
+                        : 'bg-muted text-foreground',
                     )}
                   >
                     {message.content}
                   </div>
                 ))}
                 {isLoading && (
-                  <div className="flex items-center gap-2 text-gray-400 text-sm">
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     <span>Thinking...</span>
                   </div>
@@ -150,7 +150,7 @@ export function AiChatWidget() {
             )}
 
             {/* Input */}
-            <form onSubmit={handleSubmit} className="p-3 border-t border-gray-800">
+            <form onSubmit={handleSubmit} className="p-3 border-t border-border">
               <div className="flex items-center gap-2">
                 <input
                   ref={inputRef}
@@ -159,9 +159,9 @@ export function AiChatWidget() {
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask about courses, students, analytics..."
                   className={cn(
-                    'flex-1 bg-gray-800/50 border border-gray-700 rounded-lg px-3 py-2',
-                    'text-sm text-white placeholder:text-gray-500',
-                    'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50',
+                    'flex-1 bg-muted/50 border border-border rounded-lg px-3 py-2',
+                    'text-sm text-foreground placeholder:text-muted-foreground',
+                    'focus:outline-none focus:ring-2 focus:ring-lxd-primary/50 focus:border-lxd-primary/50',
                     'transition-all duration-200',
                   )}
                 />
@@ -170,7 +170,7 @@ export function AiChatWidget() {
                   disabled={!input.trim() || isLoading}
                   className={cn(
                     'p-2 rounded-lg transition-all duration-200',
-                    'bg-blue-600 text-white hover:bg-blue-500',
+                    'bg-lxd-primary text-white hover:bg-lxd-primary/90',
                     'disabled:opacity-50 disabled:cursor-not-allowed',
                   )}
                 >

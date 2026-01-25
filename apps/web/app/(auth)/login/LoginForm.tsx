@@ -3,6 +3,7 @@
 import { browserLocalPersistence, setPersistence, signInWithEmailAndPassword } from 'firebase/auth';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +12,7 @@ import { getFirebaseAuth } from '@/lib/firebase/client';
 
 export default function LoginForm() {
   const [status, setStatus] = useState<string>('idle');
+  const router = useRouter();
   const isLoading = status === 'loading' || status.includes('Success');
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,16 +34,30 @@ export default function LoginForm() {
       await setPersistence(auth, browserLocalPersistence);
 
       // 2. Sign In
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      setStatus('Success! Setting up session...');
+
+      // 3. Get ID token and set session cookie
+      const idToken = await userCredential.user.getIdToken();
+
+      // Try to set session cookie (non-blocking)
+      try {
+        await fetch('/api/auth/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idToken }),
+          credentials: 'same-origin',
+        });
+      } catch {
+        // Session cookie is optional - Firebase client auth is primary
+      }
+
       setStatus('Success! Redirecting...');
 
-      // 3. Safety Pause (Prevent Bounce)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // 4. Go
-      window.location.href = '/ignite/dashboard';
+      // 4. Navigate to dashboard
+      // Use router.push for client-side navigation
+      router.push('/ignite/dashboard');
     } catch (err: unknown) {
-      console.error(err);
       const message = err instanceof Error ? err.message : 'Unknown error';
       setStatus(`Login Failed: ${message}`);
     }

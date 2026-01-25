@@ -25,13 +25,9 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
-  DEFAULT_ELEVENLABS_SETTINGS,
-  DEFAULT_ELEVENLABS_VOICES,
   DEFAULT_GOOGLE_SETTINGS,
   DEFAULT_GOOGLE_VOICES,
-  type ElevenLabsVoiceSettings,
   type GoogleVoiceSettings,
-  type TTSProvider,
   type TTSResponse,
   type Voice,
 } from '@/lib/tts';
@@ -43,8 +39,8 @@ interface TTSPanelProps {
 }
 
 /**
- * TTSPanel - Text-to-Speech generation panel with voice selection
- * and audio preview
+ * TTSPanel - Text-to-Speech generation panel with Google Cloud TTS
+ * Single provider architecture using high-fidelity Neural2 voices
  */
 export function TTSPanel({
   selectedText = '',
@@ -52,12 +48,8 @@ export function TTSPanel({
   onInsertAudioBlock,
 }: TTSPanelProps) {
   const [text, setText] = useState(selectedText);
-  const [provider, setProvider] = useState<TTSProvider>('elevenlabs');
   const [selectedVoice, setSelectedVoice] = useState<Voice | null>(null);
-  const [voices] = useState<{ elevenlabs: Voice[]; google: Voice[] }>({
-    elevenlabs: DEFAULT_ELEVENLABS_VOICES,
-    google: DEFAULT_GOOGLE_VOICES,
-  });
+  const [voices] = useState<Voice[]>(DEFAULT_GOOGLE_VOICES);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -65,9 +57,6 @@ export function TTSPanel({
   const [showSettings, setShowSettings] = useState(false);
 
   // Voice settings
-  const [elevenLabsSettings, setElevenLabsSettings] = useState<ElevenLabsVoiceSettings>(
-    DEFAULT_ELEVENLABS_SETTINGS,
-  );
   const [googleSettings, setGoogleSettings] =
     useState<GoogleVoiceSettings>(DEFAULT_GOOGLE_SETTINGS);
 
@@ -80,13 +69,12 @@ export function TTSPanel({
   }, [selectedText]);
 
   useEffect(() => {
-    // Set default voice when provider changes
-    const providerVoices = voices[provider];
-    const defaultVoice = providerVoices.find((v) => v.isDefault) || providerVoices[0];
-    if (defaultVoice) {
+    // Set default voice on mount
+    const defaultVoice = voices.find((v) => v.isDefault) || voices[0];
+    if (defaultVoice && !selectedVoice) {
       setSelectedVoice(defaultVoice);
     }
-  }, [provider, voices]);
+  }, [voices, selectedVoice]);
 
   useEffect(() => {
     // Cleanup audio URL on unmount
@@ -104,16 +92,14 @@ export function TTSPanel({
     setError(null);
 
     try {
-      const settings = provider === 'elevenlabs' ? elevenLabsSettings : googleSettings;
-
       const response = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text: text.trim(),
           voiceId: selectedVoice.id,
-          provider,
-          settings,
+          provider: 'google',
+          settings: googleSettings,
         }),
       });
 
@@ -177,8 +163,6 @@ export function TTSPanel({
     });
   };
 
-  const currentVoices = voices[provider];
-
   return (
     <TooltipProvider>
       <div className="space-y-4">
@@ -195,74 +179,38 @@ export function TTSPanel({
           <div className="text-xs text-zinc-600 text-right mt-1">{text.length}/5000 characters</div>
         </div>
 
-        {/* Provider & Voice Selection */}
-        <div className="flex gap-4">
-          {/* Provider Toggle */}
-          <div>
-            <Label className="text-xs text-zinc-500 mb-1 block">Provider</Label>
-            <div className="flex bg-[#0d0d14] rounded-md p-1">
-              <button
-                type="button"
-                onClick={() => setProvider('elevenlabs')}
-                className={`px-3 py-1.5 text-xs rounded-xs transition-colors ${
-                  provider === 'elevenlabs'
-                    ? 'bg-primary text-white'
-                    : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                ElevenLabs
-              </button>
-              <button
-                type="button"
-                onClick={() => setProvider('google')}
-                className={`px-3 py-1.5 text-xs rounded-xs transition-colors ${
-                  provider === 'google' ? 'bg-primary text-white' : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                Google
-              </button>
-            </div>
-          </div>
+        {/* Voice Selection */}
+        <div>
+          <Label className="text-xs text-zinc-500 mb-1 block">Voice</Label>
+          <div className="flex gap-2">
+            <select
+              value={selectedVoice?.id || ''}
+              onChange={(e) => {
+                const voice = voices.find((v) => v.id === e.target.value);
+                if (voice) setSelectedVoice(voice);
+              }}
+              className="flex-1 bg-[#0d0d14] border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-hidden focus:ring-1 focus:ring-primary"
+            >
+              {voices.map((voice) => (
+                <option key={voice.id} value={voice.id}>
+                  {voice.name} ({voice.gender}, {voice.accent || voice.languageCode})
+                </option>
+              ))}
+            </select>
 
-          {/* Voice Selector */}
-          <div className="flex-1">
-            <Label className="text-xs text-zinc-500 mb-1 block">Voice</Label>
-            <div className="flex gap-2">
-              <select
-                value={selectedVoice?.id || ''}
-                onChange={(e) => {
-                  const voice = currentVoices.find((v) => v.id === e.target.value);
-                  if (voice) setSelectedVoice(voice);
-                }}
-                className="flex-1 bg-[#0d0d14] border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-hidden focus:ring-1 focus:ring-primary"
-              >
-                {currentVoices.map((voice) => (
-                  <option key={voice.id} value={voice.id}>
-                    {voice.name} ({voice.gender}, {voice.accent || voice.languageCode})
-                  </option>
-                ))}
-              </select>
-
-              <Dialog open={showSettings} onOpenChange={setShowSettings}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" size="icon" className="border-white/10">
-                    <Settings2 className="h-4 w-4" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-[#1a1a2e] border-white/10">
-                  <DialogHeader>
-                    <DialogTitle>Voice Settings</DialogTitle>
-                  </DialogHeader>
-                  <VoiceSettingsPanel
-                    provider={provider}
-                    elevenLabsSettings={elevenLabsSettings}
-                    googleSettings={googleSettings}
-                    onElevenLabsChange={setElevenLabsSettings}
-                    onGoogleChange={setGoogleSettings}
-                  />
-                </DialogContent>
-              </Dialog>
-            </div>
+            <Dialog open={showSettings} onOpenChange={setShowSettings}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="icon" className="border-white/10">
+                  <Settings2 className="h-4 w-4" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#1a1a2e] border-white/10">
+                <DialogHeader>
+                  <DialogTitle>Voice Settings</DialogTitle>
+                </DialogHeader>
+                <VoiceSettingsPanel settings={googleSettings} onChange={setGoogleSettings} />
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
@@ -386,148 +334,66 @@ export function TTSPanel({
 }
 
 /**
- * Voice Settings Panel - Fine-tune voice parameters
+ * Voice Settings Panel - Google Cloud TTS settings
  */
 function VoiceSettingsPanel({
-  provider,
-  elevenLabsSettings,
-  googleSettings,
-  onElevenLabsChange,
-  onGoogleChange,
+  settings,
+  onChange,
 }: {
-  provider: TTSProvider;
-  elevenLabsSettings: ElevenLabsVoiceSettings;
-  googleSettings: GoogleVoiceSettings;
-  onElevenLabsChange: (settings: ElevenLabsVoiceSettings) => void;
-  onGoogleChange: (settings: GoogleVoiceSettings) => void;
+  settings: GoogleVoiceSettings;
+  onChange: (settings: GoogleVoiceSettings) => void;
 }) {
-  if (provider === 'elevenlabs') {
-    return (
-      <div className="space-y-4">
-        <div>
-          <div className="flex justify-between text-sm mb-2">
-            <Label>Stability</Label>
-            <span className="text-zinc-500">{elevenLabsSettings.stability}</span>
-          </div>
-          <Slider
-            value={[elevenLabsSettings.stability]}
-            min={0}
-            max={1}
-            step={0.05}
-            onValueChange={([value]) =>
-              onElevenLabsChange({ ...elevenLabsSettings, stability: value })
-            }
-          />
-          <p className="text-xs text-zinc-600 mt-1">
-            Higher stability = more consistent, lower = more expressive
-          </p>
-        </div>
-
-        <div>
-          <div className="flex justify-between text-sm mb-2">
-            <Label>Similarity Boost</Label>
-            <span className="text-zinc-500">{elevenLabsSettings.similarityBoost}</span>
-          </div>
-          <Slider
-            value={[elevenLabsSettings.similarityBoost]}
-            min={0}
-            max={1}
-            step={0.05}
-            onValueChange={([value]) =>
-              onElevenLabsChange({ ...elevenLabsSettings, similarityBoost: value })
-            }
-          />
-          <p className="text-xs text-zinc-600 mt-1">
-            Higher = closer to original voice, lower = more varied
-          </p>
-        </div>
-
-        <div>
-          <div className="flex justify-between text-sm mb-2">
-            <Label>Style</Label>
-            <span className="text-zinc-500">{elevenLabsSettings.style}</span>
-          </div>
-          <Slider
-            value={[elevenLabsSettings.style || 0]}
-            min={0}
-            max={1}
-            step={0.05}
-            onValueChange={([value]) => onElevenLabsChange({ ...elevenLabsSettings, style: value })}
-          />
-        </div>
-
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="speaker-boost"
-            checked={elevenLabsSettings.useSpeakerBoost}
-            onChange={(e) =>
-              onElevenLabsChange({
-                ...elevenLabsSettings,
-                useSpeakerBoost: e.target.checked,
-              })
-            }
-            className="rounded-xs border-white/10"
-          />
-          <Label htmlFor="speaker-boost" className="text-sm cursor-pointer">
-            Use Speaker Boost
-          </Label>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4">
       <div>
         <div className="flex justify-between text-sm mb-2">
           <Label>Speaking Rate</Label>
-          <span className="text-zinc-500">{googleSettings.speakingRate}x</span>
+          <span className="text-zinc-500">{settings.speakingRate}x</span>
         </div>
         <Slider
-          value={[googleSettings.speakingRate]}
+          value={[settings.speakingRate]}
           min={0.25}
           max={4}
           step={0.25}
-          onValueChange={([value]) => onGoogleChange({ ...googleSettings, speakingRate: value })}
+          onValueChange={([value]) => onChange({ ...settings, speakingRate: value })}
         />
       </div>
 
       <div>
         <div className="flex justify-between text-sm mb-2">
           <Label>Pitch</Label>
-          <span className="text-zinc-500">{googleSettings.pitch}</span>
+          <span className="text-zinc-500">{settings.pitch}</span>
         </div>
         <Slider
-          value={[googleSettings.pitch]}
+          value={[settings.pitch]}
           min={-20}
           max={20}
           step={1}
-          onValueChange={([value]) => onGoogleChange({ ...googleSettings, pitch: value })}
+          onValueChange={([value]) => onChange({ ...settings, pitch: value })}
         />
       </div>
 
       <div>
         <div className="flex justify-between text-sm mb-2">
           <Label>Volume Gain (dB)</Label>
-          <span className="text-zinc-500">{googleSettings.volumeGainDb}</span>
+          <span className="text-zinc-500">{settings.volumeGainDb}</span>
         </div>
         <Slider
-          value={[googleSettings.volumeGainDb]}
+          value={[settings.volumeGainDb]}
           min={-6}
           max={6}
           step={1}
-          onValueChange={([value]) => onGoogleChange({ ...googleSettings, volumeGainDb: value })}
+          onValueChange={([value]) => onChange({ ...settings, volumeGainDb: value })}
         />
       </div>
 
       <div>
         <Label className="text-sm mb-2 block">Audio Format</Label>
         <select
-          value={googleSettings.audioEncoding}
+          value={settings.audioEncoding}
           onChange={(e) =>
-            onGoogleChange({
-              ...googleSettings,
+            onChange({
+              ...settings,
               audioEncoding: e.target.value as 'MP3' | 'WAV' | 'OGG_OPUS',
             })
           }

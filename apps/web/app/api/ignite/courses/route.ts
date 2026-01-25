@@ -5,6 +5,9 @@ import { logger } from '@/lib/logger';
 
 const log = logger.child({ module: 'api-ignite-courses' });
 
+// CV-005: Define personas that can manage courses (editors and above)
+const COURSE_MANAGEMENT_PERSONAS = ['owner', 'editor'];
+
 export async function POST(req: Request) {
   try {
     // 1. AUTHENTICATION (The Gatekeeper)
@@ -15,6 +18,16 @@ export async function POST(req: Request) {
     const idToken = authHeader.split('Bearer ')[1];
     const decodedToken = await adminAuth.verifyIdToken(idToken);
     const userId = decodedToken.uid;
+
+    // CV-005: RBAC Check - Only editors and owners can create courses
+    const persona = decodedToken.persona || decodedToken.role || 'learner';
+    if (!COURSE_MANAGEMENT_PERSONAS.includes(persona as string)) {
+      log.warn('Forbidden: insufficient persona for course creation', { userId, persona });
+      return NextResponse.json(
+        { error: 'Forbidden: You do not have permission to create courses' },
+        { status: 403 },
+      );
+    }
 
     // 2. PARSE BODY (Explicit Context)
     const body = await req.json();
@@ -72,10 +85,23 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     const idToken = authHeader.split('Bearer ')[1];
-    await adminAuth.verifyIdToken(idToken);
+    const decodedToken = await adminAuth.verifyIdToken(idToken);
+    const userId = decodedToken.uid;
 
-    // 2. HARDCODED TENANT (For now, until strict multi-tenancy)
-    const tenantId = 'lxd360-dev';
+    // CV-005: RBAC Check - Only editors, managers, and owners can view courses
+    // (Learners see courses through their own enrollment endpoints)
+    const persona = decodedToken.persona || decodedToken.role || 'learner';
+    if (persona === 'learner') {
+      log.warn('Forbidden: learner attempted to access admin courses list', { userId });
+      return NextResponse.json(
+        { error: 'Forbidden: Learners should use the enrollment API' },
+        { status: 403 },
+      );
+    }
+
+    // DB-012: Get tenant ID from custom claims or request header (fallback for dev)
+    const tenantId =
+      (decodedToken.tenantId as string) || req.headers.get('x-tenant-id') || 'lxd360-dev'; // Fallback for development only
 
     // 3. FETCH
     const snapshot = await adminDb

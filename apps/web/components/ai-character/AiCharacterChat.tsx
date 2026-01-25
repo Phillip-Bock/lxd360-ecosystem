@@ -116,6 +116,7 @@ export function AiCharacterChat({ tenantId }: AiCharacterChatProps) {
       const res = await fetch('/api/ai/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin', // Include session cookie for auth
         body: JSON.stringify({
           message: userMsg.content,
           personaId: currentPersona,
@@ -148,6 +149,7 @@ export function AiCharacterChat({ tenantId }: AiCharacterChatProps) {
           const ttsRes = await fetch('/api/tts/google', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin', // Include session cookie for auth
             body: JSON.stringify({
               text: data.response,
               voiceId: 'en-US-Neural2-J', // Friendly assistant voice

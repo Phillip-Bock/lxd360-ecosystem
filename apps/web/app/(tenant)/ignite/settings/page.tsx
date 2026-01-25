@@ -1,8 +1,11 @@
 'use client';
 
-import { Bell, Lock, Mail, User } from 'lucide-react';
+import { Bell, Lock, Mail, ShieldAlert, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { getPersonaFromClaims, type Persona } from '@/lib/rbac/personas';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
 
 interface NotificationToggleProps {
@@ -30,7 +33,59 @@ function NotificationToggle({ id, label, description, defaultChecked }: Notifica
 }
 
 export default function SettingsPage() {
-  const { user } = useSafeAuth();
+  const { user, loading } = useSafeAuth();
+  const router = useRouter();
+  const [persona, setPersona] = useState<Persona | null>(null);
+  const [accessChecked, setAccessChecked] = useState(false);
+
+  // CV-002: Owner-only guard - Settings is restricted to owners
+  useEffect(() => {
+    async function checkOwnerAccess() {
+      if (loading || !user) return;
+
+      try {
+        const tokenResult = await user.getIdTokenResult(true);
+        const userPersona = getPersonaFromClaims(tokenResult.claims);
+        setPersona(userPersona);
+
+        // Only owners can access settings
+        if (userPersona !== 'owner') {
+          router.replace('/ignite/dashboard');
+          return;
+        }
+
+        setAccessChecked(true);
+      } catch (error) {
+        console.error('Settings access check failed:', error);
+        router.replace('/ignite/dashboard');
+      }
+    }
+
+    checkOwnerAccess();
+  }, [user, loading, router]);
+
+  // Show loading while checking access
+  if (loading || !accessChecked) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
+          <p className="text-muted-foreground text-sm">Verifying access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // CV-002: Block rendering if not owner (defense in depth)
+  if (persona !== 'owner') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+        <ShieldAlert className="h-16 w-16 text-destructive" />
+        <h2 className="text-xl font-semibold text-foreground">Access Denied</h2>
+        <p className="text-muted-foreground">Only account owners can access settings.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">

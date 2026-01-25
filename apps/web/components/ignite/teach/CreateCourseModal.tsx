@@ -54,7 +54,10 @@ export default function CreateCourseModal({
           title: title,
           description: description || '',
           type: 'SCORM',
-          filePath: result.packageUrl,
+          filePath: result.launchUrl, // Entry point from manifest
+          baseUrl: result.baseUrl,
+          scormVersion: result.scormVersion,
+          filesCount: result.filesCount,
           tenantId: tenantId, // Enterprise Standard
         }),
       });
