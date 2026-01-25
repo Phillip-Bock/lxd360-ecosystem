@@ -18,7 +18,6 @@ export {
   SAFETY_CRITICAL_BKT_PARAMS,
   updateKnowledgeState,
 } from './bkt';
-
 // Cognitive Load Detection
 export {
   // Types
@@ -49,3 +48,24 @@ export {
   type ProcessedAttempt,
   type SkillDefinition,
 } from './service';
+// SM-2 Spaced Repetition Algorithm
+export {
+  // Functions
+  adjustIntervalByMastery,
+  calculateRetentionRate,
+  createSM2Item,
+  descriptorFromQuality,
+  estimateStudyTime,
+  getDueItems,
+  getItemStatistics,
+  masteryToQuality,
+  qualityFromDescriptor,
+  // Types
+  type SM2Item,
+  type SM2ItemWithMeta,
+  type SM2Response,
+  type SM2ResponseDescriptor,
+  sortByPriority,
+  sortByPriorityWithBoost,
+  updateSM2,
+} from './sm2';

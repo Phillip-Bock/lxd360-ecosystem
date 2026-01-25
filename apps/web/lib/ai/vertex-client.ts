@@ -168,9 +168,7 @@ export class VertexAIClient {
    *
    * @param input - Text or array of texts to embed
    * @param options - Embedding options
-   * @returns Array of embedding vectors
-   *
-   * TODO(LXD-245): Implement with gemini-embedding-001 model
+   * @returns Array of embedding vectors (768 dimensions for gemini-embedding-001)
    */
   async generateEmbeddings(
     input: string | string[],
@@ -179,15 +177,66 @@ export class VertexAIClient {
       taskType?: VertexEmbeddingRequest['taskType'];
     },
   ): Promise<number[][]> {
-    void input;
-    void options;
-
-    // TODO(LXD-245): Implement embedding generation
-    // Stub returns empty arrays for now
-    log.warn('generateEmbeddings is not yet implemented');
+    if (!hasGoogleCredentials()) {
+      log.warn('Google credentials not configured for embeddings');
+      const texts = Array.isArray(input) ? input : [input];
+      return texts.map(() => []);
+    }
 
     const texts = Array.isArray(input) ? input : [input];
-    return texts.map(() => []);
+    if (texts.length === 0) return [];
+
+    const model = options?.model ?? VERTEX_MODELS.EMBEDDING;
+    const projectId = this.config.projectId;
+    const location = this.config.location;
+
+    // Vertex AI embedding endpoint
+    const url = `${VERTEX_AI_BASE}/projects/${projectId}/locations/${location}/publishers/google/models/${model}:predict`;
+
+    try {
+      const accessToken = await getAccessToken();
+
+      // Build instances for batch embedding
+      const instances = texts.map((text) => ({
+        content: text,
+        task_type: options?.taskType ?? 'SEMANTIC_SIMILARITY',
+      }));
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ instances }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        log.error('Embedding generation failed', { status: response.status, error: errorText });
+        // Return empty arrays on error
+        return texts.map(() => []);
+      }
+
+      const data = await response.json();
+
+      // Extract embeddings from response
+      // Response format: { predictions: [{ embeddings: { values: number[] } }] }
+      const embeddings: number[][] =
+        data.predictions?.map(
+          (pred: { embeddings?: { values?: number[] } }) => pred.embeddings?.values ?? [],
+        ) ?? texts.map(() => []);
+
+      log.debug('Embeddings generated', {
+        count: embeddings.length,
+        dimensions: embeddings[0]?.length ?? 0,
+      });
+
+      return embeddings;
+    } catch (error) {
+      log.error('Embedding generation error', { error });
+      return texts.map(() => []);
+    }
   }
 
   // ==========================================================================
