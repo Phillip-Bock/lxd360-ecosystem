@@ -1,0 +1,265 @@
+
+> lxd360-ecosystem@3.0.0 build C:\GitHub\lxd360-ecosystem
+> turbo run build
+
+• turbo 2.7.5
+• Packages in scope: @inspire/ml, @inspire/types, @inspire/xapi-client, @lxd360/ui, @lxd360/web
+• Running build in 5 packages
+• Remote caching disabled
+@inspire/types:build: cache hit, replaying logs 7700c665f204a57e
+@inspire/types:build: 
+@inspire/types:build: > @inspire/types@1.0.0 build C:\GitHub\lxd360-ecosystem\packages\types
+@inspire/types:build: > tsc
+@inspire/types:build: 
+@inspire/ml:build: cache hit, replaying logs f292db105aa4cef2
+@inspire/ml:build: 
+@inspire/ml:build: > @inspire/ml@1.0.0 build C:\GitHub\lxd360-ecosystem\packages\ml
+@inspire/ml:build: > tsc
+@inspire/ml:build: 
+@inspire/xapi-client:build: cache hit, replaying logs b1509e0d16ba14b4
+@inspire/xapi-client:build: 
+@inspire/xapi-client:build: > @inspire/xapi-client@1.0.0 build C:\GitHub\lxd360-ecosystem\packages\xapi-client
+@inspire/xapi-client:build: > tsc
+@inspire/xapi-client:build: 
+@lxd360/web:build: cache miss, executing 11d594354385e6b2
+@lxd360/web:build: 
+@lxd360/web:build: > @lxd360/web@3.0.0 build C:\GitHub\lxd360-ecosystem\apps\web
+@lxd360/web:build: > next build
+@lxd360/web:build: 
+@lxd360/web:build:  ⚠ The config property `experimental.turbo` is deprecated. Move this setting to `config.turbopack` or run `npx @next/codemod@latest next-experimental-turbo-to-turbopack .`
+@lxd360/web:build:    ▲ Next.js 15.5.9
+@lxd360/web:build:    - Environments: .env.local
+@lxd360/web:build:    - Experiments (use with caution):
+@lxd360/web:build:      · optimizePackageImports
+@lxd360/web:build: 
+@lxd360/web:build:    Creating an optimized production build ...
+@lxd360/web:build:  ⚠ Compiled with warnings in 18.6s
+@lxd360/web:build: 
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/core/Effects.js
+@lxd360/web:build: Attempted import error: 'sRGBEncoding' is not exported from 'three' (imported as 'sRGBEncoding').
+@lxd360/web:build: 
+@lxd360/web:build: Import trace for requested module:
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/core/Effects.js
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/index.js
+@lxd360/web:build: ./components/ignite/player/avatar/AvatarStage.tsx
+@lxd360/web:build: ./components/ignite/player/IgniteCoach.tsx
+@lxd360/web:build: ./app/(tenant)/ignite/layout.tsx
+@lxd360/web:build: 
+@lxd360/web:build: ../../node_modules/.pnpm/troika-three-text@0.46.4_three@0.182.0/node_modules/troika-three-text/dist/troika-three-text.esm.js
+@lxd360/web:build: Attempted import error: 'PlaneBufferGeometry' is not exported from 'three' (imported as 'PlaneBufferGeometry').
+@lxd360/web:build: 
+@lxd360/web:build: Import trace for requested module:
+@lxd360/web:build: ../../node_modules/.pnpm/troika-three-text@0.46.4_three@0.182.0/node_modules/troika-three-text/dist/troika-three-text.esm.js
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/core/Text.js
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/index.js
+@lxd360/web:build: ./components/ignite/player/avatar/AvatarStage.tsx
+@lxd360/web:build: ./components/ignite/player/IgniteCoach.tsx
+@lxd360/web:build: ./app/(tenant)/ignite/layout.tsx
+@lxd360/web:build: 
+@lxd360/web:build: ../../node_modules/.pnpm/troika-three-text@0.46.4_three@0.182.0/node_modules/troika-three-text/dist/troika-three-text.esm.js
+@lxd360/web:build: Attempted import error: 'PlaneBufferGeometry' is not exported from 'three' (imported as 'PlaneBufferGeometry').
+@lxd360/web:build: 
+@lxd360/web:build: Import trace for requested module:
+@lxd360/web:build: ../../node_modules/.pnpm/troika-three-text@0.46.4_three@0.182.0/node_modules/troika-three-text/dist/troika-three-text.esm.js
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/core/Text.js
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/index.js
+@lxd360/web:build: ./components/ignite/player/avatar/AvatarStage.tsx
+@lxd360/web:build: ./components/ignite/player/IgniteCoach.tsx
+@lxd360/web:build: ./app/(tenant)/ignite/layout.tsx
+@lxd360/web:build: 
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/core/Effects.js
+@lxd360/web:build: Attempted import error: 'sRGBEncoding' is not exported from 'three' (imported as 'sRGBEncoding').
+@lxd360/web:build: 
+@lxd360/web:build: Import trace for requested module:
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/core/Effects.js
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/index.js
+@lxd360/web:build: ./components/ignite/player/avatar/AvatarStage.tsx
+@lxd360/web:build: ./components/ignite/player/IgniteCoach.tsx
+@lxd360/web:build: ./app/(tenant)/ignite/layout.tsx
+@lxd360/web:build: 
+@lxd360/web:build: ../../node_modules/.pnpm/troika-three-text@0.46.4_three@0.182.0/node_modules/troika-three-text/dist/troika-three-text.esm.js
+@lxd360/web:build: Attempted import error: 'PlaneBufferGeometry' is not exported from 'three' (imported as 'PlaneBufferGeometry').
+@lxd360/web:build: 
+@lxd360/web:build: Import trace for requested module:
+@lxd360/web:build: ../../node_modules/.pnpm/troika-three-text@0.46.4_three@0.182.0/node_modules/troika-three-text/dist/troika-three-text.esm.js
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/core/Text.js
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/index.js
+@lxd360/web:build: ./components/ignite/player/avatar/AvatarStage.tsx
+@lxd360/web:build: ./components/ignite/player/IgniteCoach.tsx
+@lxd360/web:build: ./app/(tenant)/ignite/layout.tsx
+@lxd360/web:build: 
+@lxd360/web:build: ../../node_modules/.pnpm/troika-three-utils@0.46.0_three@0.182.0/node_modules/troika-three-utils/dist/troika-three-utils.esm.js
+@lxd360/web:build: Attempted import error: 'CylinderBufferGeometry' is not exported from 'three' (imported as 'CylinderBufferGeometry').
+@lxd360/web:build: 
+@lxd360/web:build: Import trace for requested module:
+@lxd360/web:build: ../../node_modules/.pnpm/troika-three-utils@0.46.0_three@0.182.0/node_modules/troika-three-utils/dist/troika-three-utils.esm.js
+@lxd360/web:build: ../../node_modules/.pnpm/troika-three-text@0.46.4_three@0.182.0/node_modules/troika-three-text/dist/troika-three-text.esm.js
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/core/Text.js
+@lxd360/web:build: ../../node_modules/.pnpm/@react-three+drei@9.0.0-beta.6_@react-three+fiber@9.0.0-beta.1_@types+react@19.2.9_immer@11.1_nvx7lsmwcs4yumf7m3zcivfmk4/node_modules/@react-three/drei/index.js
+@lxd360/web:build: ./components/ignite/player/avatar/AvatarStage.tsx
+@lxd360/web:build: ./components/ignite/player/IgniteCoach.tsx
+@lxd360/web:build: ./app/(tenant)/ignite/layout.tsx
+@lxd360/web:build: 
+@lxd360/web:build:    Linting and checking validity of types ...
+@lxd360/web:build:    Collecting page data ...
+@lxd360/web:build:  ⚠ Using edge runtime on a page currently disables static generation for that page
+@lxd360/web:build:    Generating static pages (0/78) ...
+@lxd360/web:build:    Generating static pages (19/78) 
+@lxd360/web:build:    Generating static pages (38/78) 
+@lxd360/web:build:    Generating static pages (58/78) 
+@lxd360/web:build:  ✓ Generating static pages (78/78)
+@lxd360/web:build:    Finalizing page optimization ...
+@lxd360/web:build:    Collecting build traces ...
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\pages\_app.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\react@19.2.3\node_modules\react' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\apps\web\node_modules\react'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\react@19.2.3\\node_modules\\react',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\apps\\web\\node_modules\\react'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\pages\_error.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\next@15.5.9_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@19._mk7444ahyvig57plh3cbwlnzca\node_modules\@opentelemetry\api'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\@opentelemetry+api@1.9.0\\node_modules\\@opentelemetry\\api',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\next@15.5.9_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@19._mk7444ahyvig57plh3cbwlnzca\\node_modules\\@opentelemetry\\api'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\pages\_document.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\@opentelemetry\api'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\@opentelemetry+api@1.9.0\\node_modules\\@opentelemetry\\api',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\@opentelemetry\\api'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\(marketing)\(lxd360-llc)\page.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\@opentelemetry+api@1.9.0\node_modules\@opentelemetry\api' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\@google-cloud+firestore@7.11.6\node_modules\@opentelemetry\api'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\@opentelemetry+api@1.9.0\\node_modules\\@opentelemetry\\api',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\@google-cloud+firestore@7.11.6\\node_modules\\@opentelemetry\\api'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\(tenant)\inspire\(inspire-studio)\lesson\page.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\@csstools+css-tokenizer@3.0.4\node_modules\@csstools\css-tokenizer' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\@asamuzakjp+css-color@4.1.1\node_modules\@csstools\css-tokenizer'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\@csstools+css-tokenizer@3.0.4\\node_modules\\@csstools\\css-tokenizer',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\@asamuzakjp+css-color@4.1.1\\node_modules\\@csstools\\css-tokenizer'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\ai\gemini\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\abort-controller@3.0.0\node_modules\abort-controller' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\@google-cloud+storage@7.18.0\node_modules\abort-controller'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\abort-controller@3.0.0\\node_modules\\abort-controller',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\@google-cloud+storage@7.18.0\\node_modules\\abort-controller'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\auth\session\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\teeny-request@9.0.0\node_modules\teeny-request' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\@google-cloud+storage@7.18.0\node_modules\teeny-request'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\teeny-request@9.0.0\\node_modules\\teeny-request',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\@google-cloud+storage@7.18.0\\node_modules\\teeny-request'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\ignite\chat\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\lodash.camelcase@4.3.0\node_modules\lodash.camelcase' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\@grpc+proto-loader@0.8.0\node_modules\lodash.camelcase'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\lodash.camelcase@4.3.0\\node_modules\\lodash.camelcase',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\@grpc+proto-loader@0.8.0\\node_modules\\lodash.camelcase'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\ignite\courses\[courseId]\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\@protobufjs+aspromise@1.1.2\node_modules\@protobufjs\aspromise' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\@protobufjs+fetch@1.1.0\node_modules\@protobufjs\aspromise'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\@protobufjs+aspromise@1.1.2\\node_modules\\@protobufjs\\aspromise',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\@protobufjs+fetch@1.1.0\\node_modules\\@protobufjs\\aspromise'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\ignite\courses\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\retry@0.13.1\node_modules\retry' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\async-retry@1.3.3\node_modules\retry'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\retry@0.13.1\\node_modules\\retry',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\async-retry@1.3.3\\node_modules\\retry'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\tenant\characters\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\node-forge@1.3.3\node_modules\node-forge' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\firebase-admin@13.6.0\node_modules\node-forge'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\node-forge@1.3.3\\node_modules\\node-forge',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\firebase-admin@13.6.0\\node_modules\\node-forge'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\tenant\characters\upload-url\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\gaxios@6.7.1\node_modules\gaxios' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\google-auth-library@9.15.1\node_modules\gaxios'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\gaxios@6.7.1\\node_modules\\gaxios',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\google-auth-library@9.15.1\\node_modules\\gaxios'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\tts\google\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\gtoken@7.1.0\node_modules\gtoken' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\google-auth-library@9.15.1\node_modules\gtoken'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\gtoken@7.1.0\\node_modules\\gtoken',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\google-auth-library@9.15.1\\node_modules\\gtoken'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\tts\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\node-fetch@2.7.0\node_modules\node-fetch' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\google-gax@4.6.1\node_modules\node-fetch'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\node-fetch@2.7.0\\node_modules\\node-fetch',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\google-gax@4.6.1\\node_modules\\node-fetch'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\v1\courses\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\jws@4.0.1\node_modules\jws' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\jsonwebtoken@9.0.3\node_modules\jws'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\jws@4.0.1\\node_modules\\jws',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\jsonwebtoken@9.0.3\\node_modules\\jws'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\webhooks\auth\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\limiter@1.1.5\node_modules\limiter' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\jwks-rsa@3.2.1\node_modules\limiter'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\limiter@1.1.5\\node_modules\\limiter',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\jwks-rsa@3.2.1\\node_modules\\limiter'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\webhooks\stripe\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\wrappy@1.0.2\node_modules\wrappy' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\once@1.4.0\node_modules\wrappy'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\wrappy@1.0.2\\node_modules\\wrappy',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\once@1.4.0\\node_modules\\wrappy'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\api\xapi\statements\route.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\safe-buffer@5.2.1\node_modules\safe-buffer' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\string_decoder@1.3.0\node_modules\safe-buffer'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\safe-buffer@5.2.1\\node_modules\\safe-buffer',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\string_decoder@1.3.0\\node_modules\\safe-buffer'
+@lxd360/web:build: }
+@lxd360/web:build:  ⚠ Failed to copy traced files for C:\GitHub\lxd360-ecosystem\apps\web\.next\server\app\page.js [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\https-proxy-agent@5.0.1\node_modules\https-proxy-agent' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\teeny-request@9.0.0\node_modules\https-proxy-agent'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\https-proxy-agent@5.0.1\\node_modules\\https-proxy-agent',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\teeny-request@9.0.0\\node_modules\\https-proxy-agent'
+@lxd360/web:build: }
+@lxd360/web:build: 
+@lxd360/web:build: > Build error occurred
+@lxd360/web:build: [Error: EPERM: operation not permitted, symlink 'C:\GitHub\lxd360-ecosystem\node_modules\.pnpm\@next+env@15.5.9\node_modules\@next\env' -> 'C:\GitHub\lxd360-ecosystem\apps\web\.next\standalone\node_modules\.pnpm\next@15.5.9_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@19._mk7444ahyvig57plh3cbwlnzca\node_modules\@next\env'] {
+@lxd360/web:build:   errno: -4048,
+@lxd360/web:build:   code: 'EPERM',
+@lxd360/web:build:   syscall: 'symlink',
+@lxd360/web:build:   path: 'C:\\GitHub\\lxd360-ecosystem\\node_modules\\.pnpm\\@next+env@15.5.9\\node_modules\\@next\\env',
+@lxd360/web:build:   dest: 'C:\\GitHub\\lxd360-ecosystem\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\next@15.5.9_@babel+core@7.28.6_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-dom@19._mk7444ahyvig57plh3cbwlnzca\\node_modules\\@next\\env'
+@lxd360/web:build: }
+@lxd360/web:build:  ELIFECYCLE  Command failed with exit code 1.
+@lxd360/web:build: ERROR: command finished with error: command (C:\GitHub\lxd360-ecosystem\apps\web) E:\Scratch\pnpm-store\.tools\pnpm\9.15.0\bin\pnpm.CMD run build exited (1)
+@lxd360/web#build: command (C:\GitHub\lxd360-ecosystem\apps\web) E:\Scratch\pnpm-store\.tools\pnpm\9.15.0\bin\pnpm.CMD run build exited (1)
+
+ Tasks:    3 successful, 4 total
+Cached:    3 cached, 4 total
+  Time:    1m13.678s 
+Failed:    @lxd360/web#build
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Command failed with exit code 1.

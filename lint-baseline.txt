@@ -1,0 +1,34 @@
+
+> lxd360-ecosystem@3.0.0 lint C:\GitHub\lxd360-ecosystem
+> turbo run lint
+
+• turbo 2.7.5
+• Packages in scope: @inspire/ml, @inspire/types, @inspire/xapi-client, @lxd360/ui, @lxd360/web
+• Running lint in 5 packages
+• Remote caching disabled
+@inspire/types:build: cache hit, replaying logs 7700c665f204a57e
+@inspire/types:build: 
+@inspire/types:build: > @inspire/types@1.0.0 build C:\GitHub\lxd360-ecosystem\packages\types
+@inspire/types:build: > tsc
+@inspire/types:build: 
+@inspire/ml:build: cache hit, replaying logs f292db105aa4cef2
+@inspire/ml:build: 
+@inspire/ml:build: > @inspire/ml@1.0.0 build C:\GitHub\lxd360-ecosystem\packages\ml
+@inspire/ml:build: > tsc
+@inspire/ml:build: 
+@inspire/xapi-client:build: cache hit, replaying logs b1509e0d16ba14b4
+@inspire/xapi-client:build: 
+@inspire/xapi-client:build: > @inspire/xapi-client@1.0.0 build C:\GitHub\lxd360-ecosystem\packages\xapi-client
+@inspire/xapi-client:build: > tsc
+@inspire/xapi-client:build: 
+@lxd360/web:lint: cache hit, replaying logs aac60dab2b78bc54
+@lxd360/web:lint: 
+@lxd360/web:lint: > @lxd360/web@3.0.0 lint C:\GitHub\lxd360-ecosystem\apps\web
+@lxd360/web:lint: > biome check .
+@lxd360/web:lint: 
+@lxd360/web:lint: Checked 2364 files in 579ms. No fixes applied.
+
+ Tasks:    4 successful, 4 total
+Cached:    4 cached, 4 total
+  Time:    205ms >>> FULL TURBO
+
