@@ -2,6 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('MediaLibraryBrowser');
+
 import type {
   MediaAsset,
   MediaAssetStatus,
@@ -420,18 +424,18 @@ export function MediaLibraryBrowser(): React.JSX.Element {
   // Action handlers
   const handleDelete = useCallback((ids: string[]) => {
     // Placeholder implementation - delete functionality to be implemented
-    console.error('[MediaLibrary] Delete requested', { count: ids.length });
+    log.warn('Delete requested - not yet implemented', { count: ids.length });
     setSelectedIds(new Set());
   }, []);
 
   const handleMove = useCallback((ids: string[], targetFolderId: string) => {
     // Placeholder implementation - move functionality to be implemented
-    console.error('[MediaLibrary] Move requested', { count: ids.length, targetFolderId });
+    log.warn('Move requested - not yet implemented', { count: ids.length, targetFolderId });
   }, []);
 
   const handleAddToCollection = useCallback((ids: string[], collectionId: string) => {
     // Placeholder implementation - add to collection functionality to be implemented
-    console.error('[MediaLibrary] Add to collection requested', {
+    log.warn('Add to collection requested - not yet implemented', {
       count: ids.length,
       collectionId,
     });

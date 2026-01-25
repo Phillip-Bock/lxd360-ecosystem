@@ -36,6 +36,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { logger } from '@/lib/logger';
 import {
   cancelSubscription,
   createCheckoutAndRedirect,
@@ -47,6 +48,8 @@ import {
 import { formatPrice, PLANS, type PlanType } from '@/lib/stripe/config';
 import { cn } from '@/lib/utils';
 import { PricingCard } from './PricingCard';
+
+const log = logger.scope('BillingSettings');
 
 // =============================================================================
 // COMPONENT
@@ -68,7 +71,10 @@ export function BillingSettings() {
       setBillingData(data);
     } catch (err) {
       setError('Failed to load billing information');
-      console.error('Failed to fetch billing data:', err);
+      log.error(
+        'Failed to fetch billing data',
+        err instanceof Error ? err : new Error(String(err)),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +91,7 @@ export function BillingSettings() {
       await createCheckoutAndRedirect(planType as 'professional' | 'enterprise');
     } catch (err) {
       setError('Failed to start checkout. Please try again.');
-      console.error('Checkout error:', err);
+      log.error('Checkout error', err instanceof Error ? err : new Error(String(err)));
     }
   };
 
@@ -96,7 +102,7 @@ export function BillingSettings() {
       await redirectToCustomerPortal();
     } catch (err) {
       setError('Failed to open billing portal. Please try again.');
-      console.error('Portal error:', err);
+      log.error('Portal error', err instanceof Error ? err : new Error(String(err)));
     } finally {
       setActionLoading(null);
     }
@@ -110,7 +116,7 @@ export function BillingSettings() {
       await fetchBillingData();
     } catch (err) {
       setError('Failed to cancel subscription. Please try again.');
-      console.error('Cancel error:', err);
+      log.error('Cancel error', err instanceof Error ? err : new Error(String(err)));
     } finally {
       setActionLoading(null);
     }
@@ -124,7 +130,7 @@ export function BillingSettings() {
       await fetchBillingData();
     } catch (err) {
       setError('Failed to resume subscription. Please try again.');
-      console.error('Resume error:', err);
+      log.error('Resume error', err instanceof Error ? err : new Error(String(err)));
     } finally {
       setActionLoading(null);
     }

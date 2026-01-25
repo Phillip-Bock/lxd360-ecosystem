@@ -6,7 +6,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2, Sparkles, User } from 'lucide-react';
 import { Component, type ErrorInfo, type ReactNode, Suspense, useCallback, useState } from 'react';
 import { PlaneGeometry, ShadowMaterial } from 'three';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('AvatarStage');
+
 import { type AnimationState, AvatarModel } from './AvatarModel';
 
 // ============================================================================
@@ -35,10 +39,10 @@ class R3FErrorBoundary extends Component<R3FErrorBoundaryProps, R3FErrorBoundary
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Suppress React 19 reconciler errors from @react-three/fiber
     if (error.message?.includes('reconciler') || error.message?.includes('fiber')) {
-      console.debug('[AvatarStage] R3F reconciler error suppressed:', error.message);
+      log.debug('R3F reconciler error suppressed', { message: error.message });
       return;
     }
-    console.error('[AvatarStage] 3D rendering error:', error, errorInfo);
+    log.error('3D rendering error', error, { componentStack: errorInfo.componentStack });
   }
 
   render() {

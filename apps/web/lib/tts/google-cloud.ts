@@ -3,12 +3,15 @@
  * Handles voice synthesis using Google Cloud Text-to-Speech API
  */
 
+import { logger } from '@/lib/logger';
 import {
   DEFAULT_GOOGLE_SETTINGS,
   type GoogleVoiceSettings,
   type TTSResponse,
   type Voice,
 } from './types';
+
+const log = logger.scope('GoogleTTS');
 
 const GOOGLE_TTS_API_URL = 'https://texttospeech.googleapis.com/v1';
 
@@ -98,7 +101,7 @@ export async function fetchGoogleVoices(apiKey: string): Promise<Voice[]> {
     const response = await fetch(`${GOOGLE_TTS_API_URL}/voices?key=${apiKey}&languageCode=en`);
 
     if (!response.ok) {
-      console.error('Failed to fetch Google voices');
+      log.error('Failed to fetch Google voices');
       return [];
     }
 
@@ -116,7 +119,7 @@ export async function fetchGoogleVoices(apiKey: string): Promise<Voice[]> {
       }),
     );
   } catch (error) {
-    console.error('Error fetching Google voices:', error);
+    log.error('Error fetching Google voices', error);
     return [];
   }
 }

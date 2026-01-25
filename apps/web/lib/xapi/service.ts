@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import type {
   ActivityProfile,
   AgentProfile,
@@ -6,6 +7,8 @@ import type {
   StatementQuery,
   StatementResult,
 } from './types';
+
+const log = logger.scope('xAPI');
 
 // ============================================================================
 // TYPES
@@ -77,7 +80,7 @@ export async function storeStatement(
       statementId: docRef.id,
     };
   } catch (error) {
-    console.error('Failed to store xAPI statement:', error);
+    log.error('Failed to store xAPI statement', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -122,7 +125,7 @@ export async function getStatement(statementId: string): Promise<Statement | nul
     const data = doc.data();
     return data.statement as Statement;
   } catch (error) {
-    console.error('Failed to get xAPI statement:', error);
+    log.error('Failed to get xAPI statement', error);
     return null;
   }
 }
@@ -171,7 +174,7 @@ export async function getStatements(queryParams: StatementQuery): Promise<Statem
       more: '', // Pagination not implemented - empty string indicates no more results
     };
   } catch (error) {
-    console.error('Failed to get xAPI statements:', error);
+    log.error('Failed to get xAPI statements', error);
     return {
       statements: [],
       more: '',
@@ -231,7 +234,7 @@ export async function getState(
     const data = snapshot.data();
     return data as StateDocument;
   } catch (error) {
-    console.error('Failed to get activity state:', error);
+    log.error('Failed to get activity state', error);
     return null;
   }
 }
@@ -263,7 +266,7 @@ export async function setState(
 
     return true;
   } catch (error) {
-    console.error('Failed to set activity state:', error);
+    log.error('Failed to set activity state', error);
     return false;
   }
 }
@@ -287,7 +290,7 @@ export async function deleteState(
     await deleteDoc(stateRef);
     return true;
   } catch (error) {
-    console.error('Failed to delete activity state:', error);
+    log.error('Failed to delete activity state', error);
     return false;
   }
 }
@@ -318,7 +321,7 @@ export async function getActivityProfile(
     const data = snapshot.data();
     return data as ActivityProfile;
   } catch (error) {
-    console.error('Failed to get activity profile:', error);
+    log.error('Failed to get activity profile', error);
     return null;
   }
 }
@@ -347,7 +350,7 @@ export async function setActivityProfile(
 
     return true;
   } catch (error) {
-    console.error('Failed to set activity profile:', error);
+    log.error('Failed to set activity profile', error);
     return false;
   }
 }
@@ -374,7 +377,7 @@ export async function getAgentProfile(
     const data = snapshot.data();
     return data as AgentProfile;
   } catch (error) {
-    console.error('Failed to get agent profile:', error);
+    log.error('Failed to get agent profile', error);
     return null;
   }
 }
@@ -403,7 +406,7 @@ export async function setAgentProfile(
 
     return true;
   } catch (error) {
-    console.error('Failed to set agent profile:', error);
+    log.error('Failed to set agent profile', error);
     return false;
   }
 }
@@ -463,7 +466,7 @@ export async function getLearnerProgress(
       averageScore,
     };
   } catch (error) {
-    console.error('Failed to get learner progress:', error);
+    log.error('Failed to get learner progress', error);
     return {
       userId,
       courseId,

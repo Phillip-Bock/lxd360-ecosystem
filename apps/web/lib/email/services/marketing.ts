@@ -18,6 +18,9 @@ import {
   EmailCampaignsApiApiKeys,
   type RemoveContactFromList,
 } from '@getbrevo/brevo';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('BrevoMarketing');
 
 // =============================================================================
 // Configuration
@@ -165,7 +168,7 @@ export async function createContact(
       contactId: body?.id,
     };
   } catch (error) {
-    console.error('Failed to create contact:', error);
+    log.error('Failed to create contact:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -195,7 +198,7 @@ export async function addToContactList(
 
     return { success: true };
   } catch (error) {
-    console.error('Failed to add contacts to list:', error);
+    log.error('Failed to add contacts to list:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -225,7 +228,7 @@ export async function removeFromContactList(
 
     return { success: true };
   } catch (error) {
-    console.error('Failed to remove contacts from list:', error);
+    log.error('Failed to remove contacts from list:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -326,7 +329,7 @@ export async function createCampaign(params: CreateCampaignParams): Promise<Crea
       campaignId: body.id,
     };
   } catch (error) {
-    console.error('Failed to create campaign:', error);
+    log.error('Failed to create campaign:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -348,7 +351,7 @@ export async function sendCampaign(campaignId: number): Promise<SendCampaignResu
 
     return { success: true };
   } catch (error) {
-    console.error('Failed to send campaign:', error);
+    log.error('Failed to send campaign:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

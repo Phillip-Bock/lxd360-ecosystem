@@ -14,7 +14,10 @@ import 'server-only';
 import type { DecodedIdToken } from 'firebase-admin/auth';
 import { cookies } from 'next/headers';
 import { adminAuth, adminDb } from '@/lib/firebase/admin';
+import { logger } from '@/lib/logger';
 import { ROLE_HIERARCHY, type RoleName } from '@/lib/rbac/types';
+
+const log = logger.scope('DAL');
 
 // ============================================================================
 // TYPES
@@ -63,7 +66,7 @@ export async function verifySession(): Promise<SessionUser | null> {
     };
   } catch (error) {
     // Token is invalid or expired
-    console.error('[DAL] Session verification failed:', error);
+    log.error('Session verification failed', error);
     return null;
   }
 }

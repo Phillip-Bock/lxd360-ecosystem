@@ -5,7 +5,10 @@ import { motion } from 'motion/react';
 import type React from 'react';
 import { useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('FileUpload');
 
 const mainVariant = {
   initial: {
@@ -52,7 +55,7 @@ export const FileUpload = ({
     noClick: true,
     onDrop: handleFileChange,
     onDropRejected: (rejections) => {
-      console.error('[FileUpload] Drop rejected', {
+      log.warn('Drop rejected', {
         count: rejections.length,
         errors: rejections.map((r) => r.errors.map((e) => e.message).join(', ')).join('; '),
       });

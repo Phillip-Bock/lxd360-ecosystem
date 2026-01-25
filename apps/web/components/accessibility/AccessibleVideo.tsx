@@ -30,7 +30,10 @@
 
 import * as React from 'react';
 import { announce, prefersReducedMotion } from '@/lib/accessibility';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('AccessibleVideo');
 
 // ============================================================================
 // Types
@@ -571,7 +574,7 @@ export function AccessibleVideo({
         announce('Exited fullscreen');
       }
     } catch (error) {
-      console.error('Fullscreen error:', error);
+      log.error('Fullscreen error', error instanceof Error ? error : new Error(String(error)));
     }
   };
 

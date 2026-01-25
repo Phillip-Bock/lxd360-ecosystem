@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import type {
   AnalyticsAggregatePayload,
   AnalyticsExportPayload,
@@ -6,6 +7,8 @@ import type {
   AnalyticsXAPIBatchPayload,
   TaskHandlerResult,
 } from '../types';
+
+const log = logger.scope('AnalyticsTask');
 
 // ============================================================================
 // ANALYTICS TASK HANDLER
@@ -53,9 +56,7 @@ async function handleAnalyticsAggregate(
   const { organizationId, dateRange, metrics } = payload.data;
 
   try {
-    console.error(
-      `[Analytics Task] Aggregating metrics for org ${organizationId} from ${dateRange.start} to ${dateRange.end}`,
-    );
+    log.info('Aggregating metrics', { organizationId, dateRange, metricsCount: metrics.length });
 
     // TODO(LXD-247): Integrate with BigQuery for data aggregation
     // const result = await bigQueryService.aggregate({
@@ -77,7 +78,7 @@ async function handleAnalyticsAggregate(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Analytics Task] Aggregation failed for org ${organizationId}:`, errorMessage);
+    log.error('Aggregation failed', error, { organizationId });
     return {
       success: false,
       error: errorMessage,
@@ -94,9 +95,7 @@ async function handleAnalyticsExport(payload: AnalyticsExportPayload): Promise<T
   const { reportId, format, requestedBy } = payload.data;
 
   try {
-    console.error(
-      `[Analytics Task] Exporting report ${reportId} as ${format} for user ${requestedBy}`,
-    );
+    log.info('Exporting report', { reportId, format, requestedBy });
 
     // TODO(LXD-247): Integrate with export service
     // const result = await exportService.export({
@@ -118,7 +117,7 @@ async function handleAnalyticsExport(payload: AnalyticsExportPayload): Promise<T
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Analytics Task] Export failed for report ${reportId}:`, errorMessage);
+    log.error('Export failed', error, { reportId });
     return {
       success: false,
       error: errorMessage,
@@ -135,7 +134,7 @@ async function handleAnalyticsReport(payload: AnalyticsReportPayload): Promise<T
   const { reportType, parameters, requestedBy } = payload.data;
 
   try {
-    console.error(`[Analytics Task] Generating ${reportType} report for user ${requestedBy}`);
+    log.info('Generating report', { reportType, requestedBy });
 
     // TODO(LXD-247): Integrate with Looker Studio or custom report generation
     // const result = await reportService.generate({
@@ -156,7 +155,7 @@ async function handleAnalyticsReport(payload: AnalyticsReportPayload): Promise<T
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Analytics Task] Report generation failed (${reportType}):`, errorMessage);
+    log.error('Report generation failed', error, { reportType });
     return {
       success: false,
       error: errorMessage,
@@ -173,9 +172,7 @@ async function handleXAPIBatch(payload: AnalyticsXAPIBatchPayload): Promise<Task
   const { statements, organizationId } = payload.data;
 
   try {
-    console.error(
-      `[Analytics Task] Processing ${statements.length} xAPI statements for org ${organizationId}`,
-    );
+    log.info('Processing xAPI batch', { organizationId, statementCount: statements.length });
 
     // TODO(LXD-247): Integrate with BigQuery xAPI LRS
     // const result = await xapiService.batchInsert({
@@ -217,7 +214,7 @@ async function handleXAPIBatch(payload: AnalyticsXAPIBatchPayload): Promise<Task
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Analytics Task] xAPI batch failed for org ${organizationId}:`, errorMessage);
+    log.error('xAPI batch failed', error, { organizationId });
     return {
       success: false,
       error: errorMessage,

@@ -3,6 +3,7 @@
  * Handles random selection and ordering of questions from pools
  */
 
+import { logger } from '@/lib/logger';
 import type {
   DrawResult,
   LearnerMastery,
@@ -12,6 +13,8 @@ import type {
   QuestionPool,
   ReviewItem,
 } from '@/types/studio/question-bank';
+
+const log = logger.scope('QuestionRandomizer');
 
 // =============================================================================
 // SEEDED RANDOM NUMBER GENERATOR
@@ -348,7 +351,7 @@ export function drawQuestions(options: DrawOptions): DrawResult {
 
     case 'adaptive':
       if (!mastery) {
-        console.warn('Adaptive selection requires mastery data, falling back to random');
+        log.warn('Adaptive selection requires mastery data, falling back to random');
         selected = selectRandom(allQuestions, pool.drawCount, rng);
       } else {
         selected = selectAdaptive(allQuestions, pool.drawCount, mastery, rng);
@@ -357,7 +360,7 @@ export function drawQuestions(options: DrawOptions): DrawResult {
 
     case 'spaced-repetition':
       if (!mastery) {
-        console.warn('Spaced repetition requires mastery data, falling back to random');
+        log.warn('Spaced repetition requires mastery data, falling back to random');
         selected = selectRandom(allQuestions, pool.drawCount, rng);
       } else {
         selected = selectSpacedRepetition(allQuestions, pool.drawCount, mastery, rng);

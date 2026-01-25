@@ -13,6 +13,10 @@ import {
   where,
 } from 'firebase/firestore';
 import { requireDb } from '@/lib/firebase/client';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('Courses');
+
 import type {
   Course,
   CourseFilters,
@@ -44,7 +48,7 @@ export async function getCourse(courseId: string): Promise<Course | null> {
 
     return docSnap.data();
   } catch (error) {
-    console.error('Failed to get course:', error);
+    log.error('Failed to get course:', error);
     throw new Error(`Failed to get course: ${courseId}`);
   }
 }
@@ -89,7 +93,7 @@ export async function getCoursesByOrg(
       nextCursor: hasMore ? courses[courses.length - 1]?.id : undefined,
     };
   } catch (error) {
-    console.error('Failed to get courses by org:', error);
+    log.error('Failed to get courses by org:', error);
     throw new Error(`Failed to get courses for organization: ${orgId}`);
   }
 }
@@ -135,7 +139,7 @@ export async function getPublishedCourses(
       nextCursor: hasMore ? courses[courses.length - 1]?.id : undefined,
     };
   } catch (error) {
-    console.error('Failed to get published courses:', error);
+    log.error('Failed to get published courses:', error);
     throw new Error(`Failed to get published courses for organization: ${orgId}`);
   }
 }
@@ -177,7 +181,7 @@ export async function getCoursesByCategory(
       nextCursor: hasMore ? courses[courses.length - 1]?.id : undefined,
     };
   } catch (error) {
-    console.error('Failed to get courses by category:', error);
+    log.error('Failed to get courses by category:', error);
     throw new Error(`Failed to get courses for category: ${categoryId}`);
   }
 }
@@ -204,7 +208,7 @@ export async function getCoursesByInstructor(
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => doc.data());
   } catch (error) {
-    console.error('Failed to get courses by instructor:', error);
+    log.error('Failed to get courses by instructor:', error);
     throw new Error(`Failed to get courses for instructor: ${instructorId}`);
   }
 }
@@ -265,7 +269,7 @@ export async function searchCourses(
       nextCursor: hasMore ? courses[courses.length - 1]?.id : undefined,
     };
   } catch (error) {
-    console.error('Failed to search courses:', error);
+    log.error('Failed to search courses:', error);
     throw new Error('Failed to search courses');
   }
 }
@@ -333,7 +337,7 @@ export async function createCourse(
 
     return created.data();
   } catch (error) {
-    console.error('Failed to create course:', error);
+    log.error('Failed to create course:', error);
     throw new Error('Failed to create course');
   }
 }
@@ -366,7 +370,7 @@ export async function updateCourse(
 
     return updated.data();
   } catch (error) {
-    console.error('Failed to update course:', error);
+    log.error('Failed to update course:', error);
     throw new Error(`Failed to update course: ${courseId}`);
   }
 }
@@ -380,7 +384,7 @@ export async function deleteCourse(courseId: string): Promise<void> {
     const docRef = getCourseRef(courseId);
     await deleteDoc(docRef);
   } catch (error) {
-    console.error('Failed to delete course:', error);
+    log.error('Failed to delete course:', error);
     throw new Error(`Failed to delete course: ${courseId}`);
   }
 }
@@ -409,7 +413,7 @@ export async function publishCourse(courseId: string, userId: string): Promise<C
 
     return published.data();
   } catch (error) {
-    console.error('Failed to publish course:', error);
+    log.error('Failed to publish course:', error);
     throw new Error(`Failed to publish course: ${courseId}`);
   }
 }
@@ -437,7 +441,7 @@ export async function unpublishCourse(courseId: string, userId: string): Promise
 
     return unpublished.data();
   } catch (error) {
-    console.error('Failed to unpublish course:', error);
+    log.error('Failed to unpublish course:', error);
     throw new Error(`Failed to unpublish course: ${courseId}`);
   }
 }
@@ -465,7 +469,7 @@ export async function archiveCourse(courseId: string, userId: string): Promise<C
 
     return archived.data();
   } catch (error) {
-    console.error('Failed to archive course:', error);
+    log.error('Failed to archive course:', error);
     throw new Error(`Failed to archive course: ${courseId}`);
   }
 }
@@ -490,7 +494,7 @@ export async function incrementEnrollmentCount(courseId: string): Promise<void> 
       updatedAt: serverTimestamp(),
     });
   } catch (error) {
-    console.error('Failed to increment enrollment count:', error);
+    log.error('Failed to increment enrollment count:', error);
     throw new Error(`Failed to increment enrollment count: ${courseId}`);
   }
 }
@@ -518,7 +522,7 @@ export async function updateCourseStats(
       updatedAt: serverTimestamp(),
     });
   } catch (error) {
-    console.error('Failed to update course stats:', error);
+    log.error('Failed to update course stats:', error);
     throw new Error(`Failed to update course stats: ${courseId}`);
   }
 }

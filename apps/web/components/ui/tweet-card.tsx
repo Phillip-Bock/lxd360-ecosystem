@@ -3,8 +3,11 @@ import { Suspense } from 'react';
 import { type EnrichedTweet, enrichTweet, type TweetProps } from 'react-tweet';
 import { getTweet, type Tweet } from 'react-tweet/api';
 
+import { logger } from '@/lib/logger';
 import { sanitizeHtml } from '@/lib/sanitize';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('TweetCard');
 
 interface TwitterIconProps {
   className?: string;
@@ -274,7 +277,9 @@ export const TweetCard = async ({
         if (onError) {
           onError(err);
         } else {
-          console.error(err);
+          log.error('Failed to fetch tweet', err instanceof Error ? err : new Error(String(err)), {
+            tweetId: id,
+          });
         }
       })
     : undefined;

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import type {
   EmailBatchPayload,
   EmailCertificateEarnedPayload,
@@ -9,6 +10,8 @@ import type {
   EmailWelcomePayload,
   TaskHandlerResult,
 } from '../types';
+
+const log = logger.scope('EmailTask');
 
 // ============================================================================
 // EMAIL TASK HANDLER
@@ -58,7 +61,7 @@ async function handleEmailSend(payload: EmailSendPayload): Promise<TaskHandlerRe
   try {
     // TODO(LXD-247): Integrate with email service (e.g., SendGrid, Postmark)
     // For now, log the email details and return success
-    console.error(`[Email Task] Sending ${template} email to ${to}`);
+    log.info(`[Email Task] Sending ${template} email to ${to}`);
 
     // Placeholder for email service integration
     // const result = await emailService.send({
@@ -78,7 +81,10 @@ async function handleEmailSend(payload: EmailSendPayload): Promise<TaskHandlerRe
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Email Task] Failed to send ${template} to ${to}:`, errorMessage);
+    log.error(
+      `[Email Task] Failed to send ${template} to ${to}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,
@@ -102,7 +108,7 @@ async function handleEmailBatch(payload: EmailBatchPayload): Promise<TaskHandler
     for (const email of emails) {
       try {
         // TODO(LXD-247): Integrate with email service for batch sending
-        console.error(`[Email Batch] Sending ${email.template} to ${email.to}`);
+        log.info(`[Email Batch] Sending ${email.template} to ${email.to}`);
         results.sent++;
       } catch (error) {
         results.failed++;
@@ -118,7 +124,7 @@ async function handleEmailBatch(payload: EmailBatchPayload): Promise<TaskHandler
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('[Email Batch] Failed:', errorMessage);
+    log.error('[Email Batch] Failed', error instanceof Error ? error : new Error(errorMessage));
     return {
       success: false,
       error: errorMessage,
@@ -133,7 +139,7 @@ async function handleWelcomeEmail(payload: EmailWelcomePayload): Promise<TaskHan
   const { to, firstName } = payload.data;
 
   try {
-    console.error(`[Email Task] Sending welcome email to ${to} (${firstName})`);
+    log.info(`[Email Task] Sending welcome email to ${to} (${firstName})`);
 
     // TODO(LXD-247): Integrate with email service
     // await emailService.sendTemplate('welcome', {
@@ -149,7 +155,10 @@ async function handleWelcomeEmail(payload: EmailWelcomePayload): Promise<TaskHan
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Email Task] Welcome email failed for ${to}:`, errorMessage);
+    log.error(
+      `[Email Task] Welcome email failed for ${to}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,
@@ -166,7 +175,7 @@ async function handlePasswordResetEmail(
   const { to, expiresAt } = payload.data;
 
   try {
-    console.error(`[Email Task] Sending password reset email to ${to}`);
+    log.info(`[Email Task] Sending password reset email to ${to}`);
 
     // TODO(LXD-247): Integrate with email service
     // await emailService.sendTemplate('password-reset', {
@@ -183,7 +192,10 @@ async function handlePasswordResetEmail(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Email Task] Password reset email failed for ${to}:`, errorMessage);
+    log.error(
+      `[Email Task] Password reset email failed for ${to}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,
@@ -200,7 +212,7 @@ async function handleVerificationEmail(
   const { to } = payload.data;
 
   try {
-    console.error(`[Email Task] Sending verification email to ${to}`);
+    log.info(`[Email Task] Sending verification email to ${to}`);
 
     // TODO(LXD-247): Integrate with email service
     // await emailService.sendTemplate('verification', {
@@ -216,7 +228,10 @@ async function handleVerificationEmail(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Email Task] Verification email failed for ${to}:`, errorMessage);
+    log.error(
+      `[Email Task] Verification email failed for ${to}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,
@@ -233,7 +248,7 @@ async function handleCourseEnrolledEmail(
   const { to, courseName } = payload.data;
 
   try {
-    console.error(`[Email Task] Sending course enrollment email to ${to} for "${courseName}"`);
+    log.info(`[Email Task] Sending course enrollment email to ${to} for "${courseName}"`);
 
     // TODO(LXD-247): Integrate with email service
     // await emailService.sendTemplate('course-enrolled', {
@@ -250,7 +265,10 @@ async function handleCourseEnrolledEmail(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Email Task] Course enrollment email failed for ${to}:`, errorMessage);
+    log.error(
+      `[Email Task] Course enrollment email failed for ${to}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,
@@ -267,7 +285,7 @@ async function handleCertificateEarnedEmail(
   const { to, courseName, certificateUrl } = payload.data;
 
   try {
-    console.error(`[Email Task] Sending certificate email to ${to} for "${courseName}"`);
+    log.info(`[Email Task] Sending certificate email to ${to} for "${courseName}"`);
 
     // TODO(LXD-247): Integrate with email service
     // await emailService.sendTemplate('certificate-earned', {
@@ -284,7 +302,10 @@ async function handleCertificateEarnedEmail(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Email Task] Certificate email failed for ${to}:`, errorMessage);
+    log.error(
+      `[Email Task] Certificate email failed for ${to}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,

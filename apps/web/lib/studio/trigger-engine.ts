@@ -3,6 +3,7 @@
  * Core engine for handling triggers and executing actions
  */
 
+import { logger } from '@/lib/logger';
 import type {
   AnimateActionConfig,
   AudioActionConfig,
@@ -31,6 +32,8 @@ import type {
   VisibilityActionConfig,
   XAPIActionConfig,
 } from '@/types/studio/triggers';
+
+const log = logger.scope('TriggerEngine');
 
 // =============================================================================
 // TRIGGER ENGINE CLASS
@@ -564,7 +567,7 @@ export class TriggerEngine {
       execution.error = error instanceof Error ? error.message : String(error);
 
       if (this.debugMode) {
-        console.error(`Trigger execution failed: ${trigger.name}`, error);
+        log.error('Trigger execution failed', error, { triggerName: trigger.name });
       }
     }
 
@@ -893,7 +896,7 @@ export class TriggerEngine {
 
       default:
         if (this.debugMode) {
-          console.warn(`Unknown action type: ${action.type}`);
+          log.warn('Unknown action type', { actionType: action.type });
         }
     }
   }
@@ -979,7 +982,7 @@ export class TriggerEngine {
 
       await Promise.race([executePromise, timeoutPromise]);
     } catch (error) {
-      console.error('JavaScript execution error:', error);
+      log.error('JavaScript execution error', error);
       throw error;
     }
   }
@@ -1065,7 +1068,7 @@ export class TriggerEngine {
           const fn = new Function('variables', 'states', `return ${config.expression}`);
           result = fn(Object.fromEntries(this.variables), Object.fromEntries(this.objectStates));
         } catch (error) {
-          console.error('Custom condition error:', error);
+          log.error('Custom condition error', error);
           result = false;
         }
         break;

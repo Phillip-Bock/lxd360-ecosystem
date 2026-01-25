@@ -12,6 +12,9 @@ import {
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('ErrorPage');
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
@@ -23,10 +26,8 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 
   useEffect(() => {
     // Log error (Cloud Logging will capture this in production)
-    console.error('[ErrorPage]', {
-      message: error.message,
+    log.error('Page error', error, {
       digest: error.digest,
-      stack: error.stack,
     });
   }, [error]);
 

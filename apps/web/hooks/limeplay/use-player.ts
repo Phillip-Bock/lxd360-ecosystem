@@ -2,7 +2,10 @@ import React from 'react';
 import type shaka from 'shaka-player';
 import type { StateCreator } from 'zustand';
 import { useGetStore, useMediaStore } from '@/components/limeplay/media-provider';
+import { logger } from '@/lib/logger';
 import { noop, off, on } from '@/lib/utils';
+
+const log = logger.scope('usePlayer');
 
 export type MediaStatus =
   | 'buffering'
@@ -83,7 +86,7 @@ export function usePlayer() {
     if (!media) return;
 
     media.play().catch((error: unknown) => {
-      console.error('Error playing media', error);
+      log.error('Error playing media', error instanceof Error ? error : new Error(String(error)));
       store.setState({
         idle: false,
         status: 'error',

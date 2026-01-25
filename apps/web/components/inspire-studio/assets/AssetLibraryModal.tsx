@@ -30,7 +30,11 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { AssetCategory } from '@/lib/assets/mimeTypes';
 import type { AssetMetadata } from '@/lib/assets/storage';
 import { requireDb } from '@/lib/firebase/client';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('AssetLibraryModal');
+
 import { AIAutoTagger } from './AIAutoTagger';
 import { AssetGrid } from './AssetGrid';
 import { AssetMetadataPanel } from './AssetMetadataPanel';
@@ -114,7 +118,10 @@ export function AssetLibraryModal({
         setIsLoading(false);
       },
       (error) => {
-        console.error('Error loading assets:', error);
+        log.error(
+          'Error loading assets',
+          error instanceof Error ? error : new Error(String(error)),
+        );
         setIsLoading(false);
       },
     );

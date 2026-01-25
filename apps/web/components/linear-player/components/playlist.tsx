@@ -6,6 +6,10 @@ import { useState } from 'react';
 import type shaka from 'shaka-player';
 import { useMediaStore } from '@/components/limeplay/media-provider';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('Playlist');
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -71,7 +75,7 @@ export function Playlist() {
 
   const handleAssetSelect = async (asset: DemoAsset) => {
     if (!player) {
-      console.error('Shaka Player not initialized');
+      log.error('Shaka Player not initialized');
       return;
     }
 
@@ -87,7 +91,7 @@ export function Playlist() {
         await mediaRef.current.play();
       }
     } catch (error) {
-      console.error('Error loading asset:', error);
+      log.error('Error loading asset', error instanceof Error ? error : new Error(String(error)));
     }
   };
 

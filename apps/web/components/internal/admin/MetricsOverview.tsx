@@ -34,6 +34,9 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/core/utils';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('MetricsOverview');
 
 // ============================================================================
 // TYPES
@@ -198,7 +201,10 @@ export function MetricsOverview() {
       const data = generateMockData(timeRange);
       setMetrics(data);
     } catch (error) {
-      console.error('Failed to fetch metrics:', error);
+      log.error(
+        'Failed to fetch metrics',
+        error instanceof Error ? error : new Error(String(error)),
+      );
     } finally {
       setIsLoading(false);
     }

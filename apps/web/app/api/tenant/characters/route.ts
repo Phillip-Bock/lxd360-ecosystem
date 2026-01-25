@@ -2,6 +2,9 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { type AIPersonaId, getAllPersonaIds } from '@/lib/ai-personas/persona-config';
 import { adminAuth } from '@/lib/firebase/admin';
 import { deleteTenantCharacter, listTenantCharacters } from '@/lib/gcs/storage-client';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('CharactersAPI');
 
 /**
  * GET - List all custom characters for the tenant
@@ -38,7 +41,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ characters: result });
   } catch (error) {
-    console.error('List characters error:', error);
+    log.error('List characters error', error);
     return NextResponse.json({ error: 'Failed to list characters' }, { status: 500 });
   }
 }
@@ -79,7 +82,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true, personaId });
   } catch (error) {
-    console.error('Delete character error:', error);
+    log.error('Delete character error', error);
     return NextResponse.json({ error: 'Failed to delete character' }, { status: 500 });
   }
 }

@@ -1,8 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
+import { logger } from '@/lib/logger';
 import { useMissionStore } from '@/store/inspire';
 import type { Actor, Statement } from '../types';
+
+const log = logger.scope('StudioXAPI');
+
 import {
   buildAIGenerationStatement,
   buildAuditStatement,
@@ -52,12 +56,12 @@ async function flushStatements(): Promise<void> {
     });
 
     if (!response.ok) {
-      console.error('Failed to send xAPI statements:', await response.text());
+      log.error('Failed to send xAPI statements', { status: response.status });
       // Re-queue failed statements
       statementQueue.push(...statements);
     }
   } catch (error) {
-    console.error('xAPI statement error:', error);
+    log.error('xAPI statement batch error', error);
     // Re-queue failed statements
     statementQueue.push(...statements);
   }
@@ -88,10 +92,10 @@ async function sendImmediately(statement: Statement): Promise<void> {
     });
 
     if (!response.ok) {
-      console.error('Failed to send xAPI statement:', await response.text());
+      log.error('Failed to send xAPI statement', { status: response.status });
     }
   } catch (error) {
-    console.error('xAPI statement error:', error);
+    log.error('xAPI statement error', error);
   }
 }
 

@@ -2,7 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTelemetry } from '@/lib/adaptive-learning';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('AdaptiveQuestionWrapper');
+
 import { CognitiveLoadIndicator, type CognitiveLoadLevel } from './CognitiveLoadIndicator';
 import { ConfidenceSlider } from './ConfidenceSlider';
 import { type Intervention, InterventionModal } from './InterventionModal';
@@ -112,7 +116,10 @@ export function AdaptiveQuestionWrapper({
           }
         }
       } catch (error) {
-        console.error('[Adaptive] Failed to poll cognitive load:', error);
+        log.error(
+          'Failed to poll cognitive load',
+          error instanceof Error ? error : new Error(String(error)),
+        );
       }
     };
 
@@ -224,7 +231,10 @@ export function AdaptiveQuestionWrapper({
         setConfidenceValue(0.5);
         setPendingAnswer(null);
       } catch (error) {
-        console.error('[Adaptive] Failed to submit attempt:', error);
+        log.error(
+          'Failed to submit attempt',
+          error instanceof Error ? error : new Error(String(error)),
+        );
       } finally {
         setIsSubmitting(false);
       }
@@ -262,7 +272,10 @@ export function AdaptiveQuestionWrapper({
           body: JSON.stringify({ interventionId: id, action }),
         });
       } catch (error) {
-        console.error('[Adaptive] Failed to acknowledge intervention:', error);
+        log.error(
+          'Failed to acknowledge intervention',
+          error instanceof Error ? error : new Error(String(error)),
+        );
       }
       setIntervention(null);
     },

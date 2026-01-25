@@ -4,6 +4,9 @@ import React, { useRef } from 'react';
 import type shaka from 'shaka-player';
 
 import { useMediaStore } from '@/components/limeplay/media-provider';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('useShakaPlayer');
 
 declare global {
   interface HTMLMediaElement {
@@ -25,7 +28,7 @@ export function useShakaPlayer() {
 
   React.useEffect(() => {
     if (isServer) {
-      console.warn('skipping shaka load on server');
+      log.warn('Skipping shaka load on server');
       return;
     }
 

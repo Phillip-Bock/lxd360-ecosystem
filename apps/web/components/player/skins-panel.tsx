@@ -4,8 +4,11 @@ import { Check, Lock, Palette } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import type { PlayerSkin } from '@/types/player';
+
+const log = logger.scope('SkinsPanel');
 
 interface SkinsPanelProps {
   currentSkinId: string;
@@ -176,9 +179,12 @@ export function SkinsPanel({
 
     try {
       // TODO(LXD-297): Implement skin preference saving with Firestore
-      console.error('Save skin preference temporarily unavailable during Firebase migration');
+      log.warn('Save skin preference temporarily unavailable during Firebase migration');
     } catch (error) {
-      console.error('Failed to save skin preference:', error);
+      log.error(
+        'Failed to save skin preference',
+        error instanceof Error ? error : new Error(String(error)),
+      );
     }
   };
 

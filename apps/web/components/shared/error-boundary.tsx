@@ -4,6 +4,9 @@ import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('ErrorBoundary');
 
 interface Props {
   children: ReactNode;
@@ -41,9 +44,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log error (Cloud Logging will capture this in production)
-    console.error('[ErrorBoundary]', {
-      message: error.message,
-      stack: error.stack,
+    log.error('Component error caught', error, {
       componentStack: errorInfo.componentStack,
     });
 
@@ -169,7 +170,10 @@ export function useErrorLogger() {
         : { type: 'UnknownError', message: String(error) };
 
     // Log error (Cloud Logging will capture this in production)
-    console.error('[useErrorLogger]', { ...errorInfo, ...metadata });
+    log.error('Async error logged', error instanceof Error ? error : new Error(String(error)), {
+      ...errorInfo,
+      ...metadata,
+    });
 
     // Log to our database
     try {

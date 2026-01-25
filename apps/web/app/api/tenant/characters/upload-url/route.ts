@@ -3,6 +3,9 @@ import { z } from 'zod';
 import { type AIPersonaId, getAllPersonaIds } from '@/lib/ai-personas/persona-config';
 import { adminAuth } from '@/lib/firebase/admin';
 import { ALLOWED_EXTENSIONS, generateUploadUrl, MAX_FILE_SIZE } from '@/lib/gcs/storage-client';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('CharacterUploadAPI');
 
 const RequestSchema = z.object({
   personaId: z.enum(getAllPersonaIds() as [AIPersonaId, ...AIPersonaId[]]),
@@ -62,7 +65,7 @@ export async function POST(request: NextRequest) {
       personaId,
     });
   } catch (error) {
-    console.error('Upload URL generation error:', error);
+    log.error('Upload URL generation error', error);
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(

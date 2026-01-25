@@ -28,6 +28,9 @@ import {
   TTS_SPEED_OPTIONS,
 } from '@/lib/inspire/types/accessibility-constants';
 import type { AccessibilitySettings } from '@/lib/inspire/types/inspire-types';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('AccessibilityProvider');
 
 // ============================================================================
 // SECTION 1: CONTEXT TYPES & CREATION
@@ -203,7 +206,10 @@ function loadSettingsFromStorage(userId: string): AccessibilitySettings | null {
       return parsed as AccessibilitySettings;
     }
   } catch (error) {
-    console.error('Error loading accessibility settings:', error);
+    log.error(
+      'Error loading accessibility settings',
+      error instanceof Error ? error : new Error(String(error)),
+    );
   }
   return null;
 }
@@ -217,7 +223,10 @@ function saveSettingsToStorage(settings: AccessibilitySettings): void {
   try {
     localStorage.setItem(`${STORAGE_KEY}-${settings.userId}`, JSON.stringify(settings));
   } catch (error) {
-    console.error('Error saving accessibility settings:', error);
+    log.error(
+      'Error saving accessibility settings',
+      error instanceof Error ? error : new Error(String(error)),
+    );
   }
 }
 

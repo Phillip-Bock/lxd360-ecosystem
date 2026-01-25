@@ -19,6 +19,9 @@ import {
 } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('Confetti');
 
 type Api = {
   fire: (options?: ConfettiOptions) => void;
@@ -69,7 +72,7 @@ const ConfettiComponent = forwardRef<ConfettiRef, Props>((props, ref) => {
       try {
         await instanceRef.current?.({ ...options, ...opts });
       } catch (error) {
-        console.error('Confetti error:', error);
+        log.error('Confetti error', error instanceof Error ? error : new Error(String(error)));
       }
     },
     [options],
@@ -90,7 +93,10 @@ const ConfettiComponent = forwardRef<ConfettiRef, Props>((props, ref) => {
         try {
           await fire();
         } catch (error) {
-          console.error('Confetti effect error:', error);
+          log.error(
+            'Confetti effect error',
+            error instanceof Error ? error : new Error(String(error)),
+          );
         }
       })();
     }
@@ -128,7 +134,7 @@ const ConfettiButtonComponent = ({ options, children, ...props }: ConfettiButton
         },
       });
     } catch (error) {
-      console.error('Confetti button error:', error);
+      log.error('Confetti button error', error instanceof Error ? error : new Error(String(error)));
     }
   };
 

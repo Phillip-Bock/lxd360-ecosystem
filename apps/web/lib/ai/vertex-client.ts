@@ -1,4 +1,8 @@
 import { getAccessToken, getProjectId, hasGoogleCredentials } from '@/lib/google/auth';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('VertexAI');
+
 import type {
   DocumentProcessingRequest,
   DocumentProcessingResponse,
@@ -90,7 +94,7 @@ export class VertexAIClient {
     },
   ): Promise<{ text: string; tokenUsage?: { input: number; output: number } }> {
     if (!hasGoogleCredentials()) {
-      console.warn('VertexAIClient: Google credentials not configured');
+      log.warn('Google credentials not configured');
       return {
         text: '',
         tokenUsage: { input: 0, output: 0 },
@@ -180,7 +184,7 @@ export class VertexAIClient {
 
     // TODO(LXD-245): Implement embedding generation
     // Stub returns empty arrays for now
-    console.warn('VertexAIClient.generateEmbeddings is not yet implemented');
+    log.warn('generateEmbeddings is not yet implemented');
 
     const texts = Array.isArray(input) ? input : [input];
     return texts.map(() => []);
@@ -207,7 +211,7 @@ export class VertexAIClient {
     void organizationId;
 
     // TODO(LXD-245): Implement Agent Engine session management
-    console.warn('VertexAIClient.getOrCreateAgentSession is not yet implemented');
+    log.warn('getOrCreateAgentSession is not yet implemented');
 
     return {
       id: 'stub-session-id',
@@ -235,7 +239,7 @@ export class VertexAIClient {
     void message;
 
     // TODO(LXD-245): Implement agent conversation with memory
-    console.warn('VertexAIClient.sendAgentMessage is not yet implemented');
+    log.warn('sendAgentMessage is not yet implemented');
 
     return {
       response: 'AI Learning Assistant is not yet configured.',
@@ -257,7 +261,7 @@ export class VertexAIClient {
     void topic;
 
     // TODO(LXD-245): Implement memory retrieval
-    console.warn('VertexAIClient.getAgentMemory is not yet implemented');
+    log.warn('getAgentMemory is not yet implemented');
 
     return [];
   }
@@ -278,7 +282,7 @@ export class VertexAIClient {
     void request;
 
     // TODO(LXD-245): Implement Document AI processing
-    console.warn('VertexAIClient.processDocument is not yet implemented');
+    log.warn('processDocument is not yet implemented');
 
     return {
       text: '',
@@ -312,7 +316,7 @@ export class VertexAIClient {
     void organizationId;
 
     // TODO(LXD-245): Implement BigQuery ML prediction
-    console.warn('VertexAIClient.predictLearnerChurn is not yet implemented');
+    log.warn('predictLearnerChurn is not yet implemented');
 
     return {
       learnerId,
@@ -341,7 +345,7 @@ export class VertexAIClient {
     void organizationId;
 
     // TODO(LXD-245): Implement engagement scoring
-    console.warn('VertexAIClient.calculateEngagementScore is not yet implemented');
+    log.warn('calculateEngagementScore is not yet implemented');
 
     return {
       learnerId,

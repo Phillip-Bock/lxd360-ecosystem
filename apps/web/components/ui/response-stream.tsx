@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('ResponseStream');
 
 export type Mode = 'typewriter' | 'fade';
 
@@ -213,7 +216,10 @@ function useTextStream({
 
         markComplete();
       } catch (error) {
-        console.error('Error processing text stream:', error);
+        log.error(
+          'Error processing text stream',
+          error instanceof Error ? error : new Error(String(error)),
+        );
         markComplete();
         onError?.(error);
       }

@@ -1,3 +1,7 @@
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('GoogleCloudAI');
+
 export interface MediaGenerationRequest {
   type: 'image' | 'video' | 'audio';
   prompt: string;
@@ -35,7 +39,7 @@ export const GoogleCloudAI = {
    */
   async generateImage(_request: MediaGenerationRequest): Promise<MediaGenerationResponse> {
     void _request; // Suppress unused parameter warning
-    console.warn('GoogleCloudAI.generateImage is not yet implemented');
+    log.warn('generateImage is not yet implemented');
     return {
       success: false,
       error: 'Image generation not yet implemented. Please configure Google Cloud credentials.',
@@ -48,7 +52,7 @@ export const GoogleCloudAI = {
    */
   async generateVideo(_request: MediaGenerationRequest): Promise<MediaGenerationResponse> {
     void _request; // Suppress unused parameter warning
-    console.warn('GoogleCloudAI.generateVideo is not yet implemented');
+    log.warn('generateVideo is not yet implemented');
     return {
       success: false,
       error: 'Video generation not yet implemented. Please configure Google Cloud credentials.',
@@ -61,7 +65,7 @@ export const GoogleCloudAI = {
    */
   async generateAudio(_request: MediaGenerationRequest): Promise<MediaGenerationResponse> {
     void _request; // Suppress unused parameter warning
-    console.warn('GoogleCloudAI.generateAudio is not yet implemented');
+    log.warn('generateAudio is not yet implemented');
     return {
       success: false,
       error: 'Audio generation not yet implemented. Please configure Google Cloud credentials.',
@@ -74,7 +78,7 @@ export const GoogleCloudAI = {
    */
   async processDocument(_request: DocumentProcessingRequest): Promise<MediaGenerationResponse> {
     void _request; // Suppress unused parameter warning
-    console.warn('GoogleCloudAI.processDocument is not yet implemented');
+    log.warn('processDocument is not yet implemented');
     return {
       success: false,
       error: 'Document processing not yet implemented. Please configure Google Cloud credentials.',

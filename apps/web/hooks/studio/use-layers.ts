@@ -6,6 +6,7 @@
  */
 
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
+import { logger } from '@/lib/logger';
 import type { BlendMode, DropTarget, Layer, LayerGroup } from '@/types/studio/layers';
 import {
   createLayer,
@@ -19,6 +20,8 @@ import {
   isLayerVisible,
   layerReducer,
 } from '@/types/studio/layers';
+
+const log = logger.scope('useLayers');
 
 // =============================================================================
 // TYPES
@@ -378,7 +381,7 @@ export function useLayers(options: UseLayersOptions): UseLayersReturn {
 
       setIsDirty(false);
     } catch (error) {
-      console.error('Failed to save layers:', error);
+      log.error('Failed to save layers', error instanceof Error ? error : new Error(String(error)));
       throw error;
     } finally {
       setIsSaving(false);
@@ -394,7 +397,7 @@ export function useLayers(options: UseLayersOptions): UseLayersReturn {
 
       setIsDirty(false);
     } catch (error) {
-      console.error('Failed to load layers:', error);
+      log.error('Failed to load layers', error instanceof Error ? error : new Error(String(error)));
       throw error;
     }
   }, [persistToDatabase]);

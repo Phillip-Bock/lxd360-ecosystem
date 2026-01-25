@@ -12,6 +12,10 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { requireDb } from '@/lib/firebase/client';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('ContentBlocks');
+
 import type {
   ContentBlock,
   ContentBlockData,
@@ -42,7 +46,7 @@ export async function getContentBlock(blockId: string): Promise<ContentBlock | n
 
     return docSnap.data();
   } catch (error) {
-    console.error('Failed to get content block:', error);
+    log.error('Failed to get content block:', error);
     throw new Error(`Failed to get content block: ${blockId}`);
   }
 }
@@ -60,7 +64,7 @@ export async function getBlocksByLesson(lessonId: string): Promise<ContentBlock[
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => doc.data());
   } catch (error) {
-    console.error('Failed to get blocks by lesson:', error);
+    log.error('Failed to get blocks by lesson:', error);
     throw new Error(`Failed to get blocks for lesson: ${lessonId}`);
   }
 }
@@ -83,7 +87,7 @@ export async function getPublishedBlocks(lessonId: string): Promise<ContentBlock
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => doc.data());
   } catch (error) {
-    console.error('Failed to get published blocks:', error);
+    log.error('Failed to get published blocks:', error);
     throw new Error(`Failed to get published blocks for lesson: ${lessonId}`);
   }
 }
@@ -110,7 +114,7 @@ export async function getBlocksByType(
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => doc.data());
   } catch (error) {
-    console.error('Failed to get blocks by type:', error);
+    log.error('Failed to get blocks by type:', error);
     throw new Error(`Failed to get blocks of type ${type} for lesson: ${lessonId}`);
   }
 }
@@ -125,7 +129,7 @@ export async function countBlocksInLesson(lessonId: string): Promise<number> {
     const blocks = await getBlocksByLesson(lessonId);
     return blocks.length;
   } catch (error) {
-    console.error('Failed to count blocks:', error);
+    log.error('Failed to count blocks:', error);
     throw new Error(`Failed to count blocks for lesson: ${lessonId}`);
   }
 }
@@ -140,7 +144,7 @@ export async function calculateLessonDuration(lessonId: string): Promise<number>
     const blocks = await getBlocksByLesson(lessonId);
     return blocks.reduce((total, block) => total + (block.durationSeconds ?? 0), 0);
   } catch (error) {
-    console.error('Failed to calculate lesson duration:', error);
+    log.error('Failed to calculate lesson duration:', error);
     throw new Error(`Failed to calculate duration for lesson: ${lessonId}`);
   }
 }
@@ -188,7 +192,7 @@ export async function createContentBlock(
 
     return created.data();
   } catch (error) {
-    console.error('Failed to create content block:', error);
+    log.error('Failed to create content block:', error);
     throw new Error('Failed to create content block');
   }
 }
@@ -216,7 +220,7 @@ export async function createContentBlocks(
 
     return createdBlocks;
   } catch (error) {
-    console.error('Failed to create content blocks:', error);
+    log.error('Failed to create content blocks:', error);
     throw new Error('Failed to create content blocks');
   }
 }
@@ -249,7 +253,7 @@ export async function updateContentBlock(
 
     return updated.data();
   } catch (error) {
-    console.error('Failed to update content block:', error);
+    log.error('Failed to update content block:', error);
     throw new Error(`Failed to update content block: ${blockId}`);
   }
 }
@@ -282,7 +286,7 @@ export async function updateBlockContent(
 
     return updated.data();
   } catch (error) {
-    console.error('Failed to update block content:', error);
+    log.error('Failed to update block content:', error);
     throw new Error(`Failed to update block content: ${blockId}`);
   }
 }
@@ -296,7 +300,7 @@ export async function deleteContentBlock(blockId: string): Promise<void> {
     const docRef = getContentBlockRef(blockId);
     await deleteDoc(docRef);
   } catch (error) {
-    console.error('Failed to delete content block:', error);
+    log.error('Failed to delete content block:', error);
     throw new Error(`Failed to delete content block: ${blockId}`);
   }
 }
@@ -317,7 +321,7 @@ export async function deleteBlocksByLesson(lessonId: string): Promise<void> {
 
     await batch.commit();
   } catch (error) {
-    console.error('Failed to delete blocks by lesson:', error);
+    log.error('Failed to delete blocks by lesson:', error);
     throw new Error(`Failed to delete blocks for lesson: ${lessonId}`);
   }
 }
@@ -341,7 +345,7 @@ export async function reorderBlocks(lessonId: string, blockIds: string[]): Promi
 
     await batch.commit();
   } catch (error) {
-    console.error('Failed to reorder blocks:', error);
+    log.error('Failed to reorder blocks:', error);
     throw new Error(`Failed to reorder blocks for lesson: ${lessonId}`);
   }
 }
@@ -410,7 +414,7 @@ export async function moveBlock(
 
     return updated;
   } catch (error) {
-    console.error('Failed to move block:', error);
+    log.error('Failed to move block:', error);
     throw new Error(`Failed to move block: ${blockId}`);
   }
 }
@@ -438,7 +442,7 @@ export async function publishBlock(blockId: string, userId: string): Promise<Con
 
     return published.data();
   } catch (error) {
-    console.error('Failed to publish block:', error);
+    log.error('Failed to publish block:', error);
     throw new Error(`Failed to publish block: ${blockId}`);
   }
 }
@@ -467,7 +471,7 @@ export async function publishAllBlocks(lessonId: string, userId: string): Promis
 
     await batch.commit();
   } catch (error) {
-    console.error('Failed to publish all blocks:', error);
+    log.error('Failed to publish all blocks:', error);
     throw new Error(`Failed to publish all blocks for lesson: ${lessonId}`);
   }
 }
@@ -509,7 +513,7 @@ export async function duplicateBlock(
       ariaLabel: source.ariaLabel,
     });
   } catch (error) {
-    console.error('Failed to duplicate block:', error);
+    log.error('Failed to duplicate block:', error);
     throw new Error(`Failed to duplicate block: ${blockId}`);
   }
 }
@@ -559,7 +563,7 @@ export async function copyBlocksToLesson(
 
     return createdBlocks;
   } catch (error) {
-    console.error('Failed to copy blocks to lesson:', error);
+    log.error('Failed to copy blocks to lesson:', error);
     throw new Error(`Failed to copy blocks from ${sourceLessonId} to ${targetLessonId}`);
   }
 }

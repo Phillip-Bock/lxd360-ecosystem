@@ -3,6 +3,9 @@
 import * as React from 'react';
 
 import { type UseIsInViewOptions, useIsInView } from '@/hooks/use-is-in-view';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('CodeBlock');
 
 type CodeBlockProps = React.ComponentProps<'div'> & {
   code: string;
@@ -62,7 +65,10 @@ function CodeBlock({
 
         setHighlightedCode(highlighted);
       } catch (e) {
-        console.error(`Language "${lang}" could not be loaded.`, e);
+        log.error(
+          `Language "${lang}" could not be loaded`,
+          e instanceof Error ? e : new Error(String(e)),
+        );
       }
     };
 

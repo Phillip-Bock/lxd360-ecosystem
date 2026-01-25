@@ -1,5 +1,8 @@
 'use client';
 import React from 'react';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('PixelatedCanvas');
 
 interface ImageWithCleanup extends HTMLImageElement {
   _cleanup?: () => void;
@@ -484,7 +487,9 @@ export const PixelatedCanvas: React.FC<PixelatedCanvasProps> = ({
     };
 
     img.onerror = () => {
-      console.error('Failed to load image for PixelatedCanvas:', src);
+      log.error('Failed to load image for PixelatedCanvas', new Error('Image load failed'), {
+        src,
+      });
     };
 
     if (responsive) {

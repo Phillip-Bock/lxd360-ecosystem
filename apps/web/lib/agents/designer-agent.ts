@@ -1,5 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import { generateText, MODELS, type ModelId } from '@/lib/ai/gemini-client';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('DesignerAgent');
+
 import type {
   ContentBlock,
   ContentBlockType,
@@ -217,7 +221,9 @@ export class DesignerAgent {
         return courseOutline;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        console.error(`Attempt ${attempt + 1} failed:`, lastError.message);
+        log.warn(`Course outline generation attempt ${attempt + 1} failed`, {
+          error: lastError.message,
+        });
         // Wait before retry with exponential backoff
         await new Promise((resolve) => setTimeout(resolve, 2 ** attempt * 1000));
       }
@@ -274,7 +280,9 @@ export class DesignerAgent {
         return contentBlock;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        console.error(`Attempt ${attempt + 1} failed:`, lastError.message);
+        log.warn(`Content block generation attempt ${attempt + 1} failed`, {
+          error: lastError.message,
+        });
         await new Promise((resolve) => setTimeout(resolve, 2 ** attempt * 1000));
       }
     }

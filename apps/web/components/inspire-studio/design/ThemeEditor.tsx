@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import {
   type BlockStyleConfig,
@@ -202,8 +203,13 @@ export function ThemeEditor({ theme, onChange, onSave, className }: ThemeEditorP
         const imported = JSON.parse(text) as ThemeConfig;
         onChange(imported);
         setHasUnsavedChanges(true);
-      } catch {
-        console.error('Failed to import theme');
+      } catch (error) {
+        logger
+          .scope('ThemeEditor')
+          .error(
+            'Failed to import theme',
+            error instanceof Error ? error : new Error(String(error)),
+          );
       }
     };
     input.click();

@@ -2,6 +2,9 @@
 
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('GlobalError');
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
@@ -11,10 +14,8 @@ interface GlobalErrorProps {
 export default function GlobalError({ error, reset }: GlobalErrorProps) {
   useEffect(() => {
     // Log critical error (Cloud Logging will capture this in production)
-    console.error('[GlobalError]', {
-      message: error.message,
+    log.critical('Critical application error', error, {
       digest: error.digest,
-      stack: error.stack,
     });
   }, [error]);
 

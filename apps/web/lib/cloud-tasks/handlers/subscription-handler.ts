@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import type {
   SubscriptionExpiringPayload,
   SubscriptionRenewalPayload,
@@ -6,6 +7,8 @@ import type {
   SubscriptionWebhookPayload,
   TaskHandlerResult,
 } from '../types';
+
+const log = logger.scope('SubscriptionTask');
 
 // ============================================================================
 // SUBSCRIPTION TASK HANDLER
@@ -53,7 +56,7 @@ async function handleSubscriptionWebhook(
   const { eventType, stripeEventId, payload: eventPayload } = payload.data;
 
   try {
-    console.error(`[Subscription Task] Processing Stripe webhook: ${eventType} (${stripeEventId})`);
+    log.info(`[Subscription Task] Processing Stripe webhook: ${eventType} (${stripeEventId})`);
 
     // Route to specific handlers based on event type
     switch (eventType) {
@@ -73,7 +76,7 @@ async function handleSubscriptionWebhook(
         return handleWebhookPaymentFailed(eventPayload);
 
       default:
-        console.error(`[Subscription Task] Unhandled webhook event type: ${eventType}`);
+        log.info(`[Subscription Task] Unhandled webhook event type: ${eventType}`);
         return {
           success: true,
           message: `Webhook event ${eventType} acknowledged but not processed`,
@@ -82,7 +85,10 @@ async function handleSubscriptionWebhook(
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Subscription Task] Webhook processing failed:`, errorMessage);
+    log.error(
+      '[Subscription Task] Webhook processing failed',
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,
@@ -99,7 +105,7 @@ async function handleSubscriptionRenewal(
   const { subscriptionId, customerId, planId, renewalDate } = payload.data;
 
   try {
-    console.error(
+    log.info(
       `[Subscription Task] Processing renewal for subscription ${subscriptionId} on ${renewalDate}`,
     );
 
@@ -123,7 +129,10 @@ async function handleSubscriptionRenewal(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Subscription Task] Renewal failed for ${subscriptionId}:`, errorMessage);
+    log.error(
+      `[Subscription Task] Renewal failed for ${subscriptionId}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,
@@ -140,7 +149,7 @@ async function handleSubscriptionExpiring(
   const { subscriptionId, userId, expirationDate, daysUntilExpiry } = payload.data;
 
   try {
-    console.error(
+    log.info(
       `[Subscription Task] Sending expiry notification: ${subscriptionId} expires in ${daysUntilExpiry} days`,
     );
 
@@ -163,9 +172,9 @@ async function handleSubscriptionExpiring(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(
-      `[Subscription Task] Expiry notification failed for ${subscriptionId}:`,
-      errorMessage,
+    log.error(
+      `[Subscription Task] Expiry notification failed for ${subscriptionId}`,
+      error instanceof Error ? error : new Error(errorMessage),
     );
     return {
       success: false,
@@ -183,7 +192,7 @@ async function handleSubscriptionSync(
   const { stripeSubscriptionId, action } = payload.data;
 
   try {
-    console.error(
+    log.info(
       `[Subscription Task] Syncing subscription ${stripeSubscriptionId} (action: ${action})`,
     );
 
@@ -205,7 +214,10 @@ async function handleSubscriptionSync(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Subscription Task] Sync failed for ${stripeSubscriptionId}:`, errorMessage);
+    log.error(
+      `[Subscription Task] Sync failed for ${stripeSubscriptionId}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,
@@ -221,7 +233,7 @@ async function handleWebhookSubscriptionCreated(
   _eventPayload: Record<string, unknown>,
 ): Promise<TaskHandlerResult> {
   // TODO(LXD-247): Store new subscription in Firestore
-  console.error('[Subscription Webhook] Processing subscription.created');
+  log.info('[Subscription Webhook] Processing subscription.created');
 
   return {
     success: true,
@@ -234,7 +246,7 @@ async function handleWebhookSubscriptionUpdated(
   _eventPayload: Record<string, unknown>,
 ): Promise<TaskHandlerResult> {
   // TODO(LXD-247): Update subscription in Firestore
-  console.error('[Subscription Webhook] Processing subscription.updated');
+  log.info('[Subscription Webhook] Processing subscription.updated');
 
   return {
     success: true,
@@ -247,7 +259,7 @@ async function handleWebhookSubscriptionDeleted(
   _eventPayload: Record<string, unknown>,
 ): Promise<TaskHandlerResult> {
   // TODO(LXD-247): Mark subscription as canceled in Firestore
-  console.error('[Subscription Webhook] Processing subscription.deleted');
+  log.info('[Subscription Webhook] Processing subscription.deleted');
 
   return {
     success: true,
@@ -260,7 +272,7 @@ async function handleWebhookPaymentSucceeded(
   _eventPayload: Record<string, unknown>,
 ): Promise<TaskHandlerResult> {
   // TODO(LXD-247): Record payment success, update subscription status
-  console.error('[Subscription Webhook] Processing payment.succeeded');
+  log.info('[Subscription Webhook] Processing payment.succeeded');
 
   return {
     success: true,
@@ -273,7 +285,7 @@ async function handleWebhookPaymentFailed(
   _eventPayload: Record<string, unknown>,
 ): Promise<TaskHandlerResult> {
   // TODO(LXD-247): Record payment failure, trigger notification
-  console.error('[Subscription Webhook] Processing payment.failed');
+  log.info('[Subscription Webhook] Processing payment.failed');
 
   return {
     success: true,

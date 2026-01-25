@@ -4,7 +4,10 @@
  */
 
 import * as THREE from 'three';
+import { logger } from '@/lib/logger';
 import type { Vector3, XRConfig as XRConfigType } from '@/types/studio/immersive';
+
+const log = logger.scope('XRManager');
 
 // Re-export XRConfig type for use by hooks
 export type { XRConfigType as XRConfig };
@@ -118,7 +121,7 @@ export class XRManager {
    */
   async startSession(mode: 'immersive-vr' | 'immersive-ar' = 'immersive-vr'): Promise<boolean> {
     if (!('xr' in navigator)) {
-      console.error('WebXR not supported');
+      log.error('WebXR not supported');
       return false;
     }
 
@@ -148,7 +151,7 @@ export class XRManager {
       this.callbacks.onSessionStart?.();
       return true;
     } catch (error) {
-      console.error('Failed to start XR session:', error);
+      log.error('Failed to start XR session', error);
       return false;
     }
   }

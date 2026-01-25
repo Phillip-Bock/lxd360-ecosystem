@@ -20,6 +20,10 @@ import type * as THREE from 'three';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('VRSceneBlock');
+
 import {
   Select,
   SelectContent,
@@ -116,7 +120,7 @@ function VRButton() {
       const session = await navigator.xr.requestSession('immersive-vr');
       gl.xr.setSession(session);
     } catch (err) {
-      console.error('Failed to enter VR:', err);
+      log.error('Failed to enter VR', err instanceof Error ? err : new Error(String(err)));
     }
   };
 

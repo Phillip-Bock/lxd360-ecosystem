@@ -16,6 +16,10 @@ import {
   serverTimestamp,
   updateDoc,
 } from 'firebase/firestore';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('INSPIREModalitySwapper');
+
 import {
   createContext,
   type ReactNode,
@@ -144,7 +148,7 @@ export function useModalitySwapper(): ModalitySwapperContextValue {
  *   actor={{ objectType: 'Agent', account: { homePage: 'https://lxd360.com', name: user.uid } }}
  *   sessionId={sessionId}
  *   consentTier={2}
- *   onSwap={(from, to, override) => console.log(`Swapped ${from} -> ${to}`)}
+ *   onSwap={(from, to, override) => handleModalitySwap(from, to)}
  * >
  *   <LearningContent />
  * </ModalitySwapperProvider>
@@ -197,7 +201,7 @@ export function ModalitySwapperProvider({
         setError(null);
       },
       (err) => {
-        console.error('[ModalitySwapper] Firestore error:', err);
+        log.error('Firestore subscription error', err);
         setError(err);
         setIsLoading(false);
       },
@@ -220,10 +224,10 @@ export function ModalitySwapperProvider({
         });
 
         if (!response.ok) {
-          console.error('[ModalitySwapper] Failed to send xAPI statement:', response.status);
+          log.error('Failed to send xAPI statement', { status: response.status });
         }
       } catch (err) {
-        console.error('[ModalitySwapper] xAPI error:', err);
+        log.error('xAPI error', err);
       }
     },
     [xapiEndpoint, tenantId],

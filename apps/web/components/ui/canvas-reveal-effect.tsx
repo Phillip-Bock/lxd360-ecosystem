@@ -2,7 +2,10 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import React, { useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('CanvasRevealEffect');
 
 export const CanvasRevealEffect = ({
   animationSpeed = 0.4,
@@ -214,7 +217,11 @@ const ShaderMaterial = ({
           };
           break;
         default:
-          console.error(`Invalid uniform type for '${uniformName}'.`);
+          log.error(
+            'Invalid uniform type',
+            new Error(`Invalid uniform type for '${uniformName}'`),
+            { uniformName },
+          );
           break;
       }
     }

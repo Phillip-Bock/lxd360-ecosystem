@@ -3,6 +3,10 @@
  * Listens for state changes and triggers cascading changes in other objects
  */
 
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('StateTriggerEngine');
+
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -448,7 +452,7 @@ class StateTriggerEngine {
 
   async executeAction(targetObjectId: string, action: TriggerAction): Promise<void> {
     if (!this.context) {
-      console.warn('No context set for trigger engine');
+      log.warn('No context set for trigger engine');
       return;
     }
 
@@ -573,7 +577,7 @@ class StateTriggerEngine {
   // ==========================================================================
 
   debug(): void {
-    console.warn('State Trigger Engine Debug', {
+    log.debug('State Trigger Engine Debug', {
       rules: this.rules.size,
       listeners: this.listeners.size,
       eventQueue: this.eventQueue.length,

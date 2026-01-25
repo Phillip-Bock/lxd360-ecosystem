@@ -6,6 +6,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { logger } from '@/lib/logger';
 import { createTriggerEngine, type TriggerEngine } from '@/lib/studio/trigger-engine';
 import type {
   AnimateActionConfig,
@@ -18,6 +19,8 @@ import type {
   VisibilityActionConfig,
   XAPIActionConfig,
 } from '@/types/studio/triggers';
+
+const log = logger.scope('useTriggers');
 
 // =============================================================================
 // TYPES
@@ -394,7 +397,7 @@ export function useTriggers(options: UseTriggersOptions): UseTriggersReturn {
 
       log: (...args: unknown[]) => {
         if (debugMode) {
-          console.warn('[TriggerEngine]', ...args);
+          log.debug('TriggerEngine', { args });
         }
       },
     }),

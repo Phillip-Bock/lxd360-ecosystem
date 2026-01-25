@@ -26,6 +26,9 @@ import type {
   INSPIREProject,
   TargetIndustry,
 } from '@/lib/inspire/types/inspire-types';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('INSPIREToolShell');
 
 import type { WizardPhase } from '@/lib/inspire/types/wizard-config';
 import { getPhaseForStep, WIZARD_PHASES, WIZARD_STEPS } from '@/lib/inspire/types/wizard-config';
@@ -523,7 +526,10 @@ export function INSPIREToolShell({
           onProjectLoad(loadedProject);
         }
       } catch (error) {
-        console.error('[INSPIRE] Failed to load project:', error);
+        log.error(
+          'Failed to load project',
+          error instanceof Error ? error : new Error(String(error)),
+        );
         announce('Failed to load project. Please try again.', 'assertive');
       }
     },
@@ -563,7 +569,10 @@ export function INSPIREToolShell({
         onProjectSave(project);
       }
     } catch (error) {
-      console.error('[INSPIRE] Failed to save project:', error);
+      log.error(
+        'Failed to save project',
+        error instanceof Error ? error : new Error(String(error)),
+      );
       announce('Failed to save project. Your changes are still in memory.', 'assertive');
     } finally {
       setIsSaving(false);
@@ -626,7 +635,7 @@ export function INSPIREToolShell({
       // Validate step number
       if (step < 1 || step > 17) {
         if (debug) {
-          console.warn('[INSPIRE] Invalid step number:', step);
+          log.warn('Invalid step number', { step });
         }
         return false;
       }
@@ -815,7 +824,7 @@ export function INSPIREToolShell({
         setLastAiResponse(response);
         return response;
       } catch (error) {
-        console.error('[INSPIRE] AI request failed:', error);
+        log.error('AI request failed', error instanceof Error ? error : new Error(String(error)));
 
         // Return a graceful error response
         const errorResponse: AIAssistanceResponse = {

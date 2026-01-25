@@ -16,7 +16,11 @@ import {
 import { useState } from 'react';
 import { contentBlocksData } from '@/lib/inspire/config/authoringBlocks';
 import type { ContentBlock } from '@/lib/inspire-studio/types/contentBlocks';
+import { logger } from '@/lib/logger';
 import { ContentBlocksSidebar } from './ContentBlocksSidebar';
+
+const log = logger.scope('LessonAuthor');
+
 import { ContentEditor } from './ContentEditor';
 import { RibbonToolbar } from './RibbonToolbar';
 import { VersionRevertModal } from './VersionRevertModal';
@@ -212,7 +216,7 @@ export function LessonAuthor({ courseType }: LessonAuthorProps = {}): React.JSX.
         break;
 
       case 'formatPainter':
-        console.error('[LessonAuthor] Format Painter functionality not yet implemented');
+        log.warn('Format Painter functionality not yet implemented');
         break;
 
       case 'fontFamily':
@@ -323,7 +327,7 @@ export function LessonAuthor({ courseType }: LessonAuthorProps = {}): React.JSX.
         break;
 
       case 'focusOrder':
-        console.error('[LessonAuthor] Focus Order functionality not yet implemented');
+        log.warn('Focus Order functionality not yet implemented');
         break;
 
       case 'altText':
@@ -331,9 +335,9 @@ export function LessonAuthor({ courseType }: LessonAuthorProps = {}): React.JSX.
           const block = contentBlocks.find((b) => b.id === selectedBlockId);
           if (block && (block.type === 'image' || block.type === 'video')) {
             // TODO(LXD-412): Replace with proper modal UI for alt text input
-            console.error('[LessonAuthor] Alt text editor not yet implemented');
+            log.warn('Alt text editor not yet implemented');
           } else {
-            console.error('[LessonAuthor] Alt text is only available for image and video blocks');
+            log.warn('Alt text is only available for image and video blocks');
           }
         }
         break;
@@ -347,15 +351,15 @@ export function LessonAuthor({ courseType }: LessonAuthorProps = {}): React.JSX.
         break;
 
       case 'spellCheck':
-        console.error('[LessonAuthor] Spell check functionality not yet implemented');
+        log.warn('Spell check functionality not yet implemented');
         break;
 
       case 'addComment':
         if (selectedBlockId) {
           // TODO(LXD-412): Replace with proper modal UI for comment input
-          console.error('[LessonAuthor] Comment functionality not yet implemented');
+          log.warn('Comment functionality not yet implemented');
         } else {
-          console.error('[LessonAuthor] Please select a block to add a comment');
+          log.warn('Please select a block to add a comment');
         }
         break;
 
@@ -373,21 +377,19 @@ export function LessonAuthor({ courseType }: LessonAuthorProps = {}): React.JSX.
         break;
 
       case 'theme':
-        console.error('[LessonAuthor] Theme functionality not yet implemented', { theme: value });
+        log.warn('Theme functionality not yet implemented', { theme: value });
         break;
 
       case 'layout':
-        console.error('[LessonAuthor] Layout functionality not yet implemented', { layout: value });
+        log.warn('Layout functionality not yet implemented', { layout: value });
         break;
 
       case 'backgroundColor':
-        console.error('[LessonAuthor] Background color functionality not yet implemented', {
-          color: value,
-        });
+        log.warn('Background color functionality not yet implemented', { color: value });
         break;
 
       case 'animations':
-        console.error('[LessonAuthor] Animations functionality not yet implemented');
+        log.warn('Animations functionality not yet implemented');
         break;
     }
   };

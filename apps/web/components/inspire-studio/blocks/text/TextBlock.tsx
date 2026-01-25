@@ -14,9 +14,12 @@ import {
 } from 'lucide-react';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { logger } from '@/lib/logger';
 import { safeInnerHtml } from '@/lib/sanitize';
 import type { TextBlockContent } from '@/types/blocks';
 import type { BlockComponentProps } from '../BlockRenderer';
+
+const log = logger.scope('TextBlock');
 
 /**
  * TextBlock - Rich text content with inline editing
@@ -153,9 +156,7 @@ export function TextBlock({
               icon={Link}
               label="Link"
               onClick={() => {
-                console.error(
-                  '[TextBlock] Link creation requires implementation of proper URL input dialog',
-                );
+                log.warn('Link creation requires implementation of proper URL input dialog');
               }}
             />
             <ToolbarButton

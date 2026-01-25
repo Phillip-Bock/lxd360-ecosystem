@@ -1,6 +1,9 @@
 'use client';
 
 import { useCallback, useRef, useState } from 'react';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('useIgniteVoice');
 
 // ============================================================================
 // USE IGNITE VOICE HOOK
@@ -118,7 +121,7 @@ export function useIgniteVoice(): UseIgniteVoiceReturn {
         };
 
         audio.onerror = (e) => {
-          console.error('[useIgniteVoice] Audio playback error:', e);
+          log.error('Audio playback error', new Error(String(e)));
           setError('Failed to play audio');
           setIsSpeaking(false);
           setIsLoading(false);
@@ -136,7 +139,7 @@ export function useIgniteVoice(): UseIgniteVoiceReturn {
         // Start playback
         await audio.play();
       } catch (err) {
-        console.error('[useIgniteVoice] Error:', err);
+        log.error('Error playing audio', err instanceof Error ? err : new Error(String(err)));
         setError(err instanceof Error ? err.message : 'Failed to play audio');
         setIsSpeaking(false);
         setIsLoading(false);

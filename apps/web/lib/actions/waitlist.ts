@@ -2,6 +2,9 @@
 
 import { z } from 'zod';
 import { adminDb } from '@/lib/firebase/admin';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('Waitlist');
 
 const waitlistSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -64,7 +67,7 @@ export async function joinWaitlist(
       message: "You're on the list! We'll notify you when we launch.",
     };
   } catch (error) {
-    console.error('Waitlist error:', error);
+    log.error('Failed to add to waitlist', error);
     return {
       success: false,
       message: 'Something went wrong. Please try again.',

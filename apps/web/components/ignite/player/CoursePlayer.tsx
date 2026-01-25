@@ -14,10 +14,13 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import { useXAPIBridge } from '@/lib/xapi/bridge';
 import { storeStatement } from '@/lib/xapi/service';
 import { IgniteCoach } from './IgniteCoach';
+
+const log = logger.scope('CoursePlayer');
 
 // ============================================================================
 // TYPES
@@ -118,8 +121,8 @@ export function CoursePlayer({
         }
       }
     },
-    onError: (error) => {
-      console.error('Bridge error:', error);
+    onError: (error: string | Error) => {
+      log.error('Bridge error', typeof error === 'string' ? new Error(error) : error);
     },
   });
 
@@ -129,7 +132,12 @@ export function CoursePlayer({
       const latestStatement = statements[statements.length - 1];
       storeStatement(latestStatement, {
         organizationId: tenantId,
-      }).catch(console.error);
+      }).catch((err) =>
+        log.error(
+          'Failed to store xAPI statement',
+          err instanceof Error ? err : new Error(String(err)),
+        ),
+      );
     }
   }, [statements, tenantId]);
 

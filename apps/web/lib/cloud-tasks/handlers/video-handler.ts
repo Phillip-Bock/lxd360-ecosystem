@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import type {
   TaskHandlerResult,
   VideoGeneratePayload,
@@ -6,6 +7,8 @@ import type {
   VideoThumbnailPayload,
   VideoTranscodePayload,
 } from '../types';
+
+const log = logger.scope('VideoTask');
 
 // ============================================================================
 // VIDEO TASK HANDLER
@@ -49,7 +52,7 @@ async function handleVideoGenerate(payload: VideoGeneratePayload): Promise<TaskH
   const { projectId, sceneId, outputFormat, quality, userId } = payload.data;
 
   try {
-    console.error(
+    log.info(
       `[Video Task] Generating video for project ${projectId}, scene ${sceneId} (${quality} ${outputFormat})`,
     );
 
@@ -79,7 +82,10 @@ async function handleVideoGenerate(payload: VideoGeneratePayload): Promise<TaskH
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Video Task] Generation failed for project ${projectId}:`, errorMessage);
+    log.error(
+      `[Video Task] Generation failed for project ${projectId}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,
@@ -96,7 +102,7 @@ async function handleVideoProcess(payload: VideoProcessPayload): Promise<TaskHan
   const { sourceUrl, outputPath, operations } = payload.data;
 
   try {
-    console.error(
+    log.info(
       `[Video Task] Processing video from ${sourceUrl} with ${operations.length} operations`,
     );
 
@@ -121,7 +127,10 @@ async function handleVideoProcess(payload: VideoProcessPayload): Promise<TaskHan
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Video Task] Processing failed for ${sourceUrl}:`, errorMessage);
+    log.error(
+      `[Video Task] Processing failed for ${sourceUrl}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,
@@ -138,7 +147,7 @@ async function handleVideoTranscode(payload: VideoTranscodePayload): Promise<Tas
   const { sourceUrl, outputFormats, resolutions } = payload.data;
 
   try {
-    console.error(
+    log.info(
       `[Video Task] Transcoding ${sourceUrl} to formats: ${outputFormats.join(', ')} at resolutions: ${resolutions.join(', ')}`,
     );
 
@@ -164,7 +173,10 @@ async function handleVideoTranscode(payload: VideoTranscodePayload): Promise<Tas
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Video Task] Transcoding failed for ${sourceUrl}:`, errorMessage);
+    log.error(
+      `[Video Task] Transcoding failed for ${sourceUrl}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,
@@ -181,7 +193,7 @@ async function handleVideoThumbnail(payload: VideoThumbnailPayload): Promise<Tas
   const { videoUrl, timestamps, outputPath } = payload.data;
 
   try {
-    console.error(`[Video Task] Generating ${timestamps.length} thumbnails for ${videoUrl}`);
+    log.info(`[Video Task] Generating ${timestamps.length} thumbnails for ${videoUrl}`);
 
     // TODO(LXD-247): Integrate with video thumbnail service
     // const result = await thumbnailGenerator.generate({
@@ -203,7 +215,10 @@ async function handleVideoThumbnail(payload: VideoThumbnailPayload): Promise<Tas
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error(`[Video Task] Thumbnail generation failed for ${videoUrl}:`, errorMessage);
+    log.error(
+      `[Video Task] Thumbnail generation failed for ${videoUrl}`,
+      error instanceof Error ? error : new Error(errorMessage),
+    );
     return {
       success: false,
       error: errorMessage,

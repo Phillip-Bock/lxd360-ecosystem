@@ -7,7 +7,10 @@ import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
 import { CoursePlayer } from '@/components/ignite/player';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
+
+const log = logger.scope('CoursePlayer');
 
 /**
  * SCORM Course Player Page
@@ -62,7 +65,7 @@ export default function SCORMCoursePlayerPage({
         const data = await res.json();
         setCourse(data);
       } catch (err) {
-        console.error('Error loading course:', err);
+        log.error('Error loading course', err);
         setError('Failed to load course');
       } finally {
         setLoading(false);

@@ -1,6 +1,10 @@
+import { logger } from '@/lib/logger';
 import type { Statement } from '@/lib/xapi/types';
 import { DesignerAgent } from './designer-agent';
 import { createLearnerCohort } from './learner-agent';
+
+const log = logger.scope('DemoOrchestrator');
+
 import type {
   CourseConsumption,
   DemoOrchestratorConfig,
@@ -192,7 +196,9 @@ export class DemoOrchestrator {
       });
     } catch (error) {
       // Fall back to demo course if AI fails
-      console.error('AI course generation failed, using demo course:', error);
+      log.warn('AI course generation failed, using demo course', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       course = DesignerAgent.createDemoCourse({
         topic: scenario.courseConfig.topic,
         industry: scenario.courseConfig.industry,

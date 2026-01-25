@@ -11,6 +11,9 @@ import {
 } from 'firebase/firestore';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { requireDb } from '@/lib/firebase/client';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('useDraftLock');
 
 // =============================================================================
 // Types
@@ -118,7 +121,10 @@ export function useDraftLock(
         { merge: true },
       );
     } catch (error) {
-      console.error('Failed to send heartbeat:', error);
+      log.error(
+        'Failed to send heartbeat',
+        error instanceof Error ? error : new Error(String(error)),
+      );
     }
   }, [hasLock, getLockRef]);
 
@@ -167,7 +173,10 @@ export function useDraftLock(
       onLockAcquired?.();
       return true;
     } catch (error) {
-      console.error('Failed to acquire lock:', error);
+      log.error(
+        'Failed to acquire lock',
+        error instanceof Error ? error : new Error(String(error)),
+      );
       return false;
     }
   }, [
@@ -198,7 +207,10 @@ export function useDraftLock(
       setHasLock(false);
       setLockedBy(null);
     } catch (error) {
-      console.error('Failed to release lock:', error);
+      log.error(
+        'Failed to release lock',
+        error instanceof Error ? error : new Error(String(error)),
+      );
     }
   }, [getLockRef, userId]);
 
@@ -221,7 +233,10 @@ export function useDraftLock(
       onLockAcquired?.();
       return true;
     } catch (error) {
-      console.error('Failed to force take lock:', error);
+      log.error(
+        'Failed to force take lock',
+        error instanceof Error ? error : new Error(String(error)),
+      );
       return false;
     }
   }, [getLockRef, userId, userName, userEmail, onLockAcquired]);
@@ -267,7 +282,7 @@ export function useDraftLock(
         }
       },
       (error) => {
-        console.error('Lock listener error:', error);
+        log.error('Lock listener error', error instanceof Error ? error : new Error(String(error)));
         setIsLoading(false);
       },
     );

@@ -5,8 +5,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import type { CourseSlide, LearnerNote } from '@/types/player';
+
+const log = logger.scope('NotesPanel');
 
 interface NotesPanelProps {
   courseId: string;
@@ -40,9 +43,9 @@ export function NotesPanel({
 
     try {
       // TODO(LXD-297): Implement notes fetching with Firestore
-      console.error('Fetch notes temporarily unavailable during Firebase migration');
+      log.warn('Fetch notes temporarily unavailable during Firebase migration');
     } catch (error) {
-      console.error('Failed to fetch notes:', error);
+      log.error('Failed to fetch notes', error instanceof Error ? error : new Error(String(error)));
     }
     setIsLoading(false);
   }, [courseId, isDemo]);
@@ -75,9 +78,9 @@ export function NotesPanel({
 
     try {
       // TODO(LXD-297): Implement note creation with Firestore
-      console.error('Add note temporarily unavailable during Firebase migration');
+      log.warn('Add note temporarily unavailable during Firebase migration');
     } catch (error) {
-      console.error('Failed to add note:', error);
+      log.error('Failed to add note', error instanceof Error ? error : new Error(String(error)));
     }
     setIsSaving(false);
   };
@@ -92,9 +95,9 @@ export function NotesPanel({
 
     try {
       // TODO(LXD-297): Implement note deletion with Firestore
-      console.error('Delete note temporarily unavailable during Firebase migration');
+      log.warn('Delete note temporarily unavailable during Firebase migration');
     } catch (error) {
-      console.error('Failed to delete note:', error);
+      log.error('Failed to delete note', error instanceof Error ? error : new Error(String(error)));
     }
   };
 
@@ -114,9 +117,9 @@ export function NotesPanel({
 
     try {
       // TODO(LXD-297): Implement note pin toggle with Firestore
-      console.error('Toggle pin temporarily unavailable during Firebase migration');
+      log.warn('Toggle pin temporarily unavailable during Firebase migration');
     } catch (error) {
-      console.error('Failed to toggle pin:', error);
+      log.error('Failed to toggle pin', error instanceof Error ? error : new Error(String(error)));
     }
   };
 

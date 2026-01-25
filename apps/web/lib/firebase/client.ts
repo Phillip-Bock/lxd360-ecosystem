@@ -1,4 +1,8 @@
 import { type FirebaseApp, getApp, getApps, initializeApp } from 'firebase/app';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('Firebase');
+
 import { type Auth, getAuth } from 'firebase/auth';
 import { type Firestore, getFirestore } from 'firebase/firestore';
 import { type FirebaseStorage, getStorage } from 'firebase/storage';
@@ -37,7 +41,7 @@ function getAppInstance(): FirebaseApp | null {
     try {
       return initializeApp(firebaseConfig);
     } catch (e) {
-      console.error('Firebase Init Error:', e);
+      log.error('Firebase initialization failed', e);
       return null;
     }
   }

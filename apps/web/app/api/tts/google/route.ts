@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import { type AuthenticatedRequest, withAuth } from '@/lib/api/with-auth';
+import { logger } from '@/lib/logger';
 import { fetchGoogleVoices, synthesizeWithGoogle } from '@/lib/tts/google-cloud';
 import { DEFAULT_GOOGLE_VOICES } from '@/lib/tts/types';
+
+const log = logger.scope('GoogleTTSAPI');
 
 export const runtime = 'nodejs';
 
@@ -63,7 +66,7 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
 
     return NextResponse.json({ ...result, user: uid });
   } catch (error) {
-    console.error('Google TTS API error:', error);
+    log.error('Google TTS API error', error);
     return NextResponse.json(
       {
         success: false,
@@ -95,7 +98,7 @@ export async function GET(): Promise<NextResponse> {
       configured: true,
     });
   } catch (error) {
-    console.error('Error fetching Google voices:', error);
+    log.error('Error fetching Google voices', error);
     return NextResponse.json({
       voices: DEFAULT_GOOGLE_VOICES,
       configured: true,

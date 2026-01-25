@@ -22,7 +22,10 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { type AssetCategory, formatFileSize } from '@/lib/assets/mimeTypes';
 import { type AssetMetadata, updateAssetMetadata } from '@/lib/assets/storage';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('AssetMetadataPanel');
 
 // =============================================================================
 // Types
@@ -119,7 +122,10 @@ export function AssetMetadataPanel({
       onSave?.(updatedAsset);
       setHasChanges(false);
     } catch (error) {
-      console.error('Failed to save asset metadata:', error);
+      log.error(
+        'Failed to save asset metadata',
+        error instanceof Error ? error : new Error(String(error)),
+      );
     } finally {
       setIsSaving(false);
     }

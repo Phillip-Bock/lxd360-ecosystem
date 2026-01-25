@@ -4,6 +4,9 @@ import { AlertTriangle, ArrowLeft, Home, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('IgniteError');
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -12,7 +15,7 @@ interface ErrorProps {
 
 export default function IgniteError({ error, reset }: ErrorProps) {
   useEffect(() => {
-    console.error('[IgniteError]', error);
+    log.error('Ignite error', error);
   }, [error]);
 
   return (

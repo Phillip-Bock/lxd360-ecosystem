@@ -2,6 +2,10 @@
 
 import { AlertTriangle, Building2, Shield, User } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('RoleAssignmentDialog');
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -275,7 +279,7 @@ export function RoleAssignmentDialog({
       });
       handleOpenChange(false);
     } catch (error) {
-      console.error('Failed to assign role:', error);
+      log.error('Failed to assign role', error instanceof Error ? error : new Error(String(error)));
     } finally {
       setIsSubmitting(false);
     }

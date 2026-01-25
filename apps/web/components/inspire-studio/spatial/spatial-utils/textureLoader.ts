@@ -7,6 +7,9 @@
 // =============================================================================
 
 import type { Texture } from 'three';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('TextureLoader');
 
 // Cache for loaded textures
 const textureCache = new Map<string, Texture>();
@@ -68,7 +71,10 @@ export async function preloadTextures(urls: string[]): Promise<Map<string, Textu
         const texture = await loadPanoramaTexture(url);
         results.set(url, texture);
       } catch (error) {
-        console.error(`Failed to preload texture: ${url}`, error);
+        log.error(
+          `Failed to preload texture: ${url}`,
+          error instanceof Error ? error : new Error(String(error)),
+        );
       }
     }),
   );

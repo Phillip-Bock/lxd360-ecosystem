@@ -5,6 +5,9 @@ import type shaka from 'shaka-player';
 import { Media } from '@/components/limeplay/media';
 import { useMediaStore } from '@/components/limeplay/media-provider';
 import { ASSETS } from '@/components/linear-player/components/playlist';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('MediaElement');
 
 export function MediaElement({
   config,
@@ -35,9 +38,9 @@ export function MediaElement({
             throw new Error('Invalid URL protocol');
           }
         } catch (error) {
-          console.error(
-            'Invalid playback URL:',
-            error instanceof Error ? error.message : 'Unknown error',
+          log.error(
+            'Invalid playback URL',
+            error instanceof Error ? error : new Error(String(error)),
           );
         }
       }
@@ -53,7 +56,10 @@ export function MediaElement({
             // Media loaded successfully
           })
           .catch((error: unknown) => {
-            console.error('[limeplay] error loading media:', error);
+            log.error(
+              'Error loading media',
+              error instanceof Error ? error : new Error(String(error)),
+            );
           });
       }
     }

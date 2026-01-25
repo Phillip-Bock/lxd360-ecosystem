@@ -13,6 +13,10 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { requireDb } from '@/lib/firebase/client';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('Lessons');
+
 import type {
   CreateLessonInput,
   Lesson,
@@ -45,7 +49,7 @@ export async function getLesson(lessonId: string): Promise<Lesson | null> {
 
     return docSnap.data();
   } catch (error) {
-    console.error('Failed to get lesson:', error);
+    log.error('Failed to get lesson:', error);
     throw new Error(`Failed to get lesson: ${lessonId}`);
   }
 }
@@ -63,7 +67,7 @@ export async function getLessonsByCourse(courseId: string): Promise<Lesson[]> {
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => doc.data());
   } catch (error) {
-    console.error('Failed to get lessons by course:', error);
+    log.error('Failed to get lessons by course:', error);
     throw new Error(`Failed to get lessons for course: ${courseId}`);
   }
 }
@@ -87,7 +91,7 @@ export async function getLessonsByModule(courseId: string, moduleId: string): Pr
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => doc.data());
   } catch (error) {
-    console.error('Failed to get lessons by module:', error);
+    log.error('Failed to get lessons by module:', error);
     throw new Error(`Failed to get lessons for module: ${moduleId}`);
   }
 }
@@ -110,7 +114,7 @@ export async function getPublishedLessons(courseId: string): Promise<Lesson[]> {
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => doc.data());
   } catch (error) {
-    console.error('Failed to get published lessons:', error);
+    log.error('Failed to get published lessons:', error);
     throw new Error(`Failed to get published lessons for course: ${courseId}`);
   }
 }
@@ -134,7 +138,7 @@ export async function getPreviewableLessons(courseId: string): Promise<Lesson[]>
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => doc.data());
   } catch (error) {
-    console.error('Failed to get previewable lessons:', error);
+    log.error('Failed to get previewable lessons:', error);
     throw new Error(`Failed to get previewable lessons for course: ${courseId}`);
   }
 }
@@ -193,7 +197,7 @@ export async function searchLessons(
       nextCursor: hasMore ? lessons[lessons.length - 1]?.id : undefined,
     };
   } catch (error) {
-    console.error('Failed to search lessons:', error);
+    log.error('Failed to search lessons:', error);
     throw new Error('Failed to search lessons');
   }
 }
@@ -226,7 +230,7 @@ export async function getNextLesson(
 
     return snapshot.docs[0].data();
   } catch (error) {
-    console.error('Failed to get next lesson:', error);
+    log.error('Failed to get next lesson:', error);
     throw new Error('Failed to get next lesson');
   }
 }
@@ -259,7 +263,7 @@ export async function getPreviousLesson(
 
     return snapshot.docs[0].data();
   } catch (error) {
-    console.error('Failed to get previous lesson:', error);
+    log.error('Failed to get previous lesson:', error);
     throw new Error('Failed to get previous lesson');
   }
 }
@@ -324,7 +328,7 @@ export async function createLesson(
 
     return created.data();
   } catch (error) {
-    console.error('Failed to create lesson:', error);
+    log.error('Failed to create lesson:', error);
     throw new Error('Failed to create lesson');
   }
 }
@@ -370,7 +374,7 @@ export async function updateLesson(
 
     return updated.data();
   } catch (error) {
-    console.error('Failed to update lesson:', error);
+    log.error('Failed to update lesson:', error);
     throw new Error(`Failed to update lesson: ${lessonId}`);
   }
 }
@@ -401,7 +405,7 @@ export async function deleteLesson(lessonId: string): Promise<void> {
       xpTotal: totalXp,
     });
   } catch (error) {
-    console.error('Failed to delete lesson:', error);
+    log.error('Failed to delete lesson:', error);
     throw new Error(`Failed to delete lesson: ${lessonId}`);
   }
 }
@@ -425,7 +429,7 @@ export async function reorderLessons(courseId: string, lessonIds: string[]): Pro
 
     await batch.commit();
   } catch (error) {
-    console.error('Failed to reorder lessons:', error);
+    log.error('Failed to reorder lessons:', error);
     throw new Error(`Failed to reorder lessons for course: ${courseId}`);
   }
 }
@@ -453,7 +457,7 @@ export async function publishLesson(lessonId: string, userId: string): Promise<L
 
     return published.data();
   } catch (error) {
-    console.error('Failed to publish lesson:', error);
+    log.error('Failed to publish lesson:', error);
     throw new Error(`Failed to publish lesson: ${lessonId}`);
   }
 }
@@ -481,7 +485,7 @@ export async function unpublishLesson(lessonId: string, userId: string): Promise
 
     return unpublished.data();
   } catch (error) {
-    console.error('Failed to unpublish lesson:', error);
+    log.error('Failed to unpublish lesson:', error);
     throw new Error(`Failed to unpublish lesson: ${lessonId}`);
   }
 }
@@ -529,7 +533,7 @@ export async function duplicateLesson(
       xpReward: source.xpReward,
     });
   } catch (error) {
-    console.error('Failed to duplicate lesson:', error);
+    log.error('Failed to duplicate lesson:', error);
     throw new Error(`Failed to duplicate lesson: ${lessonId}`);
   }
 }

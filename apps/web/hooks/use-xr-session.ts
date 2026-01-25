@@ -6,6 +6,9 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('useXRSession');
 
 // =============================================================================
 // TYPES
@@ -289,7 +292,7 @@ export function useXRSession(options: UseXRSessionOptions = {}): UseXRSessionRet
       await session.end();
     } catch (err) {
       // Session may already be ended
-      console.error('Error ending session:', err);
+      log.error('Error ending session', err instanceof Error ? err : new Error(String(err)));
     }
   }, [session]);
 

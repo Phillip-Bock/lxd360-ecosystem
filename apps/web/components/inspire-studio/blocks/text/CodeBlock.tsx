@@ -3,8 +3,11 @@
 import { Check, ChevronDown, Copy, FileCode } from 'lucide-react';
 import type React from 'react';
 import { useCallback, useState } from 'react';
+import { logger } from '@/lib/logger';
 import type { CodeBlockContent } from '@/types/blocks';
 import type { BlockComponentProps } from '../BlockRenderer';
+
+const log = logger.scope('CodeBlock');
 
 const LANGUAGES = [
   { value: 'javascript', label: 'JavaScript' },
@@ -51,7 +54,7 @@ export function CodeBlock({ block, isEditing, onUpdate }: BlockComponentProps<Co
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      log.error('Failed to copy code', err instanceof Error ? err : new Error(String(err)));
     }
   }, [content.code]);
 

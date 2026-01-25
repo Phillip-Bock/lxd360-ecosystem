@@ -25,6 +25,9 @@ import { cert, getApps, initializeApp } from 'firebase-admin/app';
 import { FieldValue, getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('xAPIStatements');
 
 // ============================================================================
 // FIREBASE ADMIN INITIALIZATION
@@ -348,7 +351,7 @@ async function writeToFirestore(
 
     return { success: true };
   } catch (error) {
-    console.error('Firestore write error:', error);
+    log.error('Firestore write error', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown Firestore error',
@@ -386,7 +389,7 @@ async function publishToPubSub(
 
     return { success: true };
   } catch (error) {
-    console.error('Pub/Sub publish error:', error);
+    log.error('Pub/Sub publish error', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown Pub/Sub error',
@@ -660,9 +663,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Log any failures (but don't fail the request)
     writeResults.forEach((result, index) => {
       if (result.status === 'rejected') {
-        console.error(`Write operation ${index} failed:`, result.reason);
+        log.error('Write operation failed', result.reason, { operationIndex: index });
       } else if (!result.value.success) {
-        console.error(`Write operation ${index} returned error:`, result.value.error);
+        log.error('Write operation returned error', {
+          operationIndex: index,
+          error: result.value.error,
+        });
       }
     });
   }
@@ -797,7 +803,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       { status: 200, headers: corsHeaders },
     );
   } catch (error) {
-    console.error('Statement query error:', error);
+    log.error('Statement query error', error);
     return NextResponse.json(
       {
         success: false,

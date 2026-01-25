@@ -12,8 +12,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { logger } from '@/lib/logger';
 // CRITICAL FIX: Import the Safe Auth Hook
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
+
+const log = logger.scope('CreateCourseModal');
+
 import { ScormUploader, type ScormUploadResult } from './ScormUploader';
 
 export interface CreateCourseModalProps {
@@ -70,7 +74,7 @@ export default function CreateCourseModal({
       onOpenChange(false);
       window.location.reload();
     } catch (err: unknown) {
-      console.error(err);
+      log.error('Failed to create course', err instanceof Error ? err : new Error(String(err)));
       const message = err instanceof Error ? err.message : 'Unknown error';
       alert(`Error saving course: ${message}`);
       setIsCreating(false);

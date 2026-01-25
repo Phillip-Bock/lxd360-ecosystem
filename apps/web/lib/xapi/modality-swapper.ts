@@ -33,6 +33,10 @@
 import { doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { requireDb } from '@/lib/firebase/client';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('ModalitySwapper');
+
 import {
   ContentModality,
   type ContentModalityType,
@@ -205,7 +209,7 @@ export function useModalitySwapper(config: ModalitySwapperConfig): ModalitySwapp
           acceptedAt: serverTimestamp(),
         },
         { merge: true },
-      ).catch(console.error);
+      ).catch((err) => log.error('Failed to log swap acceptance', err));
 
       // Trigger callback
       onModalityChange?.(recommendedModality);
@@ -231,7 +235,7 @@ export function useModalitySwapper(config: ModalitySwapperConfig): ModalitySwapp
           overrideAt: serverTimestamp(),
         },
         { merge: true },
-      ).catch(console.error);
+      ).catch((err) => log.error('Failed to log swap rejection', err));
 
       // Trigger callback
       onSwapRejected?.(reason);
@@ -343,7 +347,7 @@ export function useModalitySwapper(config: ModalitySwapperConfig): ModalitySwapp
         setIsLoading(false);
       },
       (err) => {
-        console.error('Firestore subscription error:', err);
+        log.error('Firestore subscription error', err);
         setError(err);
         setIsLoading(false);
       },

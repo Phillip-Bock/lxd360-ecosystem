@@ -5,7 +5,10 @@ import { FileIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useMemo, useState } from 'react';
 
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('CodeComparison');
 
 interface CodeComparisonProps {
   beforeCode: string;
@@ -71,7 +74,10 @@ export function CodeComparison({
         setHighlightedBefore(before);
         setHighlightedAfter(after);
       } catch (error) {
-        console.error('Error highlighting code:', error);
+        log.error(
+          'Error highlighting code',
+          error instanceof Error ? error : new Error(String(error)),
+        );
         setHighlightedBefore(`<pre>${beforeCode}</pre>`);
         setHighlightedAfter(`<pre>${afterCode}</pre>`);
       }

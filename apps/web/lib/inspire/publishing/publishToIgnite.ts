@@ -17,6 +17,9 @@ import {
 } from 'firebase/firestore';
 import { z } from 'zod';
 import { requireDb } from '@/lib/firebase/client';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('PublishToIgnite');
 
 // =============================================================================
 // Types
@@ -348,7 +351,7 @@ export async function publishToIgnite(
         });
       } catch {
         // Non-fatal: catalog will refresh eventually
-        console.warn('Failed to trigger catalog refresh');
+        log.warn('Failed to trigger catalog refresh');
       }
     }
 

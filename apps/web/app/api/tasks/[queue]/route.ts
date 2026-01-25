@@ -1,5 +1,8 @@
 import { isValidQueueName, routeTaskToHandler } from '@/lib/cloud-tasks';
 import type { QueueName, TaskContext, TaskPayload } from '@/lib/cloud-tasks/types';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('CloudTasks');
 
 // ============================================================================
 // HELPERS
@@ -62,7 +65,7 @@ export async function POST(
 
   // Validate queue name
   if (!isValidQueueName(queue)) {
-    console.error(`[Cloud Tasks] Invalid queue name: ${queue}`);
+    log.error('Invalid queue name', { queue });
     return Response.json(
       {
         success: false,
@@ -75,7 +78,7 @@ export async function POST(
 
   // Verify request authenticity
   if (!verifyCloudTasksRequest(request.headers)) {
-    console.error('[Cloud Tasks] Unauthorized request - missing Cloud Tasks headers');
+    log.error('Unauthorized request - missing Cloud Tasks headers');
     return Response.json(
       {
         success: false,
@@ -94,9 +97,7 @@ export async function POST(
     const payload = (await request.json()) as TaskPayload;
 
     // Log task execution start
-    console.error(
-      `[Cloud Tasks] Processing task: ${payload.type} on queue ${queue} (attempt ${taskContext.retryCount + 1})`,
-    );
+    log.info('Processing task', { type: payload.type, queue, attempt: taskContext.retryCount + 1 });
 
     // Route to appropriate handler
     const result = await routeTaskToHandler(queue as QueueName, payload);
@@ -104,7 +105,7 @@ export async function POST(
     const duration = Date.now() - startTime;
 
     if (result.success) {
-      console.error(`[Cloud Tasks] Task completed successfully: ${payload.type} (${duration}ms)`);
+      log.info('Task completed successfully', { type: payload.type, duration });
       return Response.json(
         {
           success: true,
@@ -121,7 +122,7 @@ export async function POST(
     }
 
     // Task handler returned failure
-    console.error(`[Cloud Tasks] Task failed: ${payload.type} - ${result.error}`);
+    log.error('Task failed', { type: payload.type, error: result.error });
     return Response.json(
       {
         success: false,
@@ -142,7 +143,7 @@ export async function POST(
     const duration = Date.now() - startTime;
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
-    console.error(`[Cloud Tasks] Task execution error on ${queue}: ${errorMessage}`);
+    log.error('Task execution error', { queue, error: errorMessage });
 
     // Return 500 to trigger Cloud Tasks retry
     return Response.json(

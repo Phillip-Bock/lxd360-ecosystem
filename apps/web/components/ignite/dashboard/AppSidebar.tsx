@@ -49,8 +49,11 @@ import {
 } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getFirebaseAuth } from '@/lib/firebase/client';
+import { logger } from '@/lib/logger';
 import { canAccess, getPersonaFromClaims, PERSONA_CONFIG, type Persona } from '@/lib/rbac/personas';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('AppSidebar');
 
 // ============================================================================
 // NAVIGATION CONFIGURATION
@@ -249,7 +252,10 @@ export function AppSidebar({ user }: AppSidebarProps) {
         const loadedPersona = getPersonaFromClaims(tokenResult.claims);
         setPersona(loadedPersona);
       } catch (error) {
-        console.error('Failed to load claims:', error);
+        log.error(
+          'Failed to load claims',
+          error instanceof Error ? error : new Error(String(error)),
+        );
         // Default to learner on error
         setPersona('learner');
       } finally {
@@ -273,7 +279,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
         router.push('/login');
       }
     } catch (error) {
-      console.error('Sign out failed:', error);
+      log.error('Sign out failed', error instanceof Error ? error : new Error(String(error)));
     }
   };
 

@@ -3,6 +3,7 @@
  * Handles timeline playback, media synchronization, and cue point execution
  */
 
+import { logger } from '@/lib/logger';
 import type {
   CuePointAction,
   ObjectTrack,
@@ -13,6 +14,8 @@ import type {
   TimeMs,
 } from '@/types/studio/timeline';
 import { getObjectPropertiesAtTime, propertiesToCSS } from './animation-engine';
+
+const log = logger.scope('PlaybackEngine');
 
 // =============================================================================
 // PLAYBACK ENGINE CLASS
@@ -502,7 +505,7 @@ export class PlaybackEngine {
       try {
         listener(event);
       } catch (error) {
-        console.error('Playback listener error:', error);
+        log.error('Playback listener error', error);
       }
     }
   }

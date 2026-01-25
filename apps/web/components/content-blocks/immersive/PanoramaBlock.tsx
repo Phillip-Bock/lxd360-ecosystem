@@ -17,7 +17,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { logger } from '@/lib/logger';
 import { type Hotspot, hotspotColors, type PanoramaScene } from './HotspotTypes';
+
+const log = logger.scope('PanoramaBlock');
 
 // Photo Sphere Viewer imports (dynamic to avoid SSR issues)
 let Viewer: typeof import('@photo-sphere-viewer/core').Viewer | null = null;
@@ -190,7 +193,10 @@ export function PanoramaBlock({
           setIsAutoRotating(true);
         }
       } catch (err) {
-        console.error('Failed to initialize panorama viewer:', err);
+        log.error(
+          'Failed to initialize panorama viewer',
+          err instanceof Error ? err : new Error(String(err)),
+        );
         if (mounted) {
           setError('Failed to load panorama viewer');
         }

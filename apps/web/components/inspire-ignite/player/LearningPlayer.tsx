@@ -5,7 +5,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useCognitiveTracking } from '@/lib/hooks/useCognitiveTracking';
 import { useXAPITracking } from '@/lib/hooks/useXAPITracking';
 import type { ContentBlock } from '@/lib/inspire/types/contentBlocks';
+import { logger } from '@/lib/logger';
 import { CognitiveMeter } from './CognitiveMeter';
+
+const log = logger.scope('LearningPlayer');
+
 import { ContentRenderer } from './ContentRenderer';
 import { PlayerControls } from './PlayerControls';
 
@@ -90,7 +94,10 @@ export function LearningPlayer({
           'lesson',
         );
       } catch (error) {
-        console.error('Failed to load state:', error);
+        log.error(
+          'Failed to load state',
+          error instanceof Error ? error : new Error(String(error)),
+        );
         setIsLoading(false);
       }
     };

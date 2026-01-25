@@ -15,7 +15,10 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { GoogleCloudAI, type MediaGenerationResponse } from '@/lib/ai/google-cloud-ai';
+import { logger } from '@/lib/logger';
 import type { AISettings } from './AISettingsModal';
+
+const log = logger.scope('MediaGeneratorPanel');
 
 interface MediaGeneratorPanelProps {
   settings: AISettings;
@@ -101,7 +104,7 @@ export default function MediaGeneratorPanel({
       }
     } catch (err) {
       setError('An error occurred during generation');
-      console.error(err);
+      log.error('Media generation failed', err instanceof Error ? err : new Error(String(err)));
     } finally {
       setIsGenerating(false);
     }
@@ -137,7 +140,10 @@ export default function MediaGeneratorPanel({
       }
     } catch (err) {
       setError('File upload processing failed');
-      console.error(err);
+      log.error(
+        'File upload processing failed',
+        err instanceof Error ? err : new Error(String(err)),
+      );
     } finally {
       setIsGenerating(false);
     }

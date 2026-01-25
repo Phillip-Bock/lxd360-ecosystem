@@ -7,6 +7,9 @@ import type {
   VariableValue,
 } from '@/components/inspire-studio/branching/types';
 import { BRANCHING_EXTENSIONS, BRANCHING_VERBS } from '@/components/inspire-studio/branching/types';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('BranchingXAPI');
 
 // =============================================================================
 // xAPI Statement Types for Branching
@@ -251,10 +254,13 @@ async function sendStatement(statement: BranchingStatementBase): Promise<void> {
     });
 
     if (!response.ok) {
-      console.error('[xAPI] Failed to send statement:', response.statusText);
+      log.error('Failed to send xAPI statement', new Error(response.statusText));
     }
   } catch (error) {
-    console.error('[xAPI] Error sending statement:', error);
+    log.error(
+      'Error sending xAPI statement',
+      error instanceof Error ? error : new Error(String(error)),
+    );
   }
 }
 

@@ -5,6 +5,10 @@ import { Maximize2, Minimize2, Send, Volume2, VolumeX, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('AiCharacterChat');
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -190,7 +194,7 @@ export function AiCharacterChat({ tenantId }: AiCharacterChatProps) {
         setTimeout(() => setCharacterState('idle'), 2000);
       }
     } catch (err) {
-      console.error('AI error:', err);
+      log.error('AI error', err instanceof Error ? err : new Error(String(err)));
       audio.stop('thinking');
       if (audioEnabled) audio.play('error');
       setCharacterState('error');

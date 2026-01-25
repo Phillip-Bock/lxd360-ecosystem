@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 import { verifyIdToken } from '@/lib/firebase/admin';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('SessionAPI');
 
 /**
  * POST /api/auth/session
@@ -47,7 +50,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     return response;
   } catch (error) {
-    console.error('[Session API] Error:', error);
+    log.error('Failed to create session', error);
     return NextResponse.json({ error: 'Failed to create session' }, { status: 500 });
   }
 }

@@ -36,6 +36,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/core/utils';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('QuickActions');
 
 // ============================================================================
 // TYPES
@@ -76,10 +79,11 @@ export function QuickActions() {
         setActionStatus((prev) => ({ ...prev, invite: 'idle' }));
       }, 1000);
     } catch (error) {
-      console.error('[QuickActions] Failed to invite team member', {
-        email,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      });
+      log.error(
+        'Failed to invite team member',
+        error instanceof Error ? error : new Error(String(error)),
+        { email },
+      );
       setActionStatus((prev) => ({ ...prev, invite: 'error' }));
     }
   };

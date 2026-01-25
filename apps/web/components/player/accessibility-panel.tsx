@@ -15,7 +15,10 @@ import {
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
+import { logger } from '@/lib/logger';
 import type { LearnerProfile } from '@/types/player';
+
+const log = logger.scope('AccessibilityPanel');
 
 interface AccessibilityPanelProps {
   profile: LearnerProfile | null;
@@ -61,9 +64,12 @@ export function AccessibilityPanel({
 
     try {
       // TODO(LXD-297): Implement accessibility settings saving with Firestore
-      console.error('Save settings temporarily unavailable during Firebase migration');
+      log.warn('Save settings temporarily unavailable during Firebase migration');
     } catch (error) {
-      console.error('Failed to save settings:', error);
+      log.error(
+        'Failed to save settings',
+        error instanceof Error ? error : new Error(String(error)),
+      );
     } finally {
       setIsSaving(false);
     }

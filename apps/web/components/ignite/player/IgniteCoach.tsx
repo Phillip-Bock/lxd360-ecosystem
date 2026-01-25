@@ -18,7 +18,11 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useIgniteVoice } from '@/hooks/use-ignite-voice';
 import { useAuth } from '@/lib/firebase/useAuth';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('IgniteCoach');
+
 import type { AnimationState, AvatarPersona } from './avatar';
 import { VOICE_OPTIONS, VoiceSelector } from './VoiceSelector';
 
@@ -351,7 +355,7 @@ export function IgniteCoach({
           }, 2500);
         }
       } catch (error) {
-        console.error('[IgniteCoach] Chat error:', error);
+        log.error('Chat error', error instanceof Error ? error : new Error(String(error)));
         setIsThinking(false);
         setAnimation('idle');
 

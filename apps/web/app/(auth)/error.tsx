@@ -4,6 +4,9 @@ import { AlertTriangle, ArrowLeft, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('AuthError');
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -12,7 +15,7 @@ interface ErrorProps {
 
 export default function AuthError({ error, reset }: ErrorProps) {
   useEffect(() => {
-    console.error('[AuthError]', error);
+    log.error('Auth error', error);
   }, [error]);
 
   return (

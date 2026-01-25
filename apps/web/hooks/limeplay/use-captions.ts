@@ -5,7 +5,10 @@ import type shaka from 'shaka-player';
 import type { StateCreator } from 'zustand';
 import { useGetStore, useMediaStore } from '@/components/limeplay/media-provider';
 import type { PlayerStore } from '@/hooks/limeplay/use-player';
+import { logger } from '@/lib/logger';
 import { getDeviceLanguage, off, on } from '@/lib/utils';
+
+const log = logger.scope('useCaptions');
 
 export interface CaptionsStore {
   activeTextTrack: null | shaka.extern.TextTrack;
@@ -40,7 +43,7 @@ export function useCaptions() {
 
   const findDefaultTrack = useCallback(() => {
     if (!textTracks) {
-      console.warn('No text tracks found');
+      log.warn('No text tracks found');
       return;
     }
 
@@ -87,7 +90,7 @@ export function useCaptions() {
         const isSuccess = selectTrack(defaultTrack);
 
         if (!isSuccess) {
-          console.error('Failed to select default text track');
+          log.error('Failed to select default text track', new Error('Track selection failed'));
           return;
         }
       }

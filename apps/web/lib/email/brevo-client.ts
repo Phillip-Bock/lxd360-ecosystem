@@ -15,6 +15,9 @@ import {
   TransactionalEmailsApi,
   TransactionalEmailsApiApiKeys,
 } from '@getbrevo/brevo';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('Brevo');
 
 // =============================================================================
 // Configuration
@@ -164,7 +167,7 @@ export async function sendEmail(params: SendEmailParams): Promise<SendEmailResul
       messageId: body.messageId,
     };
   } catch (error) {
-    console.error('Failed to send email:', error);
+    log.error('Failed to send email', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -225,7 +228,7 @@ export async function sendTemplateEmail(params: SendTemplateEmailParams): Promis
       messageId: body.messageId,
     };
   } catch (error) {
-    console.error('Failed to send template email:', error);
+    log.error('Failed to send template email', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

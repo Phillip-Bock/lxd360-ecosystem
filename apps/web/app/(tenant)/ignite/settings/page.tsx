@@ -5,8 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { logger } from '@/lib/logger';
 import { getPersonaFromClaims, type Persona } from '@/lib/rbac/personas';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
+
+const log = logger.scope('SettingsPage');
 
 interface NotificationToggleProps {
   id: string;
@@ -56,7 +59,7 @@ export default function SettingsPage() {
 
         setAccessChecked(true);
       } catch (error) {
-        console.error('Settings access check failed:', error);
+        log.error('Settings access check failed', error);
         router.replace('/ignite/dashboard');
       }
     }

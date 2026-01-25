@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { type AuthenticatedRequest, withAuth } from '@/lib/api/with-auth';
 import { GOOGLE_AI } from '@/lib/constants/api';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('GeminiAPI');
 
 /**
  * Server-side Gemini API route (SECURED)
@@ -44,7 +47,7 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
     }
 
     if (!GEMINI_API_KEY) {
-      console.error('GEMINI_API_KEY is not configured');
+      log.error('GEMINI_API_KEY is not configured');
       return NextResponse.json({ error: 'AI service not configured' }, { status: 500 });
     }
 
@@ -118,7 +121,7 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Gemini API error:', response.status, errorText);
+      log.error('Gemini API error', { status: response.status, error: errorText });
       return NextResponse.json(
         { error: 'AI service error', details: response.statusText },
         { status: response.status },
@@ -136,7 +139,7 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
     // Return both 'result' (original format) and 'response' (chat format) for compatibility
     return NextResponse.json({ result: textResult, response: textResult, type, user: uid });
   } catch (error) {
-    console.error('Gemini API route error:', error);
+    log.error('Gemini API route error', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -3,6 +3,9 @@
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { getFirebaseAuth } from '@/lib/firebase/client';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('RawLogin');
 
 export default function RawLoginPage() {
   const [logs, setLogs] = useState<string[]>([]);
@@ -44,7 +47,7 @@ export default function RawLoginPage() {
       window.location.href = '/ignite/dashboard';
     } catch (err: unknown) {
       const error = err as Error & { code?: string };
-      console.error(err);
+      log.error('Login failed', error);
       addLog(`🔴 ERROR: ${error.message}`);
       if (error.code === 'auth/network-request-failed') {
         addLog('⚠️ Network Error: Check your internet connection or Firewall.');

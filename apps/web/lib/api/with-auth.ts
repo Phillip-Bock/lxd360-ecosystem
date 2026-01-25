@@ -2,7 +2,10 @@ import 'server-only';
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { adminAuth, verifyIdToken } from '@/lib/firebase/admin';
+import { logger } from '@/lib/logger';
 import type { Persona } from '@/lib/rbac/personas';
+
+const log = logger.scope('AuthMiddleware');
 
 /**
  * Authenticated user information extracted from token
@@ -88,7 +91,7 @@ export function withAuth(handler: AuthenticatedHandler) {
 
       return handler(authenticatedReq);
     } catch (error) {
-      console.error('Auth middleware error:', error);
+      log.error('Authentication failed', error);
       return NextResponse.json(
         { error: 'Authentication failed', code: 'AUTH_ERROR' },
         { status: 401 },

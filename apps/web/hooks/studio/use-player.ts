@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
+import { logger } from '@/lib/logger';
 import type {
   BookmarkState,
   DebugLog,
@@ -26,6 +27,8 @@ import {
 } from '@/types/studio/player';
 import type { TimeMs } from '@/types/studio/timeline';
 import type { TriggerAction } from '@/types/studio/triggers';
+
+const log = logger.scope('useStudioPlayer');
 
 // =============================================================================
 // ID GENERATOR
@@ -721,7 +724,10 @@ export function usePlayer(options: UsePlayerOptions = {}): UsePlayerReturn {
         try {
           listener(event);
         } catch (error) {
-          console.error(`Error in player event listener for ${event.type}:`, error);
+          log.error(
+            `Error in player event listener for ${event.type}`,
+            error instanceof Error ? error : new Error(String(error)),
+          );
         }
       }
     }
@@ -1174,7 +1180,10 @@ export function usePlayer(options: UsePlayerOptions = {}): UsePlayerReturn {
             data: { actionType: action.type, actionId: action.id },
           });
         } catch (error) {
-          console.error(`Error executing action ${action.type}:`, error);
+          log.error(
+            `Error executing action ${action.type}`,
+            error instanceof Error ? error : new Error(String(error)),
+          );
           if (action.onError === 'stop') {
             break;
           }
@@ -1212,7 +1221,7 @@ export function usePlayer(options: UsePlayerOptions = {}): UsePlayerReturn {
     dispatch({ type: 'SET_DEBUG_MODE', enabled });
   }, []);
 
-  const log = useCallback((level: DebugLog['level'], message: string, data?: unknown) => {
+  const debugLog = useCallback((level: DebugLog['level'], message: string, data?: unknown) => {
     dispatch({
       type: 'LOG_DEBUG',
       log: { level, message, timestamp: Date.now(), data },
@@ -1298,7 +1307,7 @@ export function usePlayer(options: UsePlayerOptions = {}): UsePlayerReturn {
 
     // Debug
     setDebugMode,
-    log,
+    log: debugLog,
   };
 }
 

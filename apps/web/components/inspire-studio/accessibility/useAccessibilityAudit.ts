@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { logger } from '@/lib/logger';
 import type {
   AccessibilityAuditOptions,
   AccessibilityAuditState,
@@ -8,6 +9,8 @@ import type {
   AxeViolation,
   TagFilter,
 } from './types';
+
+const log = logger.scope('useAccessibilityAudit');
 
 const DEFAULT_DEBOUNCE_MS = 1000;
 const DEFAULT_TAGS: TagFilter[] = ['wcag2aa', 'section508'];
@@ -60,7 +63,10 @@ export function useAccessibilityAudit(
           const axe = await import('axe-core');
           axeRef.current = axe.default || axe;
         } catch (error) {
-          console.error('Failed to load axe-core:', error);
+          log.error(
+            'Failed to load axe-core',
+            error instanceof Error ? error : new Error(String(error)),
+          );
           if (mountedRef.current) {
             setState((prev) => ({
               ...prev,
@@ -128,7 +134,10 @@ export function useAccessibilityAudit(
         });
       }
     } catch (error) {
-      console.error('Accessibility audit failed:', error);
+      log.error(
+        'Accessibility audit failed',
+        error instanceof Error ? error : new Error(String(error)),
+      );
       if (mountedRef.current) {
         setState((prev) => ({
           ...prev,

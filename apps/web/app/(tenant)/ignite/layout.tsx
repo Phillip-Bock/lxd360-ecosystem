@@ -7,8 +7,11 @@ import { AppSidebar } from '@/components/ignite/dashboard/AppSidebar';
 import { BreadcrumbsHeader } from '@/components/ignite/dashboard/BreadcrumbsHeader';
 import { IgniteCoach } from '@/components/ignite/player/IgniteCoach';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { logger } from '@/lib/logger';
 import { canAccess, getPersonaFromClaims, type Persona } from '@/lib/rbac/personas';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
+
+const log = logger.scope('IgniteLayout');
 
 // Routes that use their own layout (don't apply admin sidebar)
 const EXEMPT_ROUTES = ['/ignite/learn', '/ignite/learner'];
@@ -81,7 +84,7 @@ export default function IgniteLayout({ children }: { children: ReactNode }) {
 
         setRbacChecked(true);
       } catch (error) {
-        console.error('RBAC check failed:', error);
+        log.error('RBAC check failed', error);
         // On error, allow access but default to learner restrictions
         setPersona('learner');
         setRbacChecked(true);

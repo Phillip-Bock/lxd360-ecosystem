@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import { type AuthenticatedRequest, withAuth } from '@/lib/api/with-auth';
+import { logger } from '@/lib/logger';
 import { synthesizeWithGoogle } from '@/lib/tts/google-cloud';
 import type { TTSProvider, TTSResponse } from '@/lib/tts/types';
+
+const log = logger.scope('TTSAPI');
 
 export const runtime = 'nodejs';
 
@@ -65,7 +68,7 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
 
     return NextResponse.json({ ...result, user: uid });
   } catch (error) {
-    console.error('TTS API error:', error);
+    log.error('TTS API error', error);
     return NextResponse.json(
       {
         success: false,

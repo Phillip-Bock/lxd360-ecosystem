@@ -1,5 +1,9 @@
 import { getAccessToken } from '@/lib/google/auth';
+import { logger } from '@/lib/logger';
 import { buildHandlerUrl, buildQueuePath, getCloudTasksConfig } from './queues';
+
+const log = logger.scope('CloudTasks');
+
 import type {
   BaseTaskPayload,
   QueueName,
@@ -123,7 +127,7 @@ export async function enqueueTask(
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Cloud Tasks API error:', errorText);
+      log.error('Cloud Tasks API error', new Error(errorText), { status: response.status });
       return {
         name: '',
         httpStatus: response.status,
@@ -141,7 +145,7 @@ export async function enqueueTask(
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Failed to enqueue task:', errorMessage);
+    log.error('Failed to enqueue task', error);
     return {
       name: '',
       httpStatus: 500,

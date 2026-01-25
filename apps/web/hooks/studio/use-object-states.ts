@@ -6,6 +6,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { logger } from '@/lib/logger';
 import type {
   EasingFunction,
   ObjectState,
@@ -20,6 +21,8 @@ import {
   interpolateProperties,
   validateStateConfig,
 } from '@/types/studio/states';
+
+const log = logger.scope('useObjectStates');
 
 // =============================================================================
 // TYPES
@@ -529,7 +532,7 @@ export function useObjectStates(options: UseObjectStatesOptions): UseObjectState
       setIsDirty(false);
       setLastSaved(new Date());
     } catch (error) {
-      console.error('Failed to save states:', error);
+      log.error('Failed to save states', error instanceof Error ? error : new Error(String(error)));
       throw error;
     } finally {
       setIsSaving(false);
@@ -546,7 +549,7 @@ export function useObjectStates(options: UseObjectStatesOptions): UseObjectState
       // For now, just mark as not dirty
       setIsDirty(false);
     } catch (error) {
-      console.error('Failed to load states:', error);
+      log.error('Failed to load states', error instanceof Error ? error : new Error(String(error)));
       throw error;
     }
   }, [persistToDatabase]);

@@ -17,7 +17,10 @@ import {
 import Image from 'next/image';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('LogoUploader');
 
 // ============================================================================
 // Types
@@ -422,7 +425,10 @@ export function LogoUploader({
           const url = await onUpload(file, slot);
           onLogoChange({ ...logos, [slot]: url });
         } catch (error) {
-          console.error('Failed to upload logo:', error);
+          log.error(
+            'Failed to upload logo',
+            error instanceof Error ? error : new Error(String(error)),
+          );
         } finally {
           setUploadingSlot(null);
         }

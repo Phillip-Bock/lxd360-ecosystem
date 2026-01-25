@@ -6,6 +6,10 @@ import Link from 'next/link';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('Tour');
+
 import {
   Card,
   CardAction,
@@ -91,10 +95,12 @@ function TourProvider({ tours, children }: { tours: Tour[]; children: React.Reac
         setIsOpen(true);
         setCurrentStepIndex(0);
       } else {
-        console.error(`Tour with id '${tourId}' has no steps.`);
+        log.error('Tour has no steps', new Error(`Tour with id '${tourId}' has no steps`), {
+          tourId,
+        });
       }
     } else {
-      console.error(`Tour with id '${tourId}' not found.`);
+      log.error('Tour not found', new Error(`Tour with id '${tourId}' not found`), { tourId });
     }
   }
 

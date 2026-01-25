@@ -2,6 +2,9 @@
 
 import { nanoid } from 'nanoid';
 import { createContext, type ReactNode, useCallback, useContext, useMemo } from 'react';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('XAPIProvider');
 
 // xAPI Statement types
 interface Actor {
@@ -175,10 +178,13 @@ export function XAPIProvider({ children, user, consentTier = 0 }: XAPIProviderPr
         });
 
         if (!response.ok) {
-          console.error('Failed to send xAPI statement:', await response.text());
+          log.error('Failed to send xAPI statement', new Error(await response.text()));
         }
       } catch (error) {
-        console.error('Error sending xAPI statement:', error);
+        log.error(
+          'Error sending xAPI statement',
+          error instanceof Error ? error : new Error(String(error)),
+        );
       }
     },
     [sessionId, consentTier],

@@ -1,6 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('useLocalStorage');
 
 export function useLocalStorage<T>(
   key: string,
@@ -20,7 +23,7 @@ export function useLocalStorage<T>(
         setStoredValue(JSON.parse(item));
       }
     } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error);
+      log.warn(`Error reading localStorage key "${key}"`, { error });
     }
   }, [key]);
 
@@ -39,7 +42,7 @@ export function useLocalStorage<T>(
           window.localStorage.setItem(key, JSON.stringify(valueToStore));
         }
       } catch (error) {
-        console.warn(`Error setting localStorage key "${key}":`, error);
+        log.warn(`Error setting localStorage key "${key}"`, { error });
       }
     },
     [key, storedValue],

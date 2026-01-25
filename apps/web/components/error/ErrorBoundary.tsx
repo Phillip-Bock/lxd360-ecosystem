@@ -4,6 +4,9 @@ import { AlertTriangle, Home, MessageCircle, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('ErrorBoundary');
 
 // =============================================================================
 // Types
@@ -128,9 +131,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     this.setState({ errorInfo });
 
     // Log error (Cloud Logging will capture this in production)
-    console.error('[ErrorBoundary]', {
-      message: error.message,
-      stack: error.stack,
+    log.error('Component error caught', error, {
       componentStack: errorInfo.componentStack,
     });
 

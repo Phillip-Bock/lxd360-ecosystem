@@ -11,7 +11,10 @@ import {
 import { StatsCards } from '@/components/ignite/dashboard/StatsCards';
 import CreateCourseModal from '@/components/ignite/teach/CreateCourseModal';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
+
+const log = logger.scope('CoursesPage');
 
 interface ApiCourse {
   id: string;
@@ -64,7 +67,7 @@ export default function CoursesPage() {
         const data = await res.json();
         if (data.courses) setApiCourses(data.courses);
       } catch (e) {
-        console.error('Failed to fetch courses:', e);
+        log.error('Failed to fetch courses', e);
       } finally {
         setLoading(false);
       }
@@ -83,7 +86,7 @@ export default function CoursesPage() {
       const data = await res.json();
       if (data.courses) setApiCourses(data.courses);
     } catch (e) {
-      console.error('Failed to refresh courses:', e);
+      log.error('Failed to refresh courses', e);
     } finally {
       setLoading(false);
     }

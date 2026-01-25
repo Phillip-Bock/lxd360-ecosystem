@@ -8,8 +8,11 @@ import { useSearchParams } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
 import { PlayerShell } from '@/components/player';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
 import type { CourseWithContent } from '@/types/player';
+
+const log = logger.scope('PlayerPage');
 
 /**
  * Course Player Entry page
@@ -110,7 +113,7 @@ export default function CoursePlayerPage({ params }: { params: Promise<{ courseI
 
         setCourse(courseData);
       } catch (err) {
-        console.error('Error loading course:', err);
+        log.error('Error loading course', err);
         setError('Failed to load course');
       } finally {
         setLoading(false);

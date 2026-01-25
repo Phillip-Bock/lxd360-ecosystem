@@ -19,6 +19,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('PanoramaUploader');
 
 interface UploadedPanorama {
   id: string;
@@ -208,7 +211,7 @@ export function PanoramaUploader({
 
       return panorama;
     } catch (error) {
-      console.error('Upload failed:', error);
+      log.error('Upload failed', error instanceof Error ? error : new Error(String(error)));
       setUploadErrors((prev) => ({
         ...prev,
         [file.name]: 'Upload failed. Please try again.',
