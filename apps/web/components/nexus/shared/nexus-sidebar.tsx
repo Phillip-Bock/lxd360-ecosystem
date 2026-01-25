@@ -19,6 +19,7 @@ import {
   ChevronDown,
   Gem,
   LayoutDashboard,
+  Lock,
   LogOut,
   Menu,
   MessageSquare,
@@ -42,6 +43,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useRBAC } from '@/lib/hooks/useRBAC';
 import { cn } from '@/lib/utils';
 
 interface NavItem {
@@ -69,6 +71,10 @@ interface NexusSidebarProps {
 export function NexusSidebar({ user }: NexusSidebarProps): React.JSX.Element {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { hasLevel } = useRBAC();
+
+  // Check if user can see admin items (Manager+ level 50)
+  const canSeeAdmin = hasLevel(50);
 
   // Mock gamification data - will be replaced with real data
   const gamificationData = {
@@ -128,10 +134,8 @@ export function NexusSidebar({ user }: NexusSidebarProps): React.JSX.Element {
           const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
           const Icon = item.icon;
 
-          // Skip admin-only items for non-admins (will be replaced with proper RBAC check)
-          if (item.adminOnly) {
-            // TODO(LXD-351): Check if user has admin role via Firebase custom claims
-          }
+          // Show admin items but with lock icon if user doesn't have access (soft gate)
+          const isLocked = item.adminOnly && !canSeeAdmin;
 
           return (
             <Link
@@ -143,9 +147,12 @@ export function NexusSidebar({ user }: NexusSidebarProps): React.JSX.Element {
                 isActive
                   ? 'bg-brand-primary text-brand-primary shadow-lg shadow-blue-900/50'
                   : 'text-brand-secondary hover:bg-brand-surface hover:text-brand-primary',
+                isLocked && 'opacity-75',
               )}
             >
-              <Icon className={cn('w-5 h-5', item.adminOnly && 'text-brand-warning')} />
+              <Icon
+                className={cn('w-5 h-5', item.adminOnly && !isLocked && 'text-brand-warning')}
+              />
               <span className="flex-1">{item.label}</span>
               {item.badge && (
                 <Badge
@@ -160,10 +167,16 @@ export function NexusSidebar({ user }: NexusSidebarProps): React.JSX.Element {
                   {item.badge}
                 </Badge>
               )}
-              {item.adminOnly && (
+              {item.adminOnly && !isLocked && (
                 <span className="text-[10px] bg-brand-warning/20 text-brand-warning px-1.5 py-0.5 rounded uppercase font-bold">
                   Admin
                 </span>
+              )}
+              {isLocked && (
+                <Lock
+                  className="w-4 h-4 text-muted-foreground flex-shrink-0"
+                  aria-label="Locked feature"
+                />
               )}
             </Link>
           );

@@ -179,14 +179,19 @@ function ProductBasedGate({
 /**
  * Gate based on employee email
  */
-function EmployeeBasedGate({ children, fallback, loading, hideOnDeny }: RoleGateWithEmployee) {
-  const { isEmployee, isLoading, error } = useIsEmployee();
+function EmployeeBasedGate({
+  children,
+  fallback,
+  loading: loadingContent,
+  hideOnDeny,
+}: RoleGateWithEmployee) {
+  const { isEmployee, loading } = useIsEmployee();
 
-  if (isLoading) {
-    return <>{loading ?? <DefaultLoading />}</>;
+  if (loading) {
+    return <>{loadingContent ?? <DefaultLoading />}</>;
   }
 
-  if (error || !isEmployee) {
+  if (!isEmployee) {
     if (hideOnDeny) return null;
     return <>{fallback ?? <DefaultAccessDenied />}</>;
   }
