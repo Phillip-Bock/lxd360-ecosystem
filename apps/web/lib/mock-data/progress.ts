@@ -1,5 +1,8 @@
 /**
  * Mock progress and enrollment data for LXP360
+ *
+ * @deprecated Use Firestore services instead. See lib/firestore/services/enrollments.ts
+ * This file is retained for seed script reference only.
  */
 
 import type {

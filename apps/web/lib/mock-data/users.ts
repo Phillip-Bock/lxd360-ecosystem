@@ -1,5 +1,8 @@
 /**
  * Mock user data for LXP360
+ *
+ * @deprecated Use Firestore services instead. See lib/firestore/services/learners.ts
+ * This file is retained for seed script reference only.
  */
 
 import type { Instructor, Learner, LearnerGroup, Manager } from '@/types/lms';

@@ -1,4 +1,20 @@
 // Content block services
+
+// Achievement services
+export {
+  awardBadge,
+  getBadge,
+  getBadges,
+  getBadgesByCategory,
+  getBadgesByType,
+  getCertificate,
+  getCertificateByVerificationCode,
+  getCourseCertificates,
+  getLearnerBadges,
+  getLearnerCertificates,
+  getRecentBadges,
+  hasEarnedBadge,
+} from './achievements';
 export {
   calculateLessonDuration,
   copyBlocksToLesson,
@@ -36,6 +52,29 @@ export {
   updateCourse,
   updateCourseStats,
 } from './courses';
+// Enrollment services
+export {
+  createEnrollment,
+  getCompletedEnrollments,
+  getCourseEnrollments,
+  getEnrollment,
+  getInProgressEnrollments,
+  getLearnerEnrollments,
+  isEnrolled,
+  updateEnrollmentProgress,
+  updateEnrollmentStatus,
+} from './enrollments';
+// Learner services
+export {
+  getLearner,
+  getLearners,
+  getLearnersByManager,
+  getLearnersByStatus,
+  incrementLearnerXp,
+  searchLearners,
+  updateLearnerActivity,
+  updateLearnerStatus,
+} from './learners';
 // Lesson services
 export {
   createLesson,

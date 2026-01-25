@@ -1,5 +1,8 @@
 /**
  * Mock course data for LXP360
+ *
+ * @deprecated Use Firestore services instead. See lib/firestore/services/courses.ts
+ * This file is retained for seed script reference only.
  */
 
 import type { Category, Course, CourseReview, INSPIREStage, Module } from '@/types/lms';

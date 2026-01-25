@@ -1,5 +1,8 @@
 /**
  * Mock badges and achievements data for LXP360
+ *
+ * @deprecated Use Firestore services instead. See lib/firestore/services/achievements.ts
+ * This file is retained for seed script reference only.
  */
 
 import type {
