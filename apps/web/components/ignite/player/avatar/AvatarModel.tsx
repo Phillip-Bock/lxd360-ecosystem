@@ -101,7 +101,7 @@ export function AvatarModel({
 
   // Load the GLTF model
   const { scene, animations } = useGLTF(modelPath, true, true, (loader) => {
-    loader.manager.onError = (url) => {
+    loader.manager.onError = (url: string) => {
       onError?.(new Error(`Failed to load model: ${url}`));
     };
   });

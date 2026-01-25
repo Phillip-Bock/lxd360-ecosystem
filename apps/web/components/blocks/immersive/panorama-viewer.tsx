@@ -6,7 +6,7 @@
  */
 
 import { Html, OrbitControls, PerspectiveCamera, useTexture } from '@react-three/drei';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, type ThreeEvent, useFrame, useThree } from '@react-three/fiber';
 import {
   ChevronLeft,
   ChevronRight,
@@ -69,10 +69,11 @@ interface PanoramaSphereProps {
 }
 
 function PanoramaSphere({ imageUrl, onLoaded }: PanoramaSphereProps) {
-  const texture = useTexture(imageUrl, (tex) => {
-    tex.colorSpace = THREE.SRGBColorSpace;
-    tex.minFilter = THREE.LinearFilter;
-    tex.magFilter = THREE.LinearFilter;
+  const texture = useTexture(imageUrl, (tex: THREE.Texture | THREE.Texture[]) => {
+    const t = Array.isArray(tex) ? tex[0] : tex;
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.minFilter = THREE.LinearFilter;
+    t.magFilter = THREE.LinearFilter;
     onLoaded?.();
   });
 
@@ -152,7 +153,7 @@ function HotspotMarker({ hotspot, onClick, isVisited }: HotspotMarkerProps) {
     <group position={position}>
       <mesh
         ref={meshRef}
-        onClick={(e) => {
+        onClick={(e: ThreeEvent<MouseEvent>) => {
           e.stopPropagation();
           onClick();
         }}
@@ -221,9 +222,16 @@ interface CameraControllerProps {
   onViewChange?: (view: SphericalCoordinates) => void;
 }
 
+// Type for OrbitControls ref with autoRotate properties
+interface OrbitControlsRef {
+  autoRotate: boolean;
+  autoRotateSpeed: number;
+  update: () => void;
+}
+
 function CameraController({ initialView, settings, onViewChange }: CameraControllerProps) {
   const { camera } = useThree();
-  const controlsRef = useRef<React.ComponentRef<typeof OrbitControls>>(null);
+  const controlsRef = useRef<OrbitControlsRef | null>(null);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const lastInteractionRef = useRef(Date.now());
 
@@ -242,8 +250,9 @@ function CameraController({ initialView, settings, onViewChange }: CameraControl
     camera.lookAt(target);
 
     if (initialView.fov) {
-      (camera as THREE.PerspectiveCamera).fov = initialView.fov;
-      camera.updateProjectionMatrix();
+      const perspCamera = camera as THREE.PerspectiveCamera;
+      perspCamera.fov = initialView.fov;
+      perspCamera.updateProjectionMatrix();
     }
   }, [camera, initialView]);
 

@@ -178,8 +178,21 @@ function buildPrompt(request: ChatRequest): string {
 async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
   // Authentication verified by withAuth wrapper
   try {
+    // ========== VERBOSE LOGGING FOR DEBUGGING ==========
+    console.log('[CortexChat] === API REQUEST START ===');
+    console.log('[CortexChat] GOOGLE_PROJECT_ID exists:', !!process.env.GOOGLE_PROJECT_ID);
+    console.log('[CortexChat] GOOGLE_CLOUD_PROJECT exists:', !!process.env.GOOGLE_CLOUD_PROJECT);
+    const privateKey = process.env.GOOGLE_PRIVATE_KEY || process.env.FIREBASE_PRIVATE_KEY || '';
+    console.log('[CortexChat] PRIVATE_KEY length:', privateKey.length);
+    console.log('[CortexChat] PRIVATE_KEY includes \\n:', privateKey.includes('\\n'));
+    console.log('[CortexChat] PRIVATE_KEY includes literal newline:', privateKey.includes('\n'));
+    console.log('[CortexChat] GEMINI_API_KEY exists:', !!GEMINI_API_KEY);
+    // ===================================================
+
     const body = (await req.json()) as ChatRequest;
     const { message, voiceId, voice = 'male', includeAudio = true } = body;
+
+    console.log('[CortexChat] Received message:', message?.substring(0, 50), '...');
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 });
@@ -191,6 +204,7 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
     }
 
     // 1. Generate text response with Gemini
+    console.log('[CortexChat] Calling Gemini...');
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
@@ -198,6 +212,7 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
     const result = await model.generateContent(prompt);
     const response = result.response;
     const rawText = response.text().trim();
+    console.log('[CortexChat] Gemini response received, length:', rawText.length);
 
     if (!rawText) {
       return NextResponse.json({ error: 'Failed to generate response' }, { status: 500 });
@@ -212,7 +227,9 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
 
     if (includeAudio) {
       try {
+        console.log('[CortexChat] Calling TTS with voiceId:', voiceId, 'voice:', voice);
         audio = await synthesizeSpeech(text, { voice, voiceId });
+        console.log('[CortexChat] TTS response received, audio length:', audio?.length || 0);
       } catch (ttsError) {
         // Log but don't fail the request - audio is optional
         console.error('[CortexChat] TTS error (continuing without audio):', ttsError);
@@ -234,9 +251,18 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
       chatResponse.raw = rawText;
     }
 
+    console.log('[CortexChat] === API REQUEST SUCCESS ===');
     return NextResponse.json(chatResponse);
   } catch (error) {
-    console.error('[CortexChat] Error:', error);
+    // ========== VERBOSE ERROR LOGGING ==========
+    console.error('[CortexChat] === API REQUEST FAILED ===');
+    if (error instanceof Error) {
+      console.error('[CortexChat] Error message:', error.message);
+      console.error('[CortexChat] Error stack:', error.stack);
+    } else {
+      console.error('[CortexChat] Unknown error:', error);
+    }
+    // ===========================================
     return NextResponse.json({ error: 'Failed to process chat request' }, { status: 500 });
   }
 }

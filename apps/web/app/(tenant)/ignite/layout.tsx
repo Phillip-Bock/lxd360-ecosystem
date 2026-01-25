@@ -3,9 +3,9 @@
 import { usePathname, useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { AiCharacterChat } from '@/components/ai-character';
 import { AppSidebar } from '@/components/ignite/dashboard/AppSidebar';
 import { BreadcrumbsHeader } from '@/components/ignite/dashboard/BreadcrumbsHeader';
+import { IgniteCoach } from '@/components/ignite/player/IgniteCoach';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { canAccess, getPersonaFromClaims, type Persona } from '@/lib/rbac/personas';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
@@ -116,8 +116,8 @@ export default function IgniteLayout({ children }: { children: ReactNode }) {
     return (
       <>
         {children}
-        {/* AI Character Chat - floating bottom-right */}
-        <AiCharacterChat tenantId={user.uid} />
+        {/* Cortex AI Coach - floating bottom-right */}
+        <IgniteCoach courseTitle="INSPIRE Ignite" learnerName={user.displayName || 'Learner'} />
       </>
     );
   }
@@ -137,8 +137,8 @@ export default function IgniteLayout({ children }: { children: ReactNode }) {
           <main className="flex-1 overflow-y-auto p-6">{children}</main>
         </SidebarInset>
 
-        {/* AI Character Chat - floating bottom-right */}
-        <AiCharacterChat tenantId={user.uid} />
+        {/* Cortex AI Coach - floating bottom-right */}
+        <IgniteCoach courseTitle="INSPIRE Ignite" learnerName={user.displayName || 'Learner'} />
       </div>
     </SidebarProvider>
   );

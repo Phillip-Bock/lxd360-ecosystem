@@ -14,13 +14,20 @@ import {
   X,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useIgniteVoice } from '@/hooks/use-ignite-voice';
 import { useAuth } from '@/lib/firebase/useAuth';
 import { cn } from '@/lib/utils';
 import type { AnimationState, AvatarPersona } from './avatar';
 import { VOICE_OPTIONS, VoiceSelector } from './VoiceSelector';
+
+// ============================================================================
+// ACCESSIBILITY CONSTANTS
+// ============================================================================
+
+const PANEL_TITLE_ID = 'cortex-coach-title';
+const PANEL_DESC_ID = 'cortex-coach-desc';
 
 // Dynamically import AvatarStage to avoid SSR issues with Three.js
 const AvatarStage = dynamic(() => import('./avatar/AvatarStage').then((mod) => mod.AvatarStage), {
@@ -143,10 +150,13 @@ export function IgniteCoach({
   // Refs
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   // Hooks
   const { user } = useAuth();
   const { playAudio, stopAudio, isSpeaking } = useIgniteVoice();
+  const uniqueId = useId();
 
   // ============================================================================
   // EFFECTS
@@ -194,6 +204,43 @@ export function IgniteCoach({
       setAnimation('idle');
     }
   }, [isSpeaking, isThinking, animation]);
+
+  // Focus trap and keyboard handling for accessibility (WCAG 2.1 AA)
+  useEffect(() => {
+    if (!isOpen || !panelRef.current) return;
+
+    // Focus close button when panel opens
+    closeButtonRef.current?.focus();
+
+    // Handle Escape key to close panel
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        stopAudio();
+        setIsOpen(false);
+        setShowSettings(false);
+      }
+
+      // Focus trap - keep focus within panel
+      if (e.key === 'Tab' && panelRef.current) {
+        const focusableElements = panelRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, stopAudio]);
 
   // ============================================================================
   // HANDLERS
@@ -361,7 +408,7 @@ export function IgniteCoach({
       <AnimatePresence mode="wait">
         {!isOpen ? (
           // ================================================================
-          // TRIGGER BUTTON
+          // TRIGGER BUTTON (WCAG 2.1 AA: Accessible name)
           // ================================================================
           <motion.button
             key="trigger"
@@ -372,6 +419,8 @@ export function IgniteCoach({
             whileTap={{ scale: 0.95 }}
             type="button"
             onClick={() => setIsOpen(true)}
+            aria-label="Open AI Learning Coach"
+            aria-haspopup="dialog"
             className={cn(
               'relative flex items-center justify-center',
               'h-14 w-14 rounded-full',
@@ -379,25 +428,40 @@ export function IgniteCoach({
               'text-white shadow-lg',
               'shadow-lxd-primary/30',
               'hover:shadow-lxd-primary/50 hover:shadow-xl',
+              'focus:outline-none focus:ring-2 focus:ring-lxd-primary focus:ring-offset-2',
               'transition-all duration-300',
             )}
           >
-            {/* Pulse ring */}
-            <span className="absolute inset-0 rounded-full animate-ping bg-lxd-primary/30" />
-            <span className="absolute inset-0 rounded-full animate-pulse bg-lxd-primary/20" />
+            {/* Pulse ring - decorative, hidden from AT */}
+            <span
+              className="absolute inset-0 rounded-full animate-ping bg-lxd-primary/30"
+              aria-hidden="true"
+            />
+            <span
+              className="absolute inset-0 rounded-full animate-pulse bg-lxd-primary/20"
+              aria-hidden="true"
+            />
 
             {/* Icon */}
-            <Sparkles className="h-6 w-6 relative z-10" />
+            <Sparkles className="h-6 w-6 relative z-10" aria-hidden="true" />
 
-            {/* Online indicator */}
-            <span className="absolute top-0 right-0 h-3 w-3 rounded-full bg-emerald-400 border-2 border-white" />
+            {/* Online indicator - decorative */}
+            <span
+              className="absolute top-0 right-0 h-3 w-3 rounded-full bg-emerald-400 border-2 border-white"
+              aria-hidden="true"
+            />
           </motion.button>
         ) : (
           // ================================================================
-          // COMPANION PANEL
+          // COMPANION PANEL (WCAG 2.1 AA: Dialog with focus trap)
           // ================================================================
           <motion.div
             key="panel"
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`${uniqueId}-${PANEL_TITLE_ID}`}
+            aria-describedby={`${uniqueId}-${PANEL_DESC_ID}`}
             initial={{ opacity: 0, y: 100, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.9 }}
@@ -427,18 +491,30 @@ export function IgniteCoach({
               {/* Header Overlay */}
               <div className="absolute top-0 left-0 right-0 p-3 bg-gradient-to-b from-black/60 to-transparent">
                 <div className="flex items-center justify-between">
-                  {/* Title */}
+                  {/* Title - linked to dialog aria-labelledby */}
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-sm font-semibold text-white">Cortex</span>
-                    <span className="text-xs text-white/60">
+                    <div
+                      className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"
+                      aria-hidden="true"
+                    />
+                    <span
+                      id={`${uniqueId}-${PANEL_TITLE_ID}`}
+                      className="text-sm font-semibold text-white"
+                    >
+                      Cortex
+                    </span>
+                    <span
+                      id={`${uniqueId}-${PANEL_DESC_ID}`}
+                      className="text-xs text-white/60"
+                      aria-live="polite"
+                    >
                       {isSpeaking ? 'Speaking...' : isThinking ? 'Thinking...' : 'Online'}
                     </span>
                   </div>
 
                   {/* Actions */}
                   <div className="flex items-center gap-1">
-                    {/* Voice toggle */}
+                    {/* Voice toggle (WCAG: aria-pressed for toggle state) */}
                     <Button
                       type="button"
                       variant="ghost"
@@ -447,42 +523,50 @@ export function IgniteCoach({
                         if (isSpeaking) stopAudio();
                         setVoiceEnabled((v) => !v);
                       }}
-                      className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10"
+                      aria-label={voiceEnabled ? 'Disable voice' : 'Enable voice'}
+                      aria-pressed={voiceEnabled}
+                      className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10 focus:ring-2 focus:ring-white/50"
                     >
                       {voiceEnabled ? (
-                        <Volume2 className="h-4 w-4" />
+                        <Volume2 className="h-4 w-4" aria-hidden="true" />
                       ) : (
-                        <VolumeX className="h-4 w-4" />
+                        <VolumeX className="h-4 w-4" aria-hidden="true" />
                       )}
                     </Button>
 
-                    {/* Settings */}
+                    {/* Settings (WCAG: aria-expanded for disclosure) */}
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
                       onClick={() => setShowSettings(!showSettings)}
+                      aria-label="Voice settings"
+                      aria-expanded={showSettings}
+                      aria-controls={`${uniqueId}-settings-panel`}
                       className={cn(
-                        'h-8 w-8 text-white/70 hover:text-white hover:bg-white/10',
+                        'h-8 w-8 text-white/70 hover:text-white hover:bg-white/10 focus:ring-2 focus:ring-white/50',
                         showSettings && 'bg-white/10 text-white',
                       )}
                     >
-                      <Settings className="h-4 w-4" />
+                      <Settings className="h-4 w-4" aria-hidden="true" />
                     </Button>
 
-                    {/* Close */}
+                    {/* Close (WCAG: Clear accessible name) */}
                     <Button
+                      ref={closeButtonRef}
                       type="button"
                       variant="ghost"
                       size="icon"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         stopAudio();
                         setIsOpen(false);
                         setShowSettings(false);
                       }}
-                      className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10"
+                      aria-label="Close Coach"
+                      className="h-8 w-8 text-white/70 hover:text-white hover:bg-white/10 cursor-pointer z-50 focus:ring-2 focus:ring-white/50"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-4 w-4" aria-hidden="true" />
                     </Button>
                   </div>
                 </div>
@@ -492,13 +576,25 @@ export function IgniteCoach({
               <AnimatePresence>
                 {showSettings && (
                   <motion.div
+                    id={`${uniqueId}-settings-panel`}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     className="absolute top-12 left-3 right-3 p-3 bg-card/95 backdrop-blur-xl rounded-xl border border-border/50 shadow-lg"
+                    role="region"
+                    aria-label="Voice settings"
                   >
-                    <p className="text-xs font-medium text-muted-foreground mb-2">Voice</p>
-                    <VoiceSelector value={voiceId} onChange={setVoiceId} />
+                    <p
+                      id={`${uniqueId}-voice-label`}
+                      className="text-xs font-medium text-muted-foreground mb-2"
+                    >
+                      Voice
+                    </p>
+                    <VoiceSelector
+                      value={voiceId}
+                      onChange={setVoiceId}
+                      labelledBy={`${uniqueId}-voice-label`}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -521,8 +617,13 @@ export function IgniteCoach({
                 </div>
               )}
 
-              {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {/* Messages (WCAG 2.1 AA: Live region for screen readers) */}
+              <div
+                className="flex-1 overflow-y-auto p-4 space-y-3"
+                role="log"
+                aria-live="polite"
+                aria-label="Conversation with Cortex"
+              >
                 {messages.map((message) => (
                   <motion.div
                     key={message.id}
@@ -541,6 +642,9 @@ export function IgniteCoach({
                           : 'bg-muted/60 text-foreground rounded-bl-md',
                       )}
                     >
+                      <span className="sr-only">
+                        {message.role === 'user' ? 'You: ' : 'Cortex: '}
+                      </span>
                       {message.content}
                     </div>
                   </motion.div>
@@ -601,16 +705,21 @@ export function IgniteCoach({
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Input */}
+              {/* Input (WCAG 2.1 AA: Accessible labels) */}
               <form onSubmit={handleSubmit} className="p-3 border-t border-border/30 bg-muted/10">
                 <div className="flex items-center gap-2">
+                  <label htmlFor={`${uniqueId}-chat-input`} className="sr-only">
+                    Ask Cortex a question
+                  </label>
                   <input
+                    id={`${uniqueId}-chat-input`}
                     ref={inputRef}
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Ask Cortex..."
                     disabled={isThinking}
+                    aria-describedby={isThinking ? `${uniqueId}-thinking-status` : undefined}
                     className={cn(
                       'flex-1 bg-background/80 border border-border/50 rounded-xl px-4 py-2.5',
                       'text-sm text-foreground placeholder:text-muted-foreground',
@@ -619,17 +728,24 @@ export function IgniteCoach({
                       'transition-all',
                     )}
                   />
+                  {isThinking && (
+                    <span id={`${uniqueId}-thinking-status`} className="sr-only">
+                      Cortex is thinking, please wait
+                    </span>
+                  )}
                   <Button
                     type="submit"
                     disabled={!input.trim() || isThinking}
                     size="icon"
+                    aria-label="Send message"
                     className={cn(
                       'h-10 w-10 rounded-xl shrink-0',
                       'bg-lxd-primary hover:bg-lxd-primary/90',
                       'disabled:opacity-50',
+                      'focus:ring-2 focus:ring-lxd-primary focus:ring-offset-2',
                     )}
                   >
-                    <Send className="h-4 w-4" />
+                    <Send className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </div>
               </form>

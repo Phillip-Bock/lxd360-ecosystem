@@ -1,11 +1,11 @@
 /**
- * Seed Script: Create "Fab Four" Test Users
+ * Seed Script: Create 4-Persona Test Users
  *
- * Creates the standard test users for Strike 1 verification:
- * - Super Admin: phill+super@lxd360.com
- * - Org Admin: phill+admin@lxd360.com
- * - Instructor: phill+teach@lxd360.com
- * - Learner: phill+learn@lxd360.com
+ * Creates the standard test users for the 4-persona RBAC model:
+ * - Owner: phill+super@lxd360.com (Full access + Billing)
+ * - Editor: phill+editor@lxd360.com (Authoring + Courses)
+ * - Manager: phill+admin@lxd360.com (LXP/LMS dashboards, learners)
+ * - Learner: phill+learn@lxd360.com (Content consumption only)
  *
  * Usage: npx tsx scripts/seed-users.ts
  */
@@ -26,139 +26,52 @@ dotenv.config({ path: path.resolve(process.cwd(), 'apps/web/.env.local') });
 dotenv.config({ path: path.resolve(process.cwd(), 'apps/web/.env') });
 
 // -----------------------------------------------------------------------------
-// Configuration
+// Configuration - 4-Persona Model
 // -----------------------------------------------------------------------------
 
 const TEST_PASSWORD = 'LXD360-Dev!';
 const DEFAULT_TENANT_ID = 'default-dev-tenant';
 
+/** 4-Persona types matching CLAUDE.md v16 */
+type Persona = 'owner' | 'editor' | 'manager' | 'learner';
+
 interface TestUser {
   email: string;
   displayName: string;
-  role: 'super_admin' | 'org_admin' | 'instructor' | 'learner';
-  roleLevel: number;
+  persona: Persona;
+  personaLevel: number;
 }
 
-const FAB_FOUR: TestUser[] = [
+/**
+ * 4-Persona Test Users
+ * Owner > Editor > Manager > Learner
+ */
+const FOUR_PERSONAS: TestUser[] = [
   {
     email: 'phill+super@lxd360.com',
-    displayName: 'Super Admin (Phill)',
-    role: 'super_admin',
-    roleLevel: 100,
+    displayName: 'Phill Bock (Owner)',
+    persona: 'owner',
+    personaLevel: 100,
+  },
+  {
+    email: 'phill+editor@lxd360.com',
+    displayName: 'Editor User',
+    persona: 'editor',
+    personaLevel: 75,
   },
   {
     email: 'phill+admin@lxd360.com',
-    displayName: 'Org Admin (Phill)',
-    role: 'org_admin',
-    roleLevel: 90,
-  },
-  {
-    email: 'phill+teach@lxd360.com',
-    displayName: 'Instructor (Phill)',
-    role: 'instructor',
-    roleLevel: 50,
+    displayName: 'Manager User',
+    persona: 'manager',
+    personaLevel: 50,
   },
   {
     email: 'phill+learn@lxd360.com',
-    displayName: 'Learner (Phill)',
-    role: 'learner',
-    roleLevel: 40,
+    displayName: 'Learner User',
+    persona: 'learner',
+    personaLevel: 25,
   },
 ];
-
-// Role permissions mapping
-const ROLE_PERMISSIONS: Record<string, string[]> = {
-  super_admin: [
-    'read:own_profile',
-    'write:own_profile',
-    'read:courses',
-    'write:courses',
-    'publish:courses',
-    'delete:courses',
-    'read:learners',
-    'write:learners',
-    'enroll:learners',
-    'read:analytics',
-    'read:analytics:personal',
-    'read:analytics:team',
-    'read:analytics:org',
-    'read:analytics:platform',
-    'export:analytics',
-    'manage:users',
-    'manage:roles',
-    'invite:users',
-    'manage:org',
-    'manage:org:settings',
-    'manage:org:billing',
-    'manage:org:branding',
-    'manage:platform',
-    'manage:tenants',
-    'create:content',
-    'review:content',
-    'approve:content',
-    'mentor:assign',
-    'mentor:sessions',
-    'take:assessments',
-    'grade:assessments',
-    'create:assessments',
-  ],
-  org_admin: [
-    'read:own_profile',
-    'write:own_profile',
-    'read:courses',
-    'write:courses',
-    'publish:courses',
-    'delete:courses',
-    'read:learners',
-    'write:learners',
-    'enroll:learners',
-    'read:analytics',
-    'read:analytics:personal',
-    'read:analytics:team',
-    'read:analytics:org',
-    'export:analytics',
-    'manage:users',
-    'manage:roles',
-    'invite:users',
-    'manage:org',
-    'manage:org:settings',
-    'manage:org:billing',
-    'manage:org:branding',
-    'create:content',
-    'review:content',
-    'approve:content',
-    'mentor:assign',
-    'mentor:sessions',
-    'take:assessments',
-    'grade:assessments',
-    'create:assessments',
-  ],
-  instructor: [
-    'read:own_profile',
-    'write:own_profile',
-    'read:courses',
-    'write:courses',
-    'publish:courses',
-    'read:learners',
-    'enroll:learners',
-    'read:analytics',
-    'read:analytics:personal',
-    'read:analytics:team',
-    'create:content',
-    'review:content',
-    'mentor:sessions',
-    'take:assessments',
-    'grade:assessments',
-    'create:assessments',
-  ],
-  learner: [
-    'read:own_profile',
-    'write:own_profile',
-    'read:courses',
-    'read:analytics:personal',
-    'take:assessments',
-  ],
-};
 
 // -----------------------------------------------------------------------------
 // Firebase Initialization
@@ -231,7 +144,7 @@ function initializeFirebase() {
 interface CreatedUser {
   email: string;
   uid: string;
-  role: string;
+  persona: Persona;
   password: string;
   displayName: string;
 }
@@ -274,17 +187,16 @@ async function createOrUpdateUser(
     }
   }
 
-  // Set custom claims
+  // Set custom claims (4-persona model)
   const claims = {
-    role: user.role,
-    roleLevel: user.roleLevel,
+    persona: user.persona,
+    personaLevel: user.personaLevel,
     tenantId: DEFAULT_TENANT_ID,
-    permissions: ROLE_PERMISSIONS[user.role] || [],
     isEmployee: true,
     claimsUpdatedAt: Date.now(),
   };
   await auth.setCustomUserClaims(uid, claims);
-  console.log(`  Set custom claims: role=${user.role}, level=${user.roleLevel}`);
+  console.log(`  Set custom claims: persona=${user.persona}, level=${user.personaLevel}`);
 
   // Create/update Firestore documents
   try {
@@ -293,48 +205,55 @@ async function createOrUpdateUser(
     await tenantRef.set(
       {
         id: DEFAULT_TENANT_ID,
-        name: 'Development Tenant',
+        name: 'LXD360 Development',
+        slug: 'lxd360-dev',
         createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+        settings: {
+          features: {
+            aiChat: true,
+            tts: true,
+            scormUpload: true,
+          },
+        },
       },
       { merge: true }
     );
 
-    // Create learner document at tenants/{tenantId}/learners/{uid}
-    const learnerRef = tenantRef.collection('learners').doc(uid);
-    const learnerData: Record<string, unknown> = {
+    // Create user document at users/{uid}
+    const userRef = db.collection('users').doc(uid);
+    const userData: Record<string, unknown> = {
       uid,
       email: user.email,
       displayName: user.displayName,
-      role: user.role,
-      roleLevel: user.roleLevel,
+      persona: user.persona,
+      personaLevel: user.personaLevel,
       tenantId: DEFAULT_TENANT_ID,
       isEmployee: true,
       isTestUser: true,
+      emailVerified: true,
       updatedAt: FieldValue.serverTimestamp(),
     };
     if (created) {
-      learnerData.createdAt = FieldValue.serverTimestamp();
+      userData.createdAt = FieldValue.serverTimestamp();
     }
-    await learnerRef.set(learnerData, { merge: true });
-    console.log(`  Created Firestore doc: tenants/${DEFAULT_TENANT_ID}/learners/${uid}`);
+    await userRef.set(userData, { merge: true });
+    console.log(`  Created Firestore doc: users/${uid}`);
 
-    // Also create in users collection for backward compatibility
-    const userRef = db.collection('users').doc(uid);
-    await userRef.set(
+    // Also create in tenant members collection
+    const memberRef = tenantRef.collection('members').doc(uid);
+    await memberRef.set(
       {
         uid,
         email: user.email,
         displayName: user.displayName,
-        role: user.role,
-        roleLevel: user.roleLevel,
-        tenantId: DEFAULT_TENANT_ID,
-        isEmployee: true,
-        isTestUser: true,
-        updatedAt: FieldValue.serverTimestamp(),
+        persona: user.persona,
+        personaLevel: user.personaLevel,
+        joinedAt: FieldValue.serverTimestamp(),
       },
       { merge: true }
     );
-    console.log(`  Created Firestore doc: users/${uid}`);
+    console.log(`  Created Firestore doc: tenants/${DEFAULT_TENANT_ID}/members/${uid}`);
   } catch (firestoreError) {
     console.warn(`  WARNING: Firestore write failed (${firestoreError})`);
     console.warn(`  Auth user was created - Firestore docs may need manual creation`);
@@ -343,7 +262,7 @@ async function createOrUpdateUser(
   return {
     email: user.email,
     uid,
-    role: user.role,
+    persona: user.persona,
     password: TEST_PASSWORD,
     displayName: user.displayName,
   };
@@ -355,7 +274,8 @@ async function createOrUpdateUser(
 
 async function main() {
   console.log('\n===========================================');
-  console.log('  LXD360 Test User Seeder - "Fab Four"');
+  console.log('  LXD360 Test User Seeder - 4-Persona Model');
+  console.log('  Owner > Editor > Manager > Learner');
   console.log('===========================================\n');
 
   // Initialize Firebase
@@ -368,8 +288,8 @@ async function main() {
 
   const createdUsers: CreatedUser[] = [];
 
-  for (const user of FAB_FOUR) {
-    console.log(`\n[${user.role.toUpperCase()}] ${user.email}`);
+  for (const user of FOUR_PERSONAS) {
+    console.log(`\n[${user.persona.toUpperCase()}] ${user.email}`);
     try {
       const result = await createOrUpdateUser(auth, db, user);
       createdUsers.push(result);
@@ -384,6 +304,7 @@ async function main() {
   const credsData = {
     generatedAt: new Date().toISOString(),
     tenantId: DEFAULT_TENANT_ID,
+    model: '4-persona',
     users: createdUsers,
   };
 
@@ -391,19 +312,15 @@ async function main() {
   console.log(`\nCredentials saved to: ${credsFile}`);
 
   console.log('\n===========================================');
-  console.log('  Summary');
+  console.log('  Summary - 4-Persona Model');
   console.log('===========================================');
   console.log(`  Total users: ${createdUsers.length}`);
   console.log(`  Tenant ID: ${DEFAULT_TENANT_ID}`);
   console.log(`  Password: ${TEST_PASSWORD}`);
   console.log('\n  Users created:');
   for (const u of createdUsers) {
-    console.log(`    - ${u.email} (${u.role})`);
+    console.log(`    - ${u.persona.padEnd(8)} | ${u.email}`);
   }
-
-  console.log('\n  Verification commands:');
-  console.log('    firebase auth:export users.json --project lxd-saas-dev');
-  console.log('    cat local-test-creds.json');
 
   console.log('\n===========================================');
   console.log('  DONE');

@@ -4,10 +4,50 @@ import { Environment, OrbitControls } from '@react-three/drei';
 import { Canvas, extend } from '@react-three/fiber';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2, Sparkles, User } from 'lucide-react';
-import { Suspense, useCallback, useState } from 'react';
+import { Component, type ErrorInfo, type ReactNode, Suspense, useCallback, useState } from 'react';
 import { PlaneGeometry, ShadowMaterial } from 'three';
 import { cn } from '@/lib/utils';
 import { type AnimationState, AvatarModel } from './AvatarModel';
+
+// ============================================================================
+// ERROR BOUNDARY FOR REACT 19 COMPATIBILITY
+// ============================================================================
+
+interface R3FErrorBoundaryProps {
+  children: ReactNode;
+  fallback: ReactNode;
+}
+
+interface R3FErrorBoundaryState {
+  hasError: boolean;
+}
+
+class R3FErrorBoundary extends Component<R3FErrorBoundaryProps, R3FErrorBoundaryState> {
+  constructor(props: R3FErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(_: Error): R3FErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // Suppress React 19 reconciler errors from @react-three/fiber
+    if (error.message?.includes('reconciler') || error.message?.includes('fiber')) {
+      console.debug('[AvatarStage] R3F reconciler error suppressed:', error.message);
+      return;
+    }
+    console.error('[AvatarStage] 3D rendering error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
 
 // Extend R3F with Three.js geometries and materials
 extend({ PlaneGeometry, ShadowMaterial });
@@ -228,62 +268,64 @@ export function AvatarStage({
           <>
             {!isLoaded && <LoadingFallback key="loading" />}
 
-            <motion.div
-              key="canvas"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isLoaded ? 1 : 0 }}
-              transition={{ duration: 0.5 }}
-              className="absolute inset-0"
-            >
-              <Canvas
-                shadows
-                dpr={[1, 2]}
-                camera={{ position: [0, 1.6, 1.2], fov: 25 }}
-                gl={{
-                  antialias: true,
-                  alpha: true,
-                  powerPreference: 'high-performance',
-                }}
-                style={{ background: backgroundColor }}
+            <R3FErrorBoundary fallback={<ErrorFallback persona={persona} />}>
+              <motion.div
+                key="canvas"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isLoaded ? 1 : 0 }}
+                transition={{ duration: 0.5 }}
+                className="absolute inset-0"
               >
-                {/* Orbit controls - limited rotation for portrait framing */}
-                <OrbitControls
-                  enablePan={false}
-                  enableZoom={enableControls}
-                  minPolarAngle={Math.PI / 2.5}
-                  maxPolarAngle={Math.PI / 2}
-                  minAzimuthAngle={-Math.PI / 6}
-                  maxAzimuthAngle={Math.PI / 6}
-                  target={[0, 1.4, 0]}
-                />
-
-                {/* Studio lighting setup */}
-                <StudioLighting />
-
-                {/* Environment for reflections */}
-                <Environment preset="city" />
-
-                {/* Ground plane for shadows */}
-                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-                  <planeGeometry args={[10, 10]} />
-                  <shadowMaterial opacity={0.3} />
-                </mesh>
-
-                {/* Avatar model */}
-                <Suspense fallback={null}>
-                  <AvatarModel
-                    modelPath={resolvedModelPath}
-                    animation={animation}
-                    onAnimationComplete={onAnimationComplete}
-                    premiumMaterials={true}
-                    scale={1}
-                    position={[0, 0, 0]}
-                    onLoad={handleLoad}
-                    onError={handleError}
+                <Canvas
+                  shadows
+                  dpr={[1, 2]}
+                  camera={{ position: [0, 1.6, 1.2], fov: 25 }}
+                  gl={{
+                    antialias: true,
+                    alpha: true,
+                    powerPreference: 'high-performance',
+                  }}
+                  style={{ background: backgroundColor }}
+                >
+                  {/* Orbit controls - limited rotation for portrait framing */}
+                  <OrbitControls
+                    enablePan={false}
+                    enableZoom={enableControls}
+                    minPolarAngle={Math.PI / 2.5}
+                    maxPolarAngle={Math.PI / 2}
+                    minAzimuthAngle={-Math.PI / 6}
+                    maxAzimuthAngle={Math.PI / 6}
+                    target={[0, 1.4, 0]}
                   />
-                </Suspense>
-              </Canvas>
-            </motion.div>
+
+                  {/* Studio lighting setup */}
+                  <StudioLighting />
+
+                  {/* Environment for reflections */}
+                  <Environment preset="city" />
+
+                  {/* Ground plane for shadows */}
+                  <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+                    <planeGeometry args={[10, 10]} />
+                    <shadowMaterial opacity={0.3} />
+                  </mesh>
+
+                  {/* Avatar model */}
+                  <Suspense fallback={null}>
+                    <AvatarModel
+                      modelPath={resolvedModelPath}
+                      animation={animation}
+                      onAnimationComplete={onAnimationComplete}
+                      premiumMaterials={true}
+                      scale={1}
+                      position={[0, 0, 0]}
+                      onLoad={handleLoad}
+                      onError={handleError}
+                    />
+                  </Suspense>
+                </Canvas>
+              </motion.div>
+            </R3FErrorBoundary>
           </>
         )}
       </AnimatePresence>

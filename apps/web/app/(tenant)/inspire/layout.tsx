@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
-import { AiCharacterChat } from '@/components/ai-character';
+import { IgniteCoach } from '@/components/ignite/player/IgniteCoach';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
 
 export default function InspireLayout({ children }: { children: ReactNode }) {
@@ -38,8 +38,8 @@ export default function InspireLayout({ children }: { children: ReactNode }) {
     <div className="relative min-h-screen bg-background text-foreground">
       {children}
 
-      {/* AI Character Chat - floating bottom-right */}
-      <AiCharacterChat tenantId={user.uid} />
+      {/* Cortex AI Coach - floating bottom-right */}
+      <IgniteCoach courseTitle="INSPIRE Studio" learnerName={user.displayName || 'Creator'} />
     </div>
   );
 }

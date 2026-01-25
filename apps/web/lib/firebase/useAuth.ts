@@ -96,8 +96,10 @@ export function useAuth(): UseAuthReturn {
 
         setProfile(newProfile as UserProfile);
       }
-    } catch (err) {
-      log.error('Failed to load user profile', { error: err, uid: firebaseUser.uid });
+    } catch (_err) {
+      // Suppress profile load errors - common for new users or during initial auth
+      // Use debug level to avoid console noise
+      log.debug('Profile load skipped (using auth data)', { uid: firebaseUser.uid });
       setProfile({
         uid: firebaseUser.uid,
         email: firebaseUser.email,
