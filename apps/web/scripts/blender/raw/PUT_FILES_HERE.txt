@@ -1,0 +1,18 @@
+Save your cortex_master.blend here. Put FBX animations in the animations/ folder.
+
+Directory Structure:
+====================
+raw/
+├── cortex_master.blend     <- Your rigged character model
+├── PUT_FILES_HERE.txt      <- This file
+└── animations/
+    ├── idle.fbx            <- Idle animation
+    ├── talking.fbx         <- Talking animation
+    └── thinking.fbx        <- Thinking animation
+
+After placing files, run:
+  pnpm process:cortex
+
+Output will be saved to:
+  dist/cortex.glb           <- Merged model with all animations
+  public/models/cortex.glb  <- Copied for web serving
