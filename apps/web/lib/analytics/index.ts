@@ -75,3 +75,69 @@ export {
   // Real-time
   useRealTimeActivity,
 } from './hooks';
+
+// ============================================================================
+// GOD VIEW ANALYTICS — TYPES
+// ============================================================================
+
+export type {
+  BusinessMetrics,
+  CompetencyScore,
+  ComplianceCompetencyGap,
+  ComplianceScore,
+  Department,
+  DepartmentRiskScore,
+  DepartmentSkillMetrics,
+  GodViewLearningMetrics,
+  HeatmapCell,
+  RiskFactor,
+  ROICorrelation,
+  ROIDashboard,
+  SkillGapHeatmap,
+  SkillMetrics,
+  TeamMember,
+} from './god-view-types';
+
+// ============================================================================
+// GOD VIEW ANALYTICS — HEATMAP
+// ============================================================================
+
+export {
+  calculateCellRisk,
+  calculateDepartmentRisk,
+  calculateSkillMetrics,
+  explainCell,
+  generateHeatmap,
+  generateHeatmapCell,
+  getDepartmentsByRisk,
+  getHotspots,
+} from './heatmap';
+
+// ============================================================================
+// GOD VIEW ANALYTICS — COMPLIANCE GAP
+// ============================================================================
+
+export {
+  analyzeDepartments,
+  analyzeGap,
+  calculateCompetencyScore,
+  calculateComplianceScore,
+  explainGap,
+  generateRiskScore,
+  getDepartmentsByRiskLevel,
+  getOrganizationSummary,
+} from './compliance-gap';
+
+// ============================================================================
+// GOD VIEW ANALYTICS — ROI ENGINE
+// ============================================================================
+
+export {
+  buildROIDashboard,
+  calculateAllCorrelations,
+  calculateCorrelation,
+  calculateEstimatedROI,
+  explainROI,
+  generateExecutiveSummary,
+  getTopCorrelations,
+} from './roi';
