@@ -43,6 +43,9 @@ export const INSPIRE_EXTENSIONS = {
   /** Self-reported confidence rating 0-1 */
   CONFIDENCE_RATING: 'https://inspire.lxd360.com/xapi/extensions/confidence-rating',
 
+  /** Interpreted confidence level from hesitation analysis */
+  CONFIDENCE_LEVEL: 'https://inspire.lxd360.com/xapi/extensions/confidence-level',
+
   // -------------------------------------------------------------------------
   // Skill & Mastery Tracking
   // -------------------------------------------------------------------------
@@ -58,6 +61,15 @@ export const INSPIRE_EXTENSIONS = {
 
   /** Prerequisites for this skill */
   PREREQUISITE_SKILLS: 'https://inspire.lxd360.com/xapi/extensions/prerequisite-skills',
+
+  /** O*NET skill ID if mapped to occupational taxonomy */
+  ONET_SKILL_ID: 'https://inspire.lxd360.com/xapi/extensions/onet-skill-id',
+
+  /** Decay-adjusted mastery after time elapsed */
+  DECAYED_MASTERY: 'https://inspire.lxd360.com/xapi/extensions/decayed-mastery',
+
+  /** Days since last practice (for decay tracking) */
+  DAYS_SINCE_PRACTICE: 'https://inspire.lxd360.com/xapi/extensions/days-since-practice',
 
   // -------------------------------------------------------------------------
   // Cognitive Load (ICL Framework)
@@ -96,6 +108,9 @@ export const INSPIRE_EXTENSIONS = {
 
   /** Learner's reason for override (if provided) */
   OVERRIDE_REASON: 'https://inspire.lxd360.com/xapi/extensions/override-reason',
+
+  /** Model phase: cold_start, transition, personalized */
+  MODEL_PHASE: 'https://inspire.lxd360.com/xapi/extensions/model-phase',
 
   // -------------------------------------------------------------------------
   // Cross-Tenant Learning (Data Governance)
@@ -165,6 +180,12 @@ export type Modality = z.infer<typeof ModalitySchema>;
 export const MasteryLevelSchema = z.enum(['novice', 'developing', 'proficient', 'mastered']);
 export type MasteryLevel = z.infer<typeof MasteryLevelSchema>;
 
+export const ConfidenceLevelSchema = z.enum(['high', 'medium', 'low', 'uncertain']);
+export type ConfidenceLevel = z.infer<typeof ConfidenceLevelSchema>;
+
+export const ModelPhaseSchema = z.enum(['cold_start', 'transition', 'personalized']);
+export type ModelPhase = z.infer<typeof ModelPhaseSchema>;
+
 export const ConsentTierSchema = z.union([
   z.literal(0), // Isolated - no sharing
   z.literal(1), // Receive - can receive cross-tenant insights
@@ -221,12 +242,16 @@ export const InspireExtensionsSchema = z
     [INSPIRE_EXTENSIONS.DISTRACTORS_TOUCHED]: z.array(z.string()).optional(),
     [INSPIRE_EXTENSIONS.RAGE_CLICKS]: z.number().int().nonnegative().optional(),
     [INSPIRE_EXTENSIONS.CONFIDENCE_RATING]: z.number().min(0).max(1).optional(),
+    [INSPIRE_EXTENSIONS.CONFIDENCE_LEVEL]: ConfidenceLevelSchema.optional(),
 
     // Skill & Mastery
     [INSPIRE_EXTENSIONS.SKILL_ID]: z.string().optional(),
     [INSPIRE_EXTENSIONS.MASTERY_ESTIMATE]: z.number().min(0).max(1).optional(),
     [INSPIRE_EXTENSIONS.MASTERY_LEVEL]: MasteryLevelSchema.optional(),
     [INSPIRE_EXTENSIONS.PREREQUISITE_SKILLS]: z.array(z.string()).optional(),
+    [INSPIRE_EXTENSIONS.ONET_SKILL_ID]: z.string().optional(),
+    [INSPIRE_EXTENSIONS.DECAYED_MASTERY]: z.number().min(0).max(1).optional(),
+    [INSPIRE_EXTENSIONS.DAYS_SINCE_PRACTICE]: z.number().int().nonnegative().optional(),
 
     // Cognitive Load
     [INSPIRE_EXTENSIONS.COGNITIVE_LOAD_INTRINSIC]: z.number().min(1).max(10).optional(),
@@ -241,6 +266,7 @@ export const InspireExtensionsSchema = z
     [INSPIRE_EXTENSIONS.AI_EXPLANATION_ID]: z.string().uuid().optional(),
     [INSPIRE_EXTENSIONS.LEARNER_OVERRIDE]: z.boolean().optional(),
     [INSPIRE_EXTENSIONS.OVERRIDE_REASON]: z.string().optional(),
+    [INSPIRE_EXTENSIONS.MODEL_PHASE]: ModelPhaseSchema.optional(),
 
     // Cross-Tenant
     [INSPIRE_EXTENSIONS.CONSENT_TIER]: ConsentTierSchema.optional(),
@@ -425,6 +451,30 @@ export function createInspireSkillExtensions(data: {
       extensions[INSPIRE_EXTENSIONS.COGNITIVE_LOAD_TOTAL] = data.cognitiveLoad.total;
     }
   }
+
+  return extensions;
+}
+
+/**
+ * Create adaptive learning extensions (Phase 7b)
+ * Includes hesitation analysis, model phase, and decay tracking
+ */
+export function createInspireAdaptiveExtensions(data: {
+  confidenceLevel?: ConfidenceLevel;
+  modelPhase?: ModelPhase;
+  onetSkillId?: string;
+  decayedMastery?: number;
+  daysSincePractice?: number;
+}): Record<string, unknown> {
+  const extensions: Record<string, unknown> = {};
+
+  if (data.confidenceLevel) extensions[INSPIRE_EXTENSIONS.CONFIDENCE_LEVEL] = data.confidenceLevel;
+  if (data.modelPhase) extensions[INSPIRE_EXTENSIONS.MODEL_PHASE] = data.modelPhase;
+  if (data.onetSkillId) extensions[INSPIRE_EXTENSIONS.ONET_SKILL_ID] = data.onetSkillId;
+  if (data.decayedMastery !== undefined)
+    extensions[INSPIRE_EXTENSIONS.DECAYED_MASTERY] = data.decayedMastery;
+  if (data.daysSincePractice !== undefined)
+    extensions[INSPIRE_EXTENSIONS.DAYS_SINCE_PRACTICE] = data.daysSincePractice;
 
   return extensions;
 }

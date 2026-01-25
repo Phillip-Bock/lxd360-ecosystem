@@ -34,6 +34,28 @@ export {
   // Classes
   TelemetryWindow,
 } from './cognitive-load';
+// Skill Decay Calculator (Phase 7b)
+export {
+  applyDecay,
+  calculateDecayRate,
+  calculateOptimalReviewTiming,
+  DEFAULT_DECAY_PARAMS,
+  type DecayedState,
+  type DecayParams,
+  explainDecay,
+  getDecayedSkills,
+  getDecayUrgency,
+} from './decay';
+// Hesitation Monitor (Phase 7b)
+export {
+  adjustBKTForHesitation,
+  type ConfidenceLevel,
+  calculateExpectedResponseTime,
+  explainHesitation,
+  type HesitationContext,
+  type HesitationSignal,
+  interpretHesitation,
+} from './hesitation';
 // React Hooks (client-side)
 export {
   type TelemetryData,
@@ -42,6 +64,34 @@ export {
   useConfidenceRating,
   useTelemetry,
 } from './hooks';
+// Adaptive Learning Orchestrator (Phase 7b)
+export {
+  blendPredictions,
+  calculateModelWeights,
+  createOrchestratorState,
+  explainModelState,
+  type InteractionRecord,
+  interactionsUntilPersonalized,
+  isInColdStart,
+  isPersonalized,
+  type ModelWeights,
+  type OrchestratorState,
+  updateOrchestratorState,
+} from './orchestrator';
+// Intelligent Probe Selector (Phase 7b)
+export {
+  calculateEntropy,
+  calculateInformationGain,
+  createProbeSession,
+  getProbeProgress,
+  type Probe,
+  type ProbeResult,
+  type ProbeSession,
+  recordProbeResult,
+  selectNextProbe,
+  shouldContinueProbing,
+  summarizeProbeSession,
+} from './probes';
 // Integration Service
 export {
   AdaptiveLearningService,
