@@ -167,7 +167,10 @@ export const ScenarioNodeSchema = z.object({
   id: z.string().uuid(),
   type: ScenarioNodeTypeSchema,
   position: z.object({ x: z.number(), y: z.number() }),
-  data: z.any(), // ReactFlow requires any for data
+  // ReactFlow Node<T> requires flexible data typing for dynamic node systems.
+  // The actual shape is validated via ScenarioNodeDataSchema (discriminated union above).
+  // Consumer code accesses node.data properties dynamically based on node.type.
+  data: z.any(),
 });
 export type ScenarioNode = z.infer<typeof ScenarioNodeSchema>;
 
