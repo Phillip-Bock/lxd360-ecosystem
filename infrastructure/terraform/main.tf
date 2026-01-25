@@ -1,20 +1,22 @@
 # =============================================================================
-# INSPIRE LRS Infrastructure
+# INSPIRE Platform Infrastructure — CODEX COMPLIANT
 # =============================================================================
 #
-# Terraform configuration for the INSPIRE LRS backend:
-# - Pub/Sub for statement ingestion
+# Terraform configuration for the INSPIRE platform:
+# - Cloud Run for web application (Gen2, CPU Boost)
+# - Secret Manager for sensitive configuration
+# - Pub/Sub for xAPI statement ingestion
 # - BigQuery for analytics storage
 # - Cloud Functions for processing
 #
-# Usage:
-#   terraform init
-#   terraform plan
-#   terraform apply
+# Codex References:
+# - Section 2.1: Cloud Run Configuration
+# - Section 2.2: Terraform Governance
+# - Section 5.1: Observability
 # =============================================================================
 
 terraform {
-  required_version = ">= 1.0"
+  required_version = ">= 1.5.0"
 
   required_providers {
     google = {
@@ -25,30 +27,8 @@ terraform {
 
   backend "gcs" {
     bucket = "lxd360-terraform-state"
-    prefix = "inspire-lrs"
+    prefix = "inspire-platform"
   }
-}
-
-# =============================================================================
-# VARIABLES
-# =============================================================================
-
-variable "project_id" {
-  description = "GCP Project ID"
-  type        = string
-  default     = "lxd-saas-dev"
-}
-
-variable "region" {
-  description = "GCP Region"
-  type        = string
-  default     = "us-central1"
-}
-
-variable "environment" {
-  description = "Environment (dev, staging, prod)"
-  type        = string
-  default     = "dev"
 }
 
 # =============================================================================
@@ -58,6 +38,46 @@ variable "environment" {
 provider "google" {
   project = var.project_id
   region  = var.region
+}
+
+# =============================================================================
+# API ENABLEMENT
+# =============================================================================
+
+resource "google_project_service" "run" {
+  project            = var.project_id
+  service            = "run.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "secretmanager" {
+  project            = var.project_id
+  service            = "secretmanager.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "aiplatform" {
+  project            = var.project_id
+  service            = "aiplatform.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "cloudtrace" {
+  project            = var.project_id
+  service            = "cloudtrace.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "logging" {
+  project            = var.project_id
+  service            = "logging.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "monitoring" {
+  project            = var.project_id
+  service            = "monitoring.googleapis.com"
+  disable_on_destroy = false
 }
 
 # =============================================================================

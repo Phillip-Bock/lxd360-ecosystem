@@ -1,0 +1,50 @@
+# INSPIRE Platform — Cursor Rules
+
+# Read context before generating code
+Read .context/project.md for architectural context
+Read .context/conventions.md for coding standards
+Read .context/ai-instructions.md for generation rules
+Read CLAUDE.md for project governance
+
+# Stack versions (critical - AI models may default to older patterns)
+Next.js: 15.x (App Router, uncached by default)
+React: 19.x (no forwardRef, ref as prop, useActionState not useFormState)
+TypeScript: 5.9 (strict mode)
+Tailwind: 4.x (CSS-first, @theme directive)
+Biome: Latest (NOT ESLint)
+
+# Package Manager
+ONLY use pnpm - never npm, yarn, or bun
+
+# Zero Tolerance
+- No any types
+- No @ts-ignore or @ts-expect-error
+- No eslint-disable comments
+- No console.log in production code
+- No useEffect for data fetching
+
+# Server-First Architecture
+- Default to Server Components
+- Use Server Actions for mutations (not API routes)
+- API routes only for external webhooks (Stripe, etc.)
+- Edge middleware for auth (next-firebase-auth-edge pattern)
+
+# Next.js 15 Specifics
+- All request APIs are async: await params, await cookies(), await headers()
+- Default is uncached - explicitly use force-cache when needed
+- Use useActionState for form handling (not useFormState)
+
+# React 19 Specifics
+- No forwardRef - pass ref as regular prop
+- No useFormState - use useActionState
+- Prefer Server Components over client hooks
+
+# Logging
+- Use structured logger from @/lib/logger
+- Never console.log in production
+- Include trace IDs for request correlation
+
+# Before committing
+pnpm typecheck  # Must pass with 0 errors
+pnpm lint       # Must pass with 0 errors
+pnpm build      # Must succeed
