@@ -82,8 +82,8 @@ if [ -n "$STAGED_FILES" ]; then
   fi
 
   # Check for console.log (but allow console.warn and console.error)
-  # Exclude scripts/, tests/, functions/, docs/, and lib/logger.ts
-  PRODUCTION_FILES=$(echo "$STAGED_FILES" | grep -v -E "^(scripts/|tests/|functions/|docs/|lib/logger\.ts)" || true)
+  # Exclude scripts/, tests/, functions/, docs/, and logger.ts files
+  PRODUCTION_FILES=$(echo "$STAGED_FILES" | grep -v -E "^(scripts/|tests/|functions/|docs/)|logger\.ts$" || true)
   if [ -n "$PRODUCTION_FILES" ]; then
     CONSOLE_LOG_FILES=$(echo "$PRODUCTION_FILES" | xargs grep -l -E "console\.(log|info|debug|trace)" 2>/dev/null || true)
     if [ -n "$CONSOLE_LOG_FILES" ]; then

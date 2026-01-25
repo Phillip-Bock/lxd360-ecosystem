@@ -41,6 +41,8 @@ export default defineConfig({
       'tests/**/*.test.{ts,tsx}',
       'lib/**/__tests__/**/*.test.{ts,tsx}',
       'components/**/__tests__/**/*.test.{ts,tsx}',
+      'apps/web/lib/**/__tests__/**/*.test.{ts,tsx}',
+      'apps/web/components/**/__tests__/**/*.test.{ts,tsx}',
     ],
 
     // Exclude patterns

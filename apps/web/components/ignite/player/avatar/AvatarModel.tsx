@@ -4,6 +4,7 @@ import { useAnimations, useGLTF } from '@react-three/drei';
 import { useEffect, useRef } from 'react';
 import type { AnimationAction, Group, Mesh, MeshStandardMaterial } from 'three';
 import { LoopOnce, LoopRepeat } from 'three';
+import type { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 // ============================================================================
 // TYPES
@@ -101,7 +102,8 @@ export function AvatarModel({
 
   // Load the GLTF model
   const { scene, animations } = useGLTF(modelPath, true, true, (loader) => {
-    loader.manager.onError = (url: string) => {
+    const gltfLoader = loader as GLTFLoader;
+    gltfLoader.manager.onError = (url: string) => {
       onError?.(new Error(`Failed to load model: ${url}`));
     };
   });
