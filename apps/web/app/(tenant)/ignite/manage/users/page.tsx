@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Mock users data - TODO: Replace with Firestore queries
+// Mock users data - TODO(LXD-301): Replace with Firestore queries
 const usersData = [
   {
     id: '1',

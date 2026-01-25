@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Mock activity stream - TODO: Replace with real-time Pub/Sub subscription
+// Mock activity stream - TODO(LXD-301): Replace with real-time Pub/Sub subscription
 const activityStream = [
   {
     id: '1',

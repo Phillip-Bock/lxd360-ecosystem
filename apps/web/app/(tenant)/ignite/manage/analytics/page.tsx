@@ -6,7 +6,7 @@ import { Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Mock platform analytics - TODO: Replace with BigQuery queries
+// Mock platform analytics - TODO(LXD-301): Replace with BigQuery queries
 const analyticsData = {
   platformMetrics: {
     totalStatements: 1234567,

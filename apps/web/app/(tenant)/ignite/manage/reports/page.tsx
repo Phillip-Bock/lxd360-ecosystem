@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Mock reports data - TODO: Replace with actual report generation
+// Mock reports data - TODO(LXD-301): Replace with actual report generation
 const reportsData = {
   templates: [
     {

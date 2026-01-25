@@ -6,7 +6,7 @@ import { Award, BookOpen, Calendar, Clock, Target, TrendingUp } from 'lucide-rea
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 
-// Mock progress data - TODO: Replace with Firestore queries
+// Mock progress data - TODO(LXD-301): Replace with Firestore queries
 const progressData = {
   overall: {
     coursesCompleted: 8,

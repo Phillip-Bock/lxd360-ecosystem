@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 
-// Mock data - TODO: Replace with Firestore queries
+// Mock data - TODO(LXD-301): Replace with Firestore queries
 const assignedCourses = [
   {
     id: 'course-1',

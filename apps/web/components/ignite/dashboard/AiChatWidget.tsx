@@ -45,7 +45,7 @@ export function AiChatWidget() {
     setInput('');
     setIsLoading(true);
 
-    // Simulate AI response - TODO: Connect to actual AI endpoint
+    // Simulate AI response - TODO(LXD-245): Connect to Vertex AI endpoint
     setTimeout(() => {
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Mock statements data - TODO: Replace with LRS queries
+// Mock statements data - TODO(LXD-301): Replace with BigQuery LRS queries
 const statementsData = [
   {
     id: 'stmt-1',

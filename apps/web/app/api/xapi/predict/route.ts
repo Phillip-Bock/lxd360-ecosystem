@@ -26,7 +26,7 @@ import {
 // CONFIGURATION
 // ============================================================================
 
-// TODO: Enable Vertex AI endpoint when ready for production ML inference
+// TODO(LXD-245): Enable Vertex AI endpoint when ready for production ML inference
 // const VERTEX_ENDPOINT_URL = process.env.VERTEX_MODALITY_ENDPOINT_URL;
 
 // ============================================================================
@@ -427,7 +427,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     .toString('base64')
     .slice(0, 32);
 
-  // TODO: Log to ai_decisions table for EU AI Act compliance
+  // TODO(LXD-309): Log to ai_decisions table for EU AI Act compliance
   // This would be a Firestore or BigQuery write
 
   const response: PredictResponse = {

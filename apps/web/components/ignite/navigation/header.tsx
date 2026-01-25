@@ -35,7 +35,7 @@ export function IgniteHeader({ user = defaultUser }: IgniteHeaderProps) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
-  // Mock notifications - TODO: Replace with real data from Firestore
+  // Mock notifications - TODO(LXD-301): Replace with real data from Firestore
   const notifications = [
     {
       id: '1',

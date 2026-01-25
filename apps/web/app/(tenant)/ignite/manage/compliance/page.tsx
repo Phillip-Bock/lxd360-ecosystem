@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Mock compliance data - TODO: Replace with actual compliance checks
+// Mock compliance data - TODO(LXD-301): Replace with actual compliance checks
 const complianceData = {
   overview: {
     complianceScore: 94,

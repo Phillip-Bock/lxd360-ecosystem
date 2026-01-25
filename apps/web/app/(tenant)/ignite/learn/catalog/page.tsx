@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Mock catalog data - TODO: Replace with Firestore queries
+// Mock catalog data - TODO(LXD-301): Replace with Firestore queries
 const catalogCourses = [
   {
     id: 'course-1',

@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 import { Activity, Clock, Database, Zap } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Mock LRS dashboard data - TODO: Replace with BigQuery queries
+// Mock LRS dashboard data - TODO(LXD-301): Replace with BigQuery queries
 const lrsDashboardData = {
   stats: {
     totalStatements: 1234567,

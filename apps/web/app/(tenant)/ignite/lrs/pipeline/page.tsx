@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Mock pipeline data - TODO: Replace with actual GCP monitoring
+// Mock pipeline data - TODO(LXD-301): Replace with GCP Cloud Monitoring integration
 const pipelineData = {
   status: 'healthy',
   components: [

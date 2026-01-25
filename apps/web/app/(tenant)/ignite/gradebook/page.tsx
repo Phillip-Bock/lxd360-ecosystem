@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Mock gradebook data - TODO: Replace with Firestore queries
+// Mock gradebook data - TODO(LXD-301): Replace with Firestore queries
 const gradebookData = {
   courses: [
     { id: 'course-1', name: 'Leadership Fundamentals' },

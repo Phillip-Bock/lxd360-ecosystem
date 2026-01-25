@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Mock organizations data - TODO: Replace with Firestore queries
+// Mock organizations data - TODO(LXD-301): Replace with Firestore queries
 const organizationsData = [
   {
     id: 'org-1',

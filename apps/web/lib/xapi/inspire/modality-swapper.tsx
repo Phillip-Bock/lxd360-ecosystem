@@ -259,7 +259,7 @@ export function ModalitySwapperProvider({
       aiExplanationId: recommendation.explanationId,
       learnerOverride: false,
       sessionId,
-      courseId: 'current', // TODO: Get from context
+      courseId: 'current', // TODO(LXD-309): Get courseId from context
       tenantId,
       consentTier,
     });
@@ -316,7 +316,7 @@ export function ModalitySwapperProvider({
         learnerOverride: true,
         overrideReason: reason,
         sessionId,
-        courseId: 'current', // TODO: Get from context
+        courseId: 'current', // TODO(LXD-309): Get courseId from context
         tenantId,
         consentTier,
       });

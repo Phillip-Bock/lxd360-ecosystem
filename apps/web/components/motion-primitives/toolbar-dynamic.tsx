@@ -49,7 +49,6 @@ export default function ToolbarDynamic(): React.JSX.Element {
         <div className="h-full w-full rounded-xl border border-zinc-950/10 bg-white">
           <motion.div
             animate={{
-              // @todo: here I want to remove the width
               width: isOpen ? '300px' : '98px',
             }}
             initial={false}

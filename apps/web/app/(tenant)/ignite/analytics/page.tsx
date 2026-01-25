@@ -4,7 +4,7 @@ import { BarChart3, Clock, Download, TrendingDown, TrendingUp, Users } from 'luc
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Mock analytics data - TODO: Replace with BigQuery/LRS queries
+// Mock analytics data - TODO(LXD-301): Replace with BigQuery/LRS queries
 const analyticsData = {
   overview: {
     totalLearners: 156,

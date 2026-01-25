@@ -6,7 +6,7 @@ import { AlertTriangle, BookOpen, Building, Server, TrendingUp, Users } from 'lu
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Mock admin dashboard data - TODO: Replace with Firestore queries
+// Mock admin dashboard data - TODO(LXD-301): Replace with Firestore queries
 const dashboardData = {
   stats: {
     totalUsers: 1234,

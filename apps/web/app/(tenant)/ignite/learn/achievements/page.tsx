@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Mock achievements data - TODO: Replace with Firestore queries
+// Mock achievements data - TODO(LXD-301): Replace with Firestore queries
 const achievementsData = {
   badges: [
     {

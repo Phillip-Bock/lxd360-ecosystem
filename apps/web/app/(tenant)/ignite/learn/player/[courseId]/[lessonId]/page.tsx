@@ -15,7 +15,7 @@ export default function PlayerPage({
 }) {
   const { courseId, lessonId } = use(params);
 
-  // TODO: Replace with actual player implementation in Phase 3
+  // TODO(LXD-413): Replace with actual player implementation
   // This is a placeholder that will be replaced with the full player shell
   return (
     <div className="flex flex-col h-full">

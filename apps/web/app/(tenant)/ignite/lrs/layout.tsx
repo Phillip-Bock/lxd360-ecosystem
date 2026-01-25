@@ -16,7 +16,7 @@ import { usePathname } from 'next/navigation';
 import { IgniteHeader } from '@/components/ignite/navigation/header';
 import { cn } from '@/lib/utils';
 
-// TODO: Add RBAC check - require admin role
+// TODO(LXD-351): Add RBAC check - require admin role
 // import { useRBAC } from '@/lib/hooks/useRBAC';
 
 const lrsNavItems = [
@@ -57,7 +57,7 @@ const lrsNavItems = [
  */
 export default function LRSLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  // TODO: Implement RBAC check
+  // TODO(LXD-351): Implement RBAC check
   // const { hasRole } = useRBAC();
   // if (!hasRole(['admin'])) {
   //   redirect('/(tenant)/ignite/learn');
