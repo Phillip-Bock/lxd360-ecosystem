@@ -1,0 +1,48 @@
+# =============================================================================
+# INSPIRE Platform — Terraform Variables Example
+# =============================================================================
+#
+# INSTRUCTIONS:
+# 1. Copy this file to terraform.tfvars
+# 2. Fill in your actual values
+# 3. NEVER commit terraform.tfvars to version control
+#
+# For CI/CD, provide values via:
+# - Environment variables: TF_VAR_<variable_name>
+# - Secret management (e.g., GitHub Secrets → Terraform Cloud)
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# PROJECT CONFIGURATION
+# -----------------------------------------------------------------------------
+
+project_id  = "lxd-saas-dev"
+region      = "us-central1"
+environment = "production" # development, staging, production
+
+# -----------------------------------------------------------------------------
+# CLOUD RUN CONFIGURATION
+# -----------------------------------------------------------------------------
+
+service_name    = "inspire-web"
+container_image = "gcr.io/lxd-saas-dev/inspire-web:latest"
+max_instances   = 10
+
+# -----------------------------------------------------------------------------
+# LRS CONFIGURATION
+# -----------------------------------------------------------------------------
+
+bigquery_retention_days = 2557 # ~7 years for compliance
+pubsub_retention_days   = 7
+
+# -----------------------------------------------------------------------------
+# SECRETS
+# -----------------------------------------------------------------------------
+# IMPORTANT: Provide via environment variables in CI/CD
+# TF_VAR_firebase_private_key, TF_VAR_stripe_secret_key, etc.
+#
+# firebase_private_key  = "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
+# firebase_client_email = "firebase-adminsdk-xxxxx@lxd-saas-dev.iam.gserviceaccount.com"
+# stripe_secret_key     = "sk_live_xxxxxxxxxxxx"
+# stripe_webhook_secret = "whsec_xxxxxxxxxxxx"
+# brevo_api_key         = "xkeysib-xxxxxxxxxxxx"

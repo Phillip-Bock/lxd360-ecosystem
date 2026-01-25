@@ -1,13 +1,17 @@
 /**
  * Production Logger — GCP Cloud Logging Compatible
  *
- * @description Structured logging for Cloud Run deployment.
+ * @description Structured logging for Cloud Run deployment with trace correlation.
  * - Production: Outputs JSON with severity field for GCP Cloud Logging
  * - Development: Outputs human-readable colorized logs
  *
+ * Implements Codex Section 5.1: Structured Logging with trace correlation.
+ *
  * @see https://cloud.google.com/logging/docs/structured-logging
- * @version 2.0.0
+ * @version 3.0.0
  */
+
+import { formatTraceForLogging, getTraceIdFromHeadersSync } from './telemetry/trace-context';
 
 // =============================================================================
 // TYPES
@@ -21,14 +25,22 @@ interface StructuredLog {
   severity: Severity;
   message: string;
   timestamp: string;
+  /** Service name */
+  service?: string;
   /** Module or component name */
   module?: string;
-  /** Request trace ID for correlation */
-  traceId?: string;
+  /** Request trace ID for correlation (GCP format) */
+  'logging.googleapis.com/trace'?: string;
+  /** Span ID for distributed tracing */
+  'logging.googleapis.com/spanId'?: string;
   /** Additional structured data */
   data?: Record<string, unknown>;
-  /** Error stack trace */
-  stack?: string;
+  /** Error information */
+  error?: {
+    message: string;
+    name?: string;
+    stack?: string;
+  };
   /** Source location */
   sourceLocation?: {
     file?: string;
@@ -41,6 +53,7 @@ interface StructuredLog {
 interface LoggerContext {
   module?: string;
   traceId?: string;
+  spanId?: string;
   [key: string]: unknown;
 }
 
@@ -53,7 +66,8 @@ interface Logger {
   critical: (message: string, error?: unknown, data?: Record<string, unknown>) => void;
   child: (context: LoggerContext) => Logger;
   scope: (moduleName: string) => Logger;
-  withTraceId: (traceId: string) => Logger;
+  withTraceId: (traceId: string, spanId?: string) => Logger;
+  withHeaders: (headers: { get: (name: string) => string | null }) => Logger;
 }
 
 // =============================================================================
@@ -63,6 +77,8 @@ interface Logger {
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const IS_TEST = process.env.NODE_ENV === 'test';
 const LOG_LEVEL = process.env.LOG_LEVEL || (IS_PRODUCTION ? 'INFO' : 'DEBUG');
+const SERVICE_NAME = process.env.K_SERVICE || 'lxd360-web';
+const PROJECT_ID = process.env.GCP_PROJECT_ID || 'lxd-saas-dev';
 
 /** Severity level hierarchy (lower = more verbose) */
 const SEVERITY_LEVELS: Record<Severity, number> = {
@@ -189,14 +205,20 @@ function formatProductionLog(
     severity,
     message: errorInfo ? `${message}: ${errorInfo.message}` : message,
     timestamp: getTimestamp(),
+    service: SERVICE_NAME,
   };
 
   if (context?.module) {
     entry.module = context.module;
   }
 
+  // Add GCP Cloud Logging trace correlation
   if (context?.traceId) {
-    entry.traceId = context.traceId;
+    entry['logging.googleapis.com/trace'] = formatTraceForLogging(context.traceId, PROJECT_ID);
+  }
+
+  if (context?.spanId) {
+    entry['logging.googleapis.com/spanId'] = context.spanId;
   }
 
   if (data && Object.keys(data).length > 0) {
@@ -204,7 +226,10 @@ function formatProductionLog(
   }
 
   if (errorInfo?.stack) {
-    entry.stack = errorInfo.stack;
+    entry.error = {
+      message: errorInfo.message,
+      stack: errorInfo.stack,
+    };
   }
 
   return JSON.stringify(entry);
@@ -296,11 +321,30 @@ function createLogger(context?: LoggerContext): Logger {
     /**
      * Create a logger with trace ID for request correlation
      * @example
-     * const log = logger.withTraceId(request.headers['x-trace-id']);
+     * const log = logger.withTraceId(traceId, spanId);
      * log.info('Handling request');
      */
-    withTraceId(traceId: string): Logger {
-      return createLogger({ ...context, traceId });
+    withTraceId(traceId: string, spanId?: string): Logger {
+      return createLogger({ ...context, traceId, spanId });
+    },
+
+    /**
+     * Create a logger with trace context extracted from request headers
+     * Supports Google Cloud Trace and W3C Trace Context headers.
+     * @example
+     * const log = logger.withHeaders(request.headers);
+     * log.info('Handling request');
+     */
+    withHeaders(headers: { get: (name: string) => string | null }): Logger {
+      const traceContext = getTraceIdFromHeadersSync(headers);
+      if (traceContext) {
+        return createLogger({
+          ...context,
+          traceId: traceContext.traceId,
+          spanId: traceContext.spanId,
+        });
+      }
+      return createLogger(context);
     },
   };
 }
