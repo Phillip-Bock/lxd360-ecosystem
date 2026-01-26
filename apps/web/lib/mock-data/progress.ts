@@ -7,7 +7,7 @@
 
 import type {
   CourseProgress,
-  Enrollment,
+  LegacyEnrollment as Enrollment,
   LearningGoal,
   LessonProgress,
   RecentlyViewed,
