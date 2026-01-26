@@ -2,231 +2,118 @@
 
 export const dynamic = 'force-dynamic';
 
-import { BookOpen, Clock, Play, Target, TrendingUp } from 'lucide-react';
-import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { cn } from '@/lib/utils';
-
-// Mock data - TODO(LXD-301): Replace with Firestore queries
-const assignedCourses = [
-  {
-    id: 'course-1',
-    title: 'Advanced Leadership Skills',
-    description: 'Develop essential leadership competencies for modern organizations',
-    progress: 65,
-    totalLessons: 12,
-    completedLessons: 8,
-    estimatedTime: '4h 30m',
-    dueDate: '2026-02-15',
-    status: 'in-progress',
-    thumbnail: '/images/courses/leadership.jpg',
-    lastAccessed: '2 hours ago',
-  },
-  {
-    id: 'course-2',
-    title: 'Workplace Safety Fundamentals',
-    description: 'Essential safety protocols and compliance training',
-    progress: 30,
-    totalLessons: 8,
-    completedLessons: 2,
-    estimatedTime: '2h 15m',
-    dueDate: '2026-01-30',
-    status: 'in-progress',
-    thumbnail: '/images/courses/safety.jpg',
-    lastAccessed: '1 day ago',
-  },
-  {
-    id: 'course-3',
-    title: 'Data Analytics Essentials',
-    description: 'Learn to analyze and visualize data for business insights',
-    progress: 0,
-    totalLessons: 15,
-    completedLessons: 0,
-    estimatedTime: '6h',
-    dueDate: '2026-03-01',
-    status: 'not-started',
-    thumbnail: '/images/courses/analytics.jpg',
-    lastAccessed: null,
-  },
-];
+import { Award, BookMarked, CheckCircle2, Play, Sparkles } from 'lucide-react';
+import {
+  CourseCard,
+  CourseCardSkeleton,
+  LearningSection,
+  WelcomeCard,
+} from '@/components/ignite/learner';
+import {
+  mockAssignedCourses,
+  mockCompletedCourses,
+  mockInProgressCourses,
+  mockProgressSummary,
+  mockRecommendedCourses,
+} from '@/lib/mock/learner-dashboard';
+import { useSafeAuth } from '@/providers/SafeAuthProvider';
 
 /**
- * My Learning page - Shows assigned courses and progress
+ * My Learning Dashboard - Learner's personal learning hub
+ *
+ * Sections:
+ * - Welcome Card with progress summary
+ * - Continue Learning (in-progress courses)
+ * - Assigned Learning (required courses not started)
+ * - Recommended (AI suggestions placeholder)
+ * - Completed (achievement history)
+ *
+ * TODO(LXD-337): Replace mock data with Firestore queries
  */
 export default function MyLearningPage() {
-  const inProgressCourses = assignedCourses.filter((c) => c.status === 'in-progress');
-  const notStartedCourses = assignedCourses.filter((c) => c.status === 'not-started');
+  const { user } = useSafeAuth();
+
+  // Get user's display name
+  const userName = user?.displayName || user?.email?.split('@')[0] || 'Learner';
+
+  // Filter courses by status
+  const inProgressCourses = mockInProgressCourses;
+  const assignedCourses = mockAssignedCourses;
+  const recommendedCourses = mockRecommendedCourses;
+  const completedCourses = mockCompletedCourses;
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-brand-primary">My Learning</h1>
-        <p className="text-muted-foreground mt-1">
-          Track your progress and continue your learning journey
-        </p>
-      </div>
+    <div className="container mx-auto p-6 space-y-8">
+      {/* Welcome Section */}
+      <WelcomeCard userName={userName} progressSummary={mockProgressSummary} />
 
-      {/* Stats overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-lxd-dark-surface border-lxd-dark-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-lxd-purple/20">
-                <BookOpen className="w-5 h-5 text-lxd-purple" aria-hidden="true" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-brand-primary">{assignedCourses.length}</p>
-                <p className="text-xs text-muted-foreground">Assigned Courses</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Continue Learning (in-progress courses) */}
+      <LearningSection
+        title="Continue Learning"
+        icon={Play}
+        itemCount={inProgressCourses.length}
+        viewAllHref="/ignite/learn/progress"
+        viewAllText="View Progress"
+        emptyMessage="You haven't started any courses yet. Browse the catalog to begin learning!"
+        isEmpty={inProgressCourses.length === 0}
+        columns={2}
+        skeleton={<CourseCardSkeleton />}
+      >
+        {inProgressCourses.map((course) => (
+          <CourseCard key={course.id} course={course} />
+        ))}
+      </LearningSection>
 
-        <Card className="bg-lxd-dark-surface border-lxd-dark-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-green-500/20">
-                <Target className="w-5 h-5 text-green-500" aria-hidden="true" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-brand-primary">{inProgressCourses.length}</p>
-                <p className="text-xs text-muted-foreground">In Progress</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Assigned Learning (required courses) */}
+      <LearningSection
+        title="Assigned Learning"
+        icon={BookMarked}
+        itemCount={assignedCourses.length}
+        viewAllHref="/ignite/learn/catalog?filter=assigned"
+        emptyMessage="No courses have been assigned to you yet."
+        isEmpty={assignedCourses.length === 0}
+        columns={3}
+        skeleton={<CourseCardSkeleton />}
+      >
+        {assignedCourses.map((course) => (
+          <CourseCard key={course.id} course={course} />
+        ))}
+      </LearningSection>
 
-        <Card className="bg-lxd-dark-surface border-lxd-dark-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-500/20">
-                <TrendingUp className="w-5 h-5 text-blue-500" aria-hidden="true" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-brand-primary">47%</p>
-                <p className="text-xs text-muted-foreground">Avg. Progress</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Recommended (AI suggestions) */}
+      <LearningSection
+        title="Recommended for You"
+        icon={Sparkles}
+        itemCount={recommendedCourses.length}
+        viewAllHref="/ignite/learn/catalog?filter=recommended"
+        viewAllText="Browse More"
+        emptyMessage="Complete more courses to get personalized recommendations."
+        isEmpty={recommendedCourses.length === 0}
+        columns={3}
+        skeleton={<CourseCardSkeleton />}
+      >
+        {recommendedCourses.map((course) => (
+          <CourseCard key={course.id} course={course} />
+        ))}
+      </LearningSection>
 
-        <Card className="bg-lxd-dark-surface border-lxd-dark-border">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-orange-500/20">
-                <Clock className="w-5 h-5 text-orange-500" aria-hidden="true" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-brand-primary">12h 45m</p>
-                <p className="text-xs text-muted-foreground">Time Remaining</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* In Progress Courses */}
-      {inProgressCourses.length > 0 && (
-        <section>
-          <h2 className="text-lg font-semibold text-brand-primary mb-4">Continue Learning</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {inProgressCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Not Started Courses */}
-      {notStartedCourses.length > 0 && (
-        <section>
-          <h2 className="text-lg font-semibold text-brand-primary mb-4">Ready to Start</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {notStartedCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
-        </section>
-      )}
+      {/* Completed (achievement history) */}
+      <LearningSection
+        title="Completed"
+        icon={Award}
+        itemCount={completedCourses.length}
+        viewAllHref="/ignite/learn/achievements"
+        viewAllText="View Achievements"
+        emptyMessage="Complete your first course to see it here!"
+        emptyIcon={CheckCircle2}
+        isEmpty={completedCourses.length === 0}
+        columns={2}
+        skeleton={<CourseCardSkeleton variant="completed" />}
+      >
+        {completedCourses.map((course) => (
+          <CourseCard key={course.id} course={course} variant="completed" />
+        ))}
+      </LearningSection>
     </div>
-  );
-}
-
-interface CourseCardProps {
-  course: (typeof assignedCourses)[0];
-}
-
-function CourseCard({ course }: CourseCardProps) {
-  const isOverdue = new Date(course.dueDate) < new Date();
-  const isDueSoon =
-    !isOverdue && new Date(course.dueDate) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
-  return (
-    <Card className="bg-lxd-dark-surface border-lxd-dark-border hover:border-lxd-purple/50 transition-colors group">
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="text-brand-primary group-hover:text-lxd-purple transition-colors">
-              {course.title}
-            </CardTitle>
-            <CardDescription className="mt-1">{course.description}</CardDescription>
-          </div>
-          {course.status === 'in-progress' && (
-            <span className="px-2 py-1 text-xs rounded-full bg-lxd-purple/20 text-lxd-purple">
-              In Progress
-            </span>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Progress bar */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">
-              {course.completedLessons} of {course.totalLessons} lessons
-            </span>
-            <span className="text-brand-primary font-medium">{course.progress}%</span>
-          </div>
-          <Progress value={course.progress} className="h-2" />
-        </div>
-
-        {/* Meta info */}
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1 text-muted-foreground">
-              <Clock className="w-4 h-4" aria-hidden="true" />
-              {course.estimatedTime}
-            </span>
-            <span
-              className={cn(
-                'flex items-center gap-1',
-                isOverdue && 'text-brand-error',
-                isDueSoon && !isOverdue && 'text-orange-500',
-                !isOverdue && !isDueSoon && 'text-muted-foreground',
-              )}
-            >
-              Due: {new Date(course.dueDate).toLocaleDateString()}
-            </span>
-          </div>
-
-          {course.lastAccessed && (
-            <span className="text-muted-foreground text-xs">
-              Last accessed: {course.lastAccessed}
-            </span>
-          )}
-        </div>
-
-        {/* Action button */}
-        <Link
-          href={`/(tenant)/ignite/learn/player/${course.id}/lesson-1`}
-          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-lxd-purple hover:bg-lxd-purple/90 text-white font-medium transition-colors"
-        >
-          <Play className="w-4 h-4" aria-hidden="true" />
-          {course.status === 'not-started' ? 'Start Course' : 'Continue'}
-        </Link>
-      </CardContent>
-    </Card>
   );
 }
