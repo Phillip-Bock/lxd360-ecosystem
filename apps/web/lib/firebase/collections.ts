@@ -23,6 +23,12 @@ export const COLLECTIONS = {
   AUDIT_LOGS: 'audit_logs',
   NOTIFICATIONS: 'notifications',
   SETTINGS: 'settings',
+  // LMS Player Collections (Content Atoms)
+  ATOMS: 'atoms',
+  PLAYLISTS: 'playlists',
+  ATOM_PROGRESS: 'atom_progress',
+  PLAYLIST_PROGRESS: 'playlist_progress',
+  OFFLINE_QUEUE: 'offline_queue',
 } as const;
 
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];
@@ -599,3 +605,73 @@ export interface Notification extends BaseDocument {
   read: boolean;
   readAt?: string;
 }
+
+// =============================================================================
+// LMS Player Collection Path Helpers
+// =============================================================================
+
+/**
+ * Collection path helpers for tenant-scoped LMS Player collections.
+ * These functions generate the correct Firestore paths for multi-tenant data.
+ */
+export const COLLECTION_PATHS = {
+  /**
+   * Get atoms collection path for a tenant.
+   * Path: /organizations/{tenantId}/atoms
+   */
+  atoms: (tenantId: string) => `organizations/${tenantId}/atoms`,
+
+  /**
+   * Get specific atom document path.
+   * Path: /organizations/{tenantId}/atoms/{atomId}
+   */
+  atom: (tenantId: string, atomId: string) => `organizations/${tenantId}/atoms/${atomId}`,
+
+  /**
+   * Get playlists collection path for a tenant.
+   * Path: /organizations/{tenantId}/playlists
+   */
+  playlists: (tenantId: string) => `organizations/${tenantId}/playlists`,
+
+  /**
+   * Get specific playlist document path.
+   * Path: /organizations/{tenantId}/playlists/{playlistId}
+   */
+  playlist: (tenantId: string, playlistId: string) =>
+    `organizations/${tenantId}/playlists/${playlistId}`,
+
+  /**
+   * Get atom progress collection path for a learner.
+   * Path: /organizations/{tenantId}/users/{learnerId}/atom_progress
+   */
+  atomProgress: (tenantId: string, learnerId: string) =>
+    `organizations/${tenantId}/users/${learnerId}/atom_progress`,
+
+  /**
+   * Get specific atom progress document path.
+   * Path: /organizations/{tenantId}/users/{learnerId}/atom_progress/{atomId}
+   */
+  atomProgressDoc: (tenantId: string, learnerId: string, atomId: string) =>
+    `organizations/${tenantId}/users/${learnerId}/atom_progress/${atomId}`,
+
+  /**
+   * Get playlist progress collection path for a learner.
+   * Path: /organizations/{tenantId}/users/{learnerId}/playlist_progress
+   */
+  playlistProgress: (tenantId: string, learnerId: string) =>
+    `organizations/${tenantId}/users/${learnerId}/playlist_progress`,
+
+  /**
+   * Get specific playlist progress document path.
+   * Path: /organizations/{tenantId}/users/{learnerId}/playlist_progress/{playlistId}
+   */
+  playlistProgressDoc: (tenantId: string, learnerId: string, playlistId: string) =>
+    `organizations/${tenantId}/users/${learnerId}/playlist_progress/${playlistId}`,
+
+  /**
+   * Get offline queue collection path for a learner.
+   * Path: /organizations/{tenantId}/users/{learnerId}/offline_queue
+   */
+  offlineQueue: (tenantId: string, learnerId: string) =>
+    `organizations/${tenantId}/users/${learnerId}/offline_queue`,
+} as const;

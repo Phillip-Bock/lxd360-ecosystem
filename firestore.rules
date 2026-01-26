@@ -273,5 +273,89 @@ service cloud.firestore {
       // Audit logs are created by admin SDK only
       allow create, update, delete: if false;
     }
+
+    // ========================================
+    // LMS Player: Content Atoms (Organization-scoped)
+    // ========================================
+
+    match /organizations/{orgId}/atoms/{atomId} {
+      // Organization members can read published atoms
+      allow read: if belongsToOrg(orgId) || isSuperAdmin();
+
+      // Authors can create atoms
+      allow create: if belongsToOrg(orgId) && isAuthor();
+
+      // Authors can update atoms in their org
+      allow update: if belongsToOrg(orgId) && isAuthor();
+
+      // Only instructors and above can delete atoms
+      allow delete: if (belongsToOrg(orgId) && isInstructor()) || isSuperAdmin();
+    }
+
+    // ========================================
+    // LMS Player: Playlists (Organization-scoped)
+    // ========================================
+
+    match /organizations/{orgId}/playlists/{playlistId} {
+      // Organization members can read playlists
+      allow read: if belongsToOrg(orgId) || isSuperAdmin();
+
+      // Authors can create playlists
+      allow create: if belongsToOrg(orgId) && isAuthor();
+
+      // Authors can update playlists
+      allow update: if belongsToOrg(orgId) && isAuthor();
+
+      // Only instructors and above can delete playlists
+      allow delete: if (belongsToOrg(orgId) && isInstructor()) || isSuperAdmin();
+    }
+
+    // ========================================
+    // LMS Player: Atom Progress (User-owned within tenant)
+    // ========================================
+
+    match /organizations/{orgId}/users/{userId}/atom_progress/{atomId} {
+      // Users can read their own progress, instructors can read all in their org
+      allow read: if (isOwner(userId) && belongsToOrg(orgId))
+                  || (belongsToOrg(orgId) && isInstructor())
+                  || isSuperAdmin();
+
+      // Users can create/update their own progress
+      allow create: if isOwner(userId) && belongsToOrg(orgId);
+      allow update: if isOwner(userId) && belongsToOrg(orgId);
+
+      // Only org admins can delete progress records
+      allow delete: if (belongsToOrg(orgId) && isOrgAdmin()) || isSuperAdmin();
+    }
+
+    // ========================================
+    // LMS Player: Playlist Progress (User-owned within tenant)
+    // ========================================
+
+    match /organizations/{orgId}/users/{userId}/playlist_progress/{playlistId} {
+      // Users can read their own progress, instructors can read all in their org
+      allow read: if (isOwner(userId) && belongsToOrg(orgId))
+                  || (belongsToOrg(orgId) && isInstructor())
+                  || isSuperAdmin();
+
+      // Users can create/update their own progress
+      allow create: if isOwner(userId) && belongsToOrg(orgId);
+      allow update: if isOwner(userId) && belongsToOrg(orgId);
+
+      // Only org admins can delete progress records
+      allow delete: if (belongsToOrg(orgId) && isOrgAdmin()) || isSuperAdmin();
+    }
+
+    // ========================================
+    // LMS Player: Offline Queue (User-owned, private)
+    // ========================================
+
+    match /organizations/{orgId}/users/{userId}/offline_queue/{itemId} {
+      // Users can only access their own offline queue
+      allow read: if isOwner(userId) && belongsToOrg(orgId);
+      allow create: if isOwner(userId) && belongsToOrg(orgId);
+      allow update: if isOwner(userId) && belongsToOrg(orgId);
+      allow delete: if isOwner(userId) && belongsToOrg(orgId);
+    }
   }
 }
