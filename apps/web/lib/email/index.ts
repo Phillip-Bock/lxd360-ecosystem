@@ -160,6 +160,7 @@ export {
 export {
   sendCourseCompletionEmail as brevoSendCourseCompletionEmail,
   sendCourseEnrollmentEmail as brevoSendCourseEnrollmentEmail,
+  sendMagicLinkEmail as brevoSendMagicLinkEmail,
   sendOrganizationInvitationEmail as brevoSendOrganizationInvitationEmail,
   sendPasswordResetEmail as brevoSendPasswordResetEmail,
   sendVerificationEmail as brevoSendVerificationEmail,
