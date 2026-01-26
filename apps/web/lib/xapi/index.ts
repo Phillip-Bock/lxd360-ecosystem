@@ -451,3 +451,56 @@ export {
   useCanvasXAPI,
   useStudioXAPI,
 } from './studio';
+
+// ============================================================================
+// DEEP PROFILE EXTENSIONS (Behavioral Telemetry)
+// ============================================================================
+
+export type {
+  ConfidenceData,
+  DeepProfileExtensionIRI,
+  DeepProfileExtensionKey,
+  EngagementData,
+  EngagementLevelType,
+  HesitationData,
+  MediaData,
+  ModalityData,
+  ModalitySwitchReasonType,
+  ModalityType,
+} from './extensions';
+
+export {
+  buildConfidenceExtensions,
+  buildDeepProfileExtensions,
+  buildEngagementExtensions,
+  buildHesitationExtensions,
+  buildMediaExtensions,
+  buildModalityExtensions,
+  DeepProfileExtensions,
+  EngagementLevel as DeepProfileEngagementLevel,
+  inferConfidence,
+  inferEngagementLevel,
+  Modality as DeepProfileModality,
+  ModalitySwitchReason,
+} from './extensions';
+
+// ============================================================================
+// XAPI STATEMENT EMITTER (Singleton with Queue)
+// ============================================================================
+
+export type {
+  BatchResult,
+  EmitOptions,
+  EmitPriority,
+  EmitterConfig,
+  EmitterQueueStatus,
+  SendResult,
+} from './emitter';
+
+export {
+  emit,
+  emitWithProfile,
+  getEmitter,
+  hasEmitter,
+  XAPIEmitter,
+} from './emitter';
