@@ -3,6 +3,12 @@
 import { AnimatePresence } from 'framer-motion';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  type ContentFormat,
+  useContentWrapper,
+  type WrapperProgress,
+  type WrapperResult,
+} from '@/lib/player';
 import { cn } from '@/lib/utils';
 import type {
   CourseWithContent,
@@ -20,6 +26,59 @@ import { PlayerControls } from './player-controls';
 import { PlayerHeader } from './player-header';
 import { PlayerSidebar } from './player-sidebar';
 
+/**
+ * External content configuration for SCORM/xAPI/cmi5/AICC packages.
+ */
+interface ExternalContentConfig {
+  /** Content URL (package base URL or single file URL) */
+  contentUrl: string;
+  /** Whether content is a single file (PDF, HTML) vs package */
+  isSingleFile?: boolean;
+  /** Tenant ID */
+  tenantId: string;
+  /** Enrollment ID */
+  enrollmentId: string;
+  /** LRS endpoint (for xAPI/cmi5) */
+  lrsEndpoint?: string;
+  /** LRS auth (for xAPI) */
+  lrsAuth?: {
+    type: 'basic' | 'oauth';
+    username?: string;
+    password?: string;
+    token?: string;
+  };
+  /** cmi5 fetch URL */
+  cmi5FetchUrl?: string;
+  /** cmi5 auth token */
+  cmi5AuthToken?: string;
+  /** AICC URL */
+  aiccUrl?: string;
+  /** AICC session ID */
+  aiccSessionId?: string;
+  /** Learner actor info (for xAPI/cmi5) */
+  actor?: {
+    name: string;
+    mbox?: string;
+    account?: {
+      homePage: string;
+      name: string;
+    };
+  };
+  /** Initial SCORM data for resume */
+  initialScormData?: Record<string, unknown>;
+  /** Callback when external content progress updates */
+  onExternalProgress?: (progress: WrapperProgress) => void;
+  /** Callback when external content completes */
+  onExternalComplete?: (result: WrapperResult) => void;
+  /** Callback to commit/persist external content data */
+  onExternalCommit?: (data: {
+    format: ContentFormat;
+    cmiData?: Record<string, unknown>;
+    statements?: unknown[];
+    stateData?: Record<string, unknown>;
+  }) => Promise<void>;
+}
+
 interface PlayerShellProps {
   course: CourseWithContent;
   progress?: LearnerProgress | null;
@@ -29,6 +88,8 @@ interface PlayerShellProps {
   designerTheme?: DesignerTheme | null;
   learnerPreferences?: LearnerPreferences | null;
   onPreferencesChange?: (prefs: Partial<LearnerPreferences>) => void;
+  /** Configuration for external SCORM/xAPI/cmi5/AICC content */
+  externalContent?: ExternalContentConfig | null;
 }
 
 export function PlayerShell({
@@ -38,6 +99,7 @@ export function PlayerShell({
   userId,
   isDemo = false,
   designerTheme,
+  externalContent,
 }: PlayerShellProps) {
   // Flatten slides for navigation
   const allSlides = course.chapters.flatMap((chapter) => chapter.slides);
@@ -69,6 +131,74 @@ export function PlayerShell({
   const [skinCssVars, setSkinCssVars] = useState<Record<string, string>>({});
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // ==========================================================================
+  // CONTENT WRAPPER INTEGRATION
+  // ==========================================================================
+  // Initialize the content wrapper hook for external SCORM/xAPI/cmi5/AICC content
+  const contentWrapperConfig = externalContent
+    ? {
+        contentUrl: externalContent.contentUrl,
+        isSingleFile: externalContent.isSingleFile,
+        tenantId: externalContent.tenantId,
+        enrollmentId: externalContent.enrollmentId,
+        learnerId: userId ?? 'anonymous',
+        courseId: course.id,
+        lrsEndpoint: externalContent.lrsEndpoint,
+        lrsAuth: externalContent.lrsAuth,
+        cmi5FetchUrl: externalContent.cmi5FetchUrl,
+        cmi5AuthToken: externalContent.cmi5AuthToken,
+        aiccUrl: externalContent.aiccUrl,
+        aiccSessionId: externalContent.aiccSessionId,
+        actor: externalContent.actor,
+        initialScormData: externalContent.initialScormData,
+        onProgress: externalContent.onExternalProgress,
+        onComplete: externalContent.onExternalComplete,
+        onCommit: externalContent.onExternalCommit,
+      }
+    : null;
+
+  const {
+    state: wrapperState,
+    initializeWrapper,
+    terminateWrapper,
+    detectFormat,
+  } = useContentWrapper(
+    contentWrapperConfig ?? {
+      contentUrl: '',
+      tenantId: '',
+      enrollmentId: '',
+      learnerId: '',
+      courseId: '',
+    },
+  );
+
+  // Detect content format when external content is provided
+  useEffect(() => {
+    if (externalContent && !wrapperState.format && !wrapperState.isLoading) {
+      detectFormat();
+    }
+  }, [externalContent, wrapperState.format, wrapperState.isLoading, detectFormat]);
+
+  // Initialize wrapper when iframe loads
+  const handleIframeLoad = useCallback(() => {
+    if (iframeRef.current?.contentWindow && wrapperState.format && !wrapperState.isInitialized) {
+      initializeWrapper(iframeRef.current.contentWindow);
+    }
+  }, [wrapperState.format, wrapperState.isInitialized, initializeWrapper]);
+
+  // Terminate wrapper on unmount or when external content changes
+  useEffect(() => {
+    return () => {
+      if (wrapperState.isInitialized && !wrapperState.isTerminated) {
+        terminateWrapper();
+      }
+    };
+  }, [wrapperState.isInitialized, wrapperState.isTerminated, terminateWrapper]);
+
+  // Check if we should show external content instead of native slides
+  const showExternalContent = externalContent && wrapperState.manifest;
 
   const currentSlide = allSlides[state.currentSlideIndex];
   const completionPercentage = ((state.currentSlideIndex + 1) / allSlides.length) * 100;
@@ -279,15 +409,77 @@ export function PlayerShell({
         </AnimatePresence>
 
         {/* Content Viewport */}
-        <PlayerContent
-          slide={currentSlide}
-          slideIndex={state.currentSlideIndex}
-          totalSlides={allSlides.length}
-          isPlaying={state.isPlaying}
-          onNext={nextSlide}
-          onPrev={prevSlide}
-          reducedMotion={accessibilitySettings.reducedMotion}
-        />
+        {showExternalContent ? (
+          // External content (SCORM/xAPI/cmi5/AICC/HTML5/PDF) in iframe
+          <div className="relative flex-1 overflow-hidden">
+            {wrapperState.isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-[var(--hud-bg,#000205)]">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--designer-primary,#0056B8)] border-t-transparent" />
+                  <p className="text-sm text-[var(--hud-text,#f0f8ff)]/70">
+                    Loading {wrapperState.format?.replace('_', ' ').toUpperCase() ?? 'content'}...
+                  </p>
+                </div>
+              </div>
+            )}
+            {wrapperState.error && (
+              <div className="absolute inset-0 flex items-center justify-center bg-[var(--hud-bg,#000205)]">
+                <div className="flex flex-col items-center gap-4 text-center">
+                  <div className="rounded-full bg-red-500/20 p-4">
+                    <svg
+                      className="h-8 w-8 text-red-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      role="img"
+                      aria-label="Error"
+                    >
+                      <title>Error</title>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-red-400">{wrapperState.error}</p>
+                </div>
+              </div>
+            )}
+            {wrapperState.manifest && (
+              <iframe
+                ref={iframeRef}
+                src={wrapperState.manifest.entryPoint}
+                className="h-full w-full border-0"
+                title={wrapperState.manifest.title ?? 'Course content'}
+                onLoad={handleIframeLoad}
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                allow="fullscreen"
+              />
+            )}
+            {/* Progress indicator for external content */}
+            {wrapperState.progress && (
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-[var(--hud-bg,#000205)]/50">
+                <div
+                  className="h-full bg-[var(--designer-primary,#0056B8)] transition-all duration-300"
+                  style={{ width: `${wrapperState.progress.percent}%` }}
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          // Native INSPIRE content
+          <PlayerContent
+            slide={currentSlide}
+            slideIndex={state.currentSlideIndex}
+            totalSlides={allSlides.length}
+            isPlaying={state.isPlaying}
+            onNext={nextSlide}
+            onPrev={prevSlide}
+            reducedMotion={accessibilitySettings.reducedMotion}
+          />
+        )}
 
         {/* Neuronaut AI Panel */}
         <AnimatePresence>
