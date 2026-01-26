@@ -4,11 +4,12 @@
  * Helpers for extracting and propagating trace IDs through the application.
  * Supports both Google Cloud Trace and W3C Trace Context headers.
  *
+ * This module is client-safe - the server-only `headers()` function is
+ * dynamically imported only in `getTraceIdFromHeaders()`.
+ *
  * @see https://cloud.google.com/trace/docs/setup
  * @see https://www.w3.org/TR/trace-context/
  */
-
-import { headers } from 'next/headers';
 
 /**
  * Trace context containing trace ID and optional span ID
@@ -64,8 +65,11 @@ function parseTraceparentHeader(header: string): TraceContext | null {
 /**
  * Get trace ID from incoming request headers (async version)
  * Use this in Server Components and Server Actions.
+ * Note: This function can only be called on the server.
  */
 export async function getTraceIdFromHeaders(): Promise<TraceContext | null> {
+  // Dynamic import to keep this module client-safe
+  const { headers } = await import('next/headers');
   const headerStore = await headers();
 
   const cloudTrace = headerStore.get('x-cloud-trace-context');

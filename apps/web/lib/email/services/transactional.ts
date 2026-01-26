@@ -7,7 +7,9 @@
  * @module lib/email/services/transactional
  */
 
-import { type SendEmailResult, sendTemplateEmail } from '../brevo-client';
+import { render } from '@react-email/components';
+import { type SendEmailResult, sendEmail, sendTemplateEmail } from '../brevo-client';
+import { MagicLinkEmail } from '../react-email/templates/auth/MagicLinkEmail';
 import {
   type CourseCompletionEmailParams,
   type CourseEnrollmentEmailParams,
@@ -196,5 +198,42 @@ export async function sendOrganizationInvitationEmail(
     templateId: EMAIL_TEMPLATES.ORG_INVITATION,
     params,
     tags: ['organization', 'invitation'],
+  });
+}
+
+// =============================================================================
+// Magic Link Emails
+// =============================================================================
+
+/**
+ * Sends a magic link email for passwordless authentication
+ *
+ * @param email - User's email address
+ * @param magicLinkUrl - The full magic link URL with token
+ * @param expiresIn - Human-readable expiry duration (e.g., "24 hours")
+ * @param otpCode - Optional OTP code for code-based auth
+ * @returns Promise resolving to send result
+ */
+export async function sendMagicLinkEmail(
+  email: string,
+  magicLinkUrl: string,
+  expiresIn: string,
+  otpCode?: string,
+): Promise<SendEmailResult> {
+  // Render the React Email template to HTML
+  const emailHtml = await render(
+    MagicLinkEmail({
+      email,
+      magicLinkUrl,
+      expiresIn,
+      otpCode,
+    }),
+  );
+
+  return sendEmail({
+    to: [{ email }],
+    subject: 'Sign in to LXD360',
+    htmlContent: emailHtml,
+    tags: ['magic-link', 'authentication'],
   });
 }

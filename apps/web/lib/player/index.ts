@@ -5,6 +5,15 @@
 // and offline sync capabilities.
 // =============================================================================
 
+// Background Audio Service exports (Podcast Mode)
+export {
+  type AudioEventCallback,
+  type AudioEventType,
+  type BackgroundAudioState,
+  backgroundAudio,
+  type MediaMetadataInfo,
+} from './background-audio';
+// Player State Machine exports
 export {
   // Store factory
   createPlayerStore,
