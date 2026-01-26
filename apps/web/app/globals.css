@@ -75,6 +75,31 @@
   --color-neural-cyan-glow: oklch(75% 0.15 195 / 0.2);
   --color-neural-purple-glow: oklch(60% 0.2 280 / 0.2);
 
+  /* ─────────────────────────────────────────────────────────────────────────
+     LXD360 Extended Brand Colors
+     ───────────────────────────────────────────────────────────────────────── */
+  --lxd-cyan: #00CED1;
+  --lxd-purple: #8B5CF6;
+  --lxd-gradient: linear-gradient(135deg, #00CED1, #8B5CF6);
+
+  /* Neural Theme (Dark Mode Surfaces) */
+  --neural-bg: #0A0A0F;
+  --neural-surface: #111118;
+  --neural-surface-2: #1A1A24;
+  --neural-border: #2A2A3A;
+  --neural-glow: rgba(0, 206, 209, 0.15);
+
+  /* Semantic Colors (Simple Names) */
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #3B82F6;
+
+  /* Text Colors */
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+
   /* Glassmorphism */
   --color-glass-bg: oklch(20% 0 0 / 0.5);
   --color-glass-border: oklch(80% 0 0 / 0.1);
