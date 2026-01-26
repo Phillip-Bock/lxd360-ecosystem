@@ -59,7 +59,7 @@
     "@react-aria/i18n": "^3.12.14",
     "@react-email/components": "^1.0.6",
     "@react-stately/color": "^3.9.3",
-    "@react-three/drei": "9.0.0-beta.6",
+    "@react-three/drei": "10.7.7",
     "@react-three/fiber": "9.0.0-beta.1",
     "@shikijs/transformers": "^3.21.0",
     "@stripe/stripe-js": "^8.6.3",
