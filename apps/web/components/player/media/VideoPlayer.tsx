@@ -322,8 +322,7 @@ export function VideoPlayer({
       )}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      tabIndex={0}
-      role="application"
+      role="region"
       aria-label={title}
     >
       <video
@@ -358,6 +357,7 @@ export function VideoPlayer({
             default={track.default}
           />
         ))}
+        <track kind="captions" src="data:text/vtt,WEBVTT" srcLang="en" label="English (default)" />
         Your browser does not support the video tag.
       </video>
 
@@ -397,7 +397,13 @@ export function VideoPlayer({
           aria-label="Play video"
         >
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-cyan-500/80 shadow-[0_0_40px_rgba(0,212,255,0.5)] backdrop-blur-sm transition-transform hover:scale-110">
-            <svg className="ml-1 h-10 w-10 text-white" fill="currentColor" viewBox="0 0 24 24" role="img" aria-label="Play">
+            <svg
+              className="ml-1 h-10 w-10 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              role="img"
+              aria-label="Play"
+            >
               <title>Play</title>
               <path d="M8 5v14l11-7z" />
             </svg>

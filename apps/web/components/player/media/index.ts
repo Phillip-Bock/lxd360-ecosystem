@@ -21,9 +21,9 @@ export {
   formatTime,
   KEYBOARD_SHORTCUTS,
   type MediaPlayerMachine,
-  parseTime,
   PLAYBACK_SPEEDS,
   type PlaybackSpeed,
+  parseTime,
   type TranscriptCue,
   type VideoSource,
 } from './types';

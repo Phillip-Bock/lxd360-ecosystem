@@ -24,7 +24,7 @@ import {
   type HesitationData,
   type ModalityData,
 } from './extensions';
-import { StatementBuilder, type ActorOptions, type ActivityOptions } from './statement-builder';
+import { type ActivityOptions, type ActorOptions, StatementBuilder } from './statement-builder';
 import type { Statement } from './types';
 import type { XAPIVerbKey } from './verbs';
 
@@ -385,7 +385,11 @@ export class XAPIEmitter {
     const id = statement.id ?? generateUUID();
     const statementWithId = { ...statement, id };
 
-    this.queueStatement(statementWithId, options?.priority ?? 'normal', options?.immediate ?? false);
+    this.queueStatement(
+      statementWithId,
+      options?.priority ?? 'normal',
+      options?.immediate ?? false,
+    );
 
     return id;
   }
@@ -397,11 +401,7 @@ export class XAPIEmitter {
   /**
    * Emit an "initialized" statement (session start)
    */
-  emitInitialized(
-    actor: ActorOptions,
-    activity: ActivityOptions,
-    registration?: string,
-  ): string {
+  emitInitialized(actor: ActorOptions, activity: ActivityOptions, registration?: string): string {
     return this.emit({
       actor,
       verb: 'initialized',
@@ -646,7 +646,11 @@ export class XAPIEmitter {
     }
 
     if (!this.config.sendHandler) {
-      return { sent: 0, failed: 0, errors: [{ statementId: 'N/A', error: 'No send handler configured' }] };
+      return {
+        sent: 0,
+        failed: 0,
+        errors: [{ statementId: 'N/A', error: 'No send handler configured' }],
+      };
     }
 
     this.isFlushing = true;

@@ -307,8 +307,7 @@ export function AudioPlayer({
         'focus-within:ring-2 focus-within:ring-cyan-500/50',
         className,
       )}
-      tabIndex={0}
-      role="application"
+      role="region"
       aria-label={`Audio player: ${title}`}
     >
       <div className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-cyan-500/10 blur-xl" />
@@ -390,6 +389,7 @@ export function AudioPlayer({
           {sources.map((source, index) => (
             <source key={`${source.src}-${index}`} src={source.src} type={source.type} />
           ))}
+          <track kind="captions" srcLang="en" label="English" default />
           Your browser does not support the audio element.
         </audio>
 

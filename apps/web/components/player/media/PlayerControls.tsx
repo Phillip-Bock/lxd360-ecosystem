@@ -156,6 +156,8 @@ export function PlayerControls({
           <div
             className="relative flex items-center"
             onMouseLeave={handleVolumeContainerMouseLeave}
+            role="group"
+            aria-label="Volume controls"
           >
             <div
               className={cn(

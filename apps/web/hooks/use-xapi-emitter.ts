@@ -14,14 +14,13 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { Statement } from '@/lib/xapi/types';
 import {
-  getEmitter,
-  XAPIEmitter,
   type EmitOptions,
   type EmitterConfig,
   type EmitterQueueStatus,
+  getEmitter,
   type SendResult,
+  type XAPIEmitter,
 } from '@/lib/xapi/emitter';
 import type {
   ConfidenceData,
@@ -29,7 +28,8 @@ import type {
   HesitationData,
   ModalityData,
 } from '@/lib/xapi/extensions';
-import type { ActorOptions, ActivityOptions } from '@/lib/xapi/statement-builder';
+import type { ActivityOptions, ActorOptions } from '@/lib/xapi/statement-builder';
+import type { Statement } from '@/lib/xapi/types';
 import type { XAPIVerbKey } from '@/lib/xapi/verbs';
 
 // ============================================================================
@@ -466,17 +466,18 @@ export function useXAPIEmitter(options: UseXAPIEmitterOptions = {}): UseXAPIEmit
 
       if (!emitter || !actor) return null;
 
-      const scoreResult = result?.score !== undefined && result?.maxScore !== undefined
-        ? {
-            score: {
-              scaled: result.score / result.maxScore,
-              raw: result.score,
-              max: result.maxScore,
-            },
-            success: result.passed,
-            durationSeconds: result.durationSeconds,
-          }
-        : undefined;
+      const scoreResult =
+        result?.score !== undefined && result?.maxScore !== undefined
+          ? {
+              score: {
+                scaled: result.score / result.maxScore,
+                raw: result.score,
+                max: result.maxScore,
+              },
+              success: result.passed,
+              durationSeconds: result.durationSeconds,
+            }
+          : undefined;
 
       return emitter.emitCompleted(
         actor,
