@@ -13,6 +13,15 @@ export {
   backgroundAudio,
   type MediaMetadataInfo,
 } from './background-audio';
+// Content Format Detection exports
+export {
+  type DetectionResult,
+  detectContentFormat,
+  detectContentFormatFromStorage,
+  detectContentFormatFromUrl,
+  getScorm2004Edition,
+  type PackageFile,
+} from './content-detector';
 // Player State Machine exports
 export {
   // Store factory
@@ -40,3 +49,69 @@ export {
   selectPendingStatementCount,
   usePlayerStore,
 } from './machine';
+// Content Wrapper Hook exports
+export {
+  type ContentWrapperState,
+  type UseContentWrapperConfig,
+  type UseContentWrapperReturn,
+  useContentWrapper,
+} from './use-content-wrapper';
+
+// Content Format Types exports
+export type {
+  AiccConfig,
+  Cmi5Config,
+  Cmi5LaunchMode,
+  Cmi5MoveOn,
+  ContentFormat,
+  ContentManifest,
+  ContentWrapper,
+  Html5Config,
+  NativeConfig,
+  PdfConfig,
+  Scorm12Config,
+  Scorm12DataModel,
+  Scorm2004Config,
+  Scorm2004DataModel,
+  Scorm2004Edition,
+  WrapperCommitData,
+  WrapperConfig,
+  WrapperConfigBase,
+  WrapperError,
+  WrapperProgress,
+  WrapperResult,
+  XApiActivity,
+  XApiActor,
+  XApiConfig,
+  XApiContext,
+  XApiResult,
+  XApiStatement,
+  XApiVerb,
+} from './wrappers';
+// Content Wrapper exports
+export {
+  AiccWrapper,
+  CMI5_VERBS,
+  Cmi5Wrapper,
+  createAiccWrapper,
+  createCmi5Wrapper,
+  // Individual wrapper factories
+  createScorm12Wrapper,
+  createScorm2004Wrapper,
+  // Factory function
+  createWrapper,
+  createXApiWrapper,
+  Html5Wrapper,
+  // Type guards
+  isHtml5Wrapper,
+  isNativeWrapper,
+  isPdfWrapper,
+  NativeWrapper,
+  PdfWrapper,
+  // Wrapper classes
+  Scorm12ApiWrapper,
+  Scorm2004ApiWrapper,
+  // Verbs
+  XAPI_VERBS,
+  XApiWrapper,
+} from './wrappers';
