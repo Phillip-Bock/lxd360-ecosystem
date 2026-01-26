@@ -43,16 +43,11 @@ const statusConfig = {
   },
 };
 
-function ComplianceStatusItem({
-  item,
-  index,
-}: {
-  item: ComplianceStatus;
-  index: number;
-}) {
+function ComplianceStatusItem({ item, index }: { item: ComplianceStatus; index: number }) {
   const config = statusConfig[item.status];
   const StatusIcon = config.icon;
-  const completionPercent = item.required > 0 ? Math.round((item.completed / item.required) * 100) : 0;
+  const completionPercent =
+    item.required > 0 ? Math.round((item.completed / item.required) * 100) : 0;
 
   return (
     <motion.div
@@ -62,15 +57,12 @@ function ComplianceStatusItem({
       className={cn(
         'flex items-center justify-between p-4 rounded-lg border',
         config.bgColor,
-        config.borderColor
+        config.borderColor,
       )}
     >
       <div className="flex items-center gap-3">
         <div
-          className={cn(
-            'flex h-10 w-10 items-center justify-center rounded-lg',
-            config.bgColor
-          )}
+          className={cn('flex h-10 w-10 items-center justify-center rounded-lg', config.bgColor)}
         >
           <StatusIcon className={cn('h-5 w-5', config.textColor)} aria-hidden="true" />
         </div>

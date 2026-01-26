@@ -2,6 +2,8 @@
 
 import { Download, Filter, Search } from 'lucide-react';
 import { useState } from 'react';
+import type { Assignment, GradebookEntry, LearnerStatus } from '@/components/ignite/gradebook';
+import { CourseSelector, GradebookTable, GradeSummary } from '@/components/ignite/gradebook';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -11,16 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  CourseSelector,
-  GradebookTable,
-  GradeSummary,
-} from '@/components/ignite/gradebook';
-import type {
-  Assignment,
-  GradebookEntry,
-  LearnerStatus,
-} from '@/components/ignite/gradebook';
 
 // ============================================================================
 // MOCK DATA - TODO(LXD-301): Replace with Firestore queries
@@ -48,10 +40,34 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 92,
     status: 'passing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 95, maxScore: 100, submittedAt: new Date('2026-01-10T10:30:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 88, maxScore: 100, submittedAt: new Date('2026-01-15T14:20:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 92, maxScore: 100, submittedAt: new Date('2026-01-18T09:15:00') },
-      { assignmentId: 'a4', assignmentName: 'Final Assessment', score: 93, maxScore: 100, submittedAt: new Date('2026-01-22T11:45:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 95,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-10T10:30:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 88,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-15T14:20:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 92,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-18T09:15:00'),
+      },
+      {
+        assignmentId: 'a4',
+        assignmentName: 'Final Assessment',
+        score: 93,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-22T11:45:00'),
+      },
     ],
   },
   {
@@ -61,10 +77,34 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 96,
     status: 'passing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 100, maxScore: 100, submittedAt: new Date('2026-01-09T08:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 95, maxScore: 100, submittedAt: new Date('2026-01-14T16:30:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 94, maxScore: 100, submittedAt: new Date('2026-01-17T13:00:00') },
-      { assignmentId: 'a4', assignmentName: 'Final Assessment', score: 96, maxScore: 100, submittedAt: new Date('2026-01-21T10:00:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 100,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-09T08:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 95,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-14T16:30:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 94,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-17T13:00:00'),
+      },
+      {
+        assignmentId: 'a4',
+        assignmentName: 'Final Assessment',
+        score: 96,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-21T10:00:00'),
+      },
     ],
   },
   {
@@ -74,9 +114,27 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 58,
     status: 'failing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 65, maxScore: 100, submittedAt: new Date('2026-01-12T11:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 52, maxScore: 100, submittedAt: new Date('2026-01-16T15:45:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 58, maxScore: 100, submittedAt: new Date('2026-01-19T09:30:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 65,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-12T11:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 52,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-16T15:45:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 58,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-19T09:30:00'),
+      },
       { assignmentId: 'a4', assignmentName: 'Final Assessment', score: null, maxScore: 100 },
     ],
   },
@@ -87,9 +145,27 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 85,
     status: 'passing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 88, maxScore: 100, submittedAt: new Date('2026-01-10T14:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 82, maxScore: 100, submittedAt: new Date('2026-01-15T10:15:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 85, maxScore: 100, submittedAt: new Date('2026-01-18T16:00:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 88,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-10T14:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 82,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-15T10:15:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 85,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-18T16:00:00'),
+      },
       { assignmentId: 'a4', assignmentName: 'Final Assessment', score: null, maxScore: 100 },
     ],
   },
@@ -100,9 +176,27 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 78,
     status: 'passing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 75, maxScore: 100, submittedAt: new Date('2026-01-11T09:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 80, maxScore: 100, submittedAt: new Date('2026-01-14T12:30:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 78, maxScore: 100, submittedAt: new Date('2026-01-18T11:00:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 75,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-11T09:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 80,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-14T12:30:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 78,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-18T11:00:00'),
+      },
       { assignmentId: 'a4', assignmentName: 'Final Assessment', score: null, maxScore: 100 },
     ],
   },
@@ -126,10 +220,34 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 91,
     status: 'passing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 92, maxScore: 100, submittedAt: new Date('2026-01-09T10:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 89, maxScore: 100, submittedAt: new Date('2026-01-13T14:00:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 93, maxScore: 100, submittedAt: new Date('2026-01-17T09:00:00') },
-      { assignmentId: 'a4', assignmentName: 'Final Assessment', score: 90, maxScore: 100, submittedAt: new Date('2026-01-21T15:30:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 92,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-09T10:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 89,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-13T14:00:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 93,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-17T09:00:00'),
+      },
+      {
+        assignmentId: 'a4',
+        assignmentName: 'Final Assessment',
+        score: 90,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-21T15:30:00'),
+      },
     ],
   },
   {
@@ -139,9 +257,27 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 63,
     status: 'failing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 70, maxScore: 100, submittedAt: new Date('2026-01-10T16:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 58, maxScore: 100, submittedAt: new Date('2026-01-15T11:30:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 62, maxScore: 100, submittedAt: new Date('2026-01-19T14:00:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 70,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-10T16:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 58,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-15T11:30:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 62,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-19T14:00:00'),
+      },
       { assignmentId: 'a4', assignmentName: 'Final Assessment', score: null, maxScore: 100 },
     ],
   },
@@ -152,9 +288,27 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 88,
     status: 'passing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 85, maxScore: 100, submittedAt: new Date('2026-01-11T13:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 90, maxScore: 100, submittedAt: new Date('2026-01-14T09:30:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 88, maxScore: 100, submittedAt: new Date('2026-01-18T10:00:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 85,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-11T13:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 90,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-14T09:30:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 88,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-18T10:00:00'),
+      },
       { assignmentId: 'a4', assignmentName: 'Final Assessment', score: null, maxScore: 100 },
     ],
   },
@@ -165,10 +319,34 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 94,
     status: 'passing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 96, maxScore: 100, submittedAt: new Date('2026-01-09T11:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 92, maxScore: 100, submittedAt: new Date('2026-01-13T16:00:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 95, maxScore: 100, submittedAt: new Date('2026-01-17T14:30:00') },
-      { assignmentId: 'a4', assignmentName: 'Final Assessment', score: 93, maxScore: 100, submittedAt: new Date('2026-01-22T09:00:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 96,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-09T11:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 92,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-13T16:00:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 95,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-17T14:30:00'),
+      },
+      {
+        assignmentId: 'a4',
+        assignmentName: 'Final Assessment',
+        score: 93,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-22T09:00:00'),
+      },
     ],
   },
   {
@@ -178,7 +356,13 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 0,
     status: 'incomplete',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 72, maxScore: 100, submittedAt: new Date('2026-01-12T10:00:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 72,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-12T10:00:00'),
+      },
       { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: null, maxScore: 100 },
       { assignmentId: 'a3', assignmentName: 'Midterm Project', score: null, maxScore: 100 },
       { assignmentId: 'a4', assignmentName: 'Final Assessment', score: null, maxScore: 100 },
@@ -191,9 +375,27 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 81,
     status: 'passing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 80, maxScore: 100, submittedAt: new Date('2026-01-10T09:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 78, maxScore: 100, submittedAt: new Date('2026-01-14T15:00:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 84, maxScore: 100, submittedAt: new Date('2026-01-18T12:00:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 80,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-10T09:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 78,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-14T15:00:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 84,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-18T12:00:00'),
+      },
       { assignmentId: 'a4', assignmentName: 'Final Assessment', score: null, maxScore: 100 },
     ],
   },
@@ -204,9 +406,27 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 72,
     status: 'passing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 70, maxScore: 100, submittedAt: new Date('2026-01-11T14:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 74, maxScore: 100, submittedAt: new Date('2026-01-15T10:00:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 71, maxScore: 100, submittedAt: new Date('2026-01-19T11:00:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 70,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-11T14:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 74,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-15T10:00:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 71,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-19T11:00:00'),
+      },
       { assignmentId: 'a4', assignmentName: 'Final Assessment', score: null, maxScore: 100 },
     ],
   },
@@ -217,9 +437,27 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 87,
     status: 'passing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 90, maxScore: 100, submittedAt: new Date('2026-01-09T15:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 85, maxScore: 100, submittedAt: new Date('2026-01-13T11:00:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 86, maxScore: 100, submittedAt: new Date('2026-01-17T16:00:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 90,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-09T15:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 85,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-13T11:00:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 86,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-17T16:00:00'),
+      },
       { assignmentId: 'a4', assignmentName: 'Final Assessment', score: null, maxScore: 100 },
     ],
   },
@@ -230,9 +468,27 @@ const mockLearners: GradebookEntry[] = [
     overallGrade: 55,
     status: 'failing',
     assignments: [
-      { assignmentId: 'a1', assignmentName: 'Module 1 Quiz', score: 60, maxScore: 100, submittedAt: new Date('2026-01-12T09:00:00') },
-      { assignmentId: 'a2', assignmentName: 'Module 2 Quiz', score: 50, maxScore: 100, submittedAt: new Date('2026-01-16T14:00:00') },
-      { assignmentId: 'a3', assignmentName: 'Midterm Project', score: 55, maxScore: 100, submittedAt: new Date('2026-01-20T10:00:00') },
+      {
+        assignmentId: 'a1',
+        assignmentName: 'Module 1 Quiz',
+        score: 60,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-12T09:00:00'),
+      },
+      {
+        assignmentId: 'a2',
+        assignmentName: 'Module 2 Quiz',
+        score: 50,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-16T14:00:00'),
+      },
+      {
+        assignmentId: 'a3',
+        assignmentName: 'Midterm Project',
+        score: 55,
+        maxScore: 100,
+        submittedAt: new Date('2026-01-20T10:00:00'),
+      },
       { assignmentId: 'a4', assignmentName: 'Final Assessment', score: null, maxScore: 100 },
     ],
   },
@@ -261,12 +517,8 @@ export default function GradebookPage(): React.ReactElement {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Gradebook
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            View and manage learner grades and progress
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Gradebook</h1>
+          <p className="text-muted-foreground mt-1">View and manage learner grades and progress</p>
         </div>
         <Button type="button" variant="outline" className="gap-2 self-start sm:self-auto">
           <Download className="w-4 h-4" aria-hidden="true" />
@@ -304,10 +556,7 @@ export default function GradebookPage(): React.ReactElement {
 
             {/* Status filter */}
             <div className="flex items-center gap-2">
-              <Filter
-                className="w-4 h-4 text-muted-foreground"
-                aria-hidden="true"
-              />
+              <Filter className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
               <Select
                 value={statusFilter}
                 onValueChange={(value) => setStatusFilter(value as LearnerStatus | 'all')}

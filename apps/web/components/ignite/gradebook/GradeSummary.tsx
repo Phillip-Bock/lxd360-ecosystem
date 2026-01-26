@@ -37,7 +37,13 @@ interface StatCardProps {
 // STAT CARD SUBCOMPONENT
 // ============================================================================
 
-function StatCard({ title, value, description, icon, variant = 'default' }: StatCardProps): React.ReactElement {
+function StatCard({
+  title,
+  value,
+  description,
+  icon,
+  variant = 'default',
+}: StatCardProps): React.ReactElement {
   const variantStyles = {
     default: 'text-foreground',
     success: 'text-[var(--color-lxd-success)]',
@@ -48,20 +54,12 @@ function StatCard({ title, value, description, icon, variant = 'default' }: Stat
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-border/50">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
-          {title}
-        </CardTitle>
-        <div className={cn('size-4', variantStyles[variant])}>
-          {icon}
-        </div>
+        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+        <div className={cn('size-4', variantStyles[variant])}>{icon}</div>
       </CardHeader>
       <CardContent>
-        <div className={cn('text-2xl font-bold', variantStyles[variant])}>
-          {value}
-        </div>
-        {description && (
-          <p className="text-xs text-muted-foreground mt-1">{description}</p>
-        )}
+        <div className={cn('text-2xl font-bold', variantStyles[variant])}>{value}</div>
+        {description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
       </CardContent>
     </Card>
   );
@@ -78,11 +76,14 @@ interface DistributionBarProps {
   total: number;
 }
 
-function DistributionBar({ passing, failing, incomplete, total }: DistributionBarProps): React.ReactElement {
+function DistributionBar({
+  passing,
+  failing,
+  incomplete,
+  total,
+}: DistributionBarProps): React.ReactElement {
   if (total === 0) {
-    return (
-      <div role="img" className="h-3 w-full bg-muted/50 rounded-full" aria-label="No data" />
-    );
+    return <div role="img" className="h-3 w-full bg-muted/50 rounded-full" aria-label="No data" />;
   }
 
   const passingPct = (passing / total) * 100;
@@ -135,7 +136,7 @@ export function GradeSummary({ learners, className }: GradeSummaryProps): React.
     learnersWithGrades.length > 0
       ? Math.round(
           learnersWithGrades.reduce((sum, l) => sum + l.overallGrade, 0) /
-            learnersWithGrades.length
+            learnersWithGrades.length,
         )
       : 0;
 
@@ -195,11 +196,17 @@ export function GradeSummary({ learners, className }: GradeSummaryProps): React.
           />
           <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
             <div className="flex items-center gap-1.5">
-              <span className="size-2.5 rounded-full bg-[var(--color-lxd-success)]" aria-hidden="true" />
+              <span
+                className="size-2.5 rounded-full bg-[var(--color-lxd-success)]"
+                aria-hidden="true"
+              />
               <span>Passing ({passingLearners})</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="size-2.5 rounded-full bg-[var(--color-lxd-error)]" aria-hidden="true" />
+              <span
+                className="size-2.5 rounded-full bg-[var(--color-lxd-error)]"
+                aria-hidden="true"
+              />
               <span>Failing ({failingLearners})</span>
             </div>
             <div className="flex items-center gap-1.5">

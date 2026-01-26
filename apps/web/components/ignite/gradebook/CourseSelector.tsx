@@ -57,15 +57,8 @@ export function CourseSelector({
       <span className="sr-only" id="course-selector-label">
         {label}
       </span>
-      <Select
-        value={selectedCourseId}
-        onValueChange={onCourseChange}
-        disabled={disabled}
-      >
-        <SelectTrigger
-          className="w-full sm:w-64"
-          aria-labelledby="course-selector-label"
-        >
+      <Select value={selectedCourseId} onValueChange={onCourseChange} disabled={disabled}>
+        <SelectTrigger className="w-full sm:w-64" aria-labelledby="course-selector-label">
           <div className="flex items-center gap-2">
             <BookOpen className="size-4 text-muted-foreground" aria-hidden="true" />
             <SelectValue placeholder={placeholder}>

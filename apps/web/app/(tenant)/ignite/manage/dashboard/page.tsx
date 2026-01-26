@@ -256,7 +256,7 @@ function QuickAction({ href, icon: Icon, label, description }: QuickActionProps)
 export default function ManagerDashboardPage() {
   const handleExport = () => {
     // TODO(LXD-339): Implement CSV export functionality
-    console.info('Export triggered - to be implemented');
+    // Export feature placeholder - will trigger CSV download when implemented
   };
 
   return (
@@ -264,9 +264,7 @@ export default function ManagerDashboardPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-foreground">Manager Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
-          Team oversight and compliance tracking
-        </p>
+        <p className="text-muted-foreground mt-1">Team oversight and compliance tracking</p>
       </div>
 
       {/* Team Stats Overview */}

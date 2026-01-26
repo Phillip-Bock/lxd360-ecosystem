@@ -1,12 +1,7 @@
 'use client';
 
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 
 // ============================================================================
 // TYPES
@@ -90,7 +85,7 @@ export function GradeCell({
               className={cn(
                 'inline-flex items-center justify-center px-2 py-1 rounded text-sm',
                 'text-muted-foreground bg-muted/30',
-                className
+                className,
               )}
               aria-label="Not submitted"
             >
@@ -137,7 +132,7 @@ export function GradeCell({
               colorClass,
               bgClass,
               'transition-colors cursor-default',
-              className
+              className,
             )}
             aria-label={score !== null ? `${score} out of ${maxScore}` : 'Not graded'}
           >
@@ -148,7 +143,9 @@ export function GradeCell({
           <TooltipContent>
             <div className="space-y-0.5">
               {tooltipLines.map((line, index) => (
-                <p key={index} className="text-xs">{line}</p>
+                <p key={index} className="text-xs">
+                  {line}
+                </p>
               ))}
             </div>
           </TooltipContent>

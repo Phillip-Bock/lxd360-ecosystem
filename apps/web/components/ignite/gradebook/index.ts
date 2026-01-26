@@ -1,19 +1,16 @@
-export { GradeCell } from './GradeCell';
-export type { GradeCellProps } from './GradeCell';
-
-export { CourseSelector } from './CourseSelector';
 export type { Course, CourseSelectorProps } from './CourseSelector';
-
-export { GradeSummary } from './GradeSummary';
-export type { GradeSummaryProps } from './GradeSummary';
-
-export { GradebookTable } from './GradebookTable';
+export { CourseSelector } from './CourseSelector';
 export type {
+  Assignment,
   AssignmentGrade,
   GradebookEntry,
-  Assignment,
+  GradebookTableProps,
   LearnerStatus,
   SortDirection,
   SortState,
-  GradebookTableProps,
 } from './GradebookTable';
+export { GradebookTable } from './GradebookTable';
+export type { GradeCellProps } from './GradeCell';
+export { GradeCell } from './GradeCell';
+export type { GradeSummaryProps } from './GradeSummary';
+export { GradeSummary } from './GradeSummary';

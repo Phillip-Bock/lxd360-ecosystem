@@ -213,7 +213,9 @@ export function GradebookTable({
             <TableHead>Learner</TableHead>
             <TableHead className="text-center">Grade</TableHead>
             {assignments.map((a) => (
-              <TableHead key={a.id} className="text-center">{a.name}</TableHead>
+              <TableHead key={a.id} className="text-center">
+                {a.name}
+              </TableHead>
             ))}
             <TableHead className="text-center">Status</TableHead>
           </TableRow>
@@ -254,7 +256,9 @@ export function GradebookTable({
             <TableHead>Learner</TableHead>
             <TableHead className="text-center">Grade</TableHead>
             {assignments.map((a) => (
-              <TableHead key={a.id} className="text-center">{a.name}</TableHead>
+              <TableHead key={a.id} className="text-center">
+                {a.name}
+              </TableHead>
             ))}
             <TableHead className="text-center">Status</TableHead>
           </TableRow>
@@ -366,9 +370,7 @@ export function GradebookTable({
 
             {/* Assignment grades */}
             {assignments.map((assignment) => {
-              const grade = entry.assignments.find(
-                (g) => g.assignmentId === assignment.id
-              );
+              const grade = entry.assignments.find((g) => g.assignmentId === assignment.id);
               return (
                 <TableCell key={assignment.id} className="text-center">
                   <GradeCell
@@ -384,9 +386,7 @@ export function GradebookTable({
             })}
 
             {/* Status badge */}
-            <TableCell className="text-center">
-              {getStatusBadge(entry.status)}
-            </TableCell>
+            <TableCell className="text-center">{getStatusBadge(entry.status)}</TableCell>
           </TableRow>
         ))}
       </TableBody>

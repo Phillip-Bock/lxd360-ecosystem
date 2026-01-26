@@ -62,7 +62,9 @@ function formatLastActive(date: Date): string {
   return date.toLocaleDateString();
 }
 
-function getCompletionBadgeVariant(rate: number): 'success' | 'warning' | 'destructive' | 'default' {
+function getCompletionBadgeVariant(
+  rate: number,
+): 'success' | 'warning' | 'destructive' | 'default' {
   if (rate >= 80) return 'success';
   if (rate >= 50) return 'warning';
   if (rate > 0) return 'destructive';
@@ -105,8 +107,7 @@ export function TeamProgressTable({
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = members.filter(
-        (m) =>
-          m.name.toLowerCase().includes(query) || m.email.toLowerCase().includes(query)
+        (m) => m.name.toLowerCase().includes(query) || m.email.toLowerCase().includes(query),
       );
     }
 
@@ -172,13 +173,7 @@ export function TeamProgressTable({
               {filteredAndSortedMembers.length} of {members.length} team members
             </CardDescription>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={onExport}
-            className="gap-2"
-          >
+          <Button type="button" variant="outline" size="sm" onClick={onExport} className="gap-2">
             <Download className="h-4 w-4" aria-hidden="true" />
             Export
           </Button>
@@ -263,26 +258,18 @@ export function TeamProgressTable({
                     <div className="flex flex-col items-center gap-2 text-muted-foreground">
                       <UserCircle className="h-8 w-8" aria-hidden="true" />
                       <p>No team members found</p>
-                      {searchQuery && (
-                        <p className="text-sm">Try adjusting your search query</p>
-                      )}
+                      {searchQuery && <p className="text-sm">Try adjusting your search query</p>}
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredAndSortedMembers.map((member) => (
-                  <TableRow
-                    key={member.id}
-                    className="hover:bg-muted/30 transition-colors"
-                  >
+                  <TableRow key={member.id} className="hover:bg-muted/30 transition-colors">
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar className="h-9 w-9">
                           {member.avatarUrl && (
-                            <AvatarImage
-                              src={member.avatarUrl}
-                              alt={`${member.name}'s avatar`}
-                            />
+                            <AvatarImage src={member.avatarUrl} alt={`${member.name}'s avatar`} />
                           )}
                           <AvatarFallback className="bg-lxd-primary/10 text-lxd-primary text-sm">
                             {getInitials(member.name)}
@@ -303,8 +290,7 @@ export function TeamProgressTable({
                             </span>
                           </TooltipTrigger>
                           <TooltipContent>
-                            {member.coursesCompleted} completed of {member.coursesAssigned}{' '}
-                            assigned
+                            {member.coursesCompleted} completed of {member.coursesAssigned} assigned
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
@@ -319,7 +305,7 @@ export function TeamProgressTable({
                                 ? 'bg-emerald-500'
                                 : member.completionRate >= 50
                                   ? 'bg-amber-500'
-                                  : 'bg-red-500'
+                                  : 'bg-red-500',
                             )}
                             style={{ width: `${member.completionRate}%` }}
                           />

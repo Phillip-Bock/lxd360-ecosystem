@@ -57,14 +57,14 @@ function StatCard({
       className={cn(
         'relative overflow-hidden rounded-xl border border-border bg-card/60 backdrop-blur-sm p-6',
         'hover:border-border/80 transition-all duration-300',
-        'group'
+        'group',
       )}
     >
       {/* Background gradient accent */}
       <div
         className={cn(
           'absolute inset-0 bg-gradient-to-br to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300',
-          variantStyles[variant]
+          variantStyles[variant],
         )}
       />
 
@@ -76,7 +76,7 @@ function StatCard({
             <div
               className={cn(
                 'flex items-center gap-1 text-sm font-medium',
-                isPositiveTrend ? 'text-emerald-500' : 'text-red-500'
+                isPositiveTrend ? 'text-emerald-500' : 'text-red-500',
               )}
             >
               <TrendIcon className="h-4 w-4" aria-hidden="true" />
@@ -93,7 +93,7 @@ function StatCard({
           className={cn(
             'flex h-12 w-12 items-center justify-center rounded-lg border',
             'group-hover:scale-105 transition-transform duration-300',
-            iconVariantStyles[variant]
+            iconVariantStyles[variant],
           )}
         >
           {icon}

@@ -67,13 +67,7 @@ const urgencyConfig = {
   },
 };
 
-function DueDateListItem({
-  item,
-  index,
-}: {
-  item: DueDateItem;
-  index: number;
-}) {
+function DueDateListItem({ item, index }: { item: DueDateItem; index: number }) {
   const urgency = getDueDateUrgency(item.dueDate, item.isOverdue);
   const config = urgencyConfig[urgency];
   const UrgencyIcon = config.icon;
@@ -87,14 +81,14 @@ function DueDateListItem({
         'flex items-center justify-between p-3 rounded-lg border transition-colors',
         config.bgColor,
         config.borderColor,
-        'hover:border-lxd-primary/30'
+        'hover:border-lxd-primary/30',
       )}
     >
       <div className="flex items-center gap-3 min-w-0 flex-1">
         <div
           className={cn(
             'flex h-9 w-9 items-center justify-center rounded-lg shrink-0',
-            config.bgColor
+            config.bgColor,
           )}
         >
           <UrgencyIcon className={cn('h-4 w-4', config.textColor)} aria-hidden="true" />
@@ -144,11 +138,7 @@ function EmptyState() {
  * - Urgent (yellow): Due within 3 days
  * - Normal (blue): Due later
  */
-export function DueDatesList({
-  dueDates,
-  isLoading = false,
-  className,
-}: DueDatesListProps) {
+export function DueDatesList({ dueDates, isLoading = false, className }: DueDatesListProps) {
   // Sort by due date (overdue first, then soonest)
   const sortedDueDates = [...dueDates].sort((a, b) => {
     // Overdue items first
