@@ -596,6 +596,71 @@ export const XAPI_VERBS = {
     id: 'https://lxd360.com/xapi/verbs/printed',
     display: { 'en-US': 'printed' },
   },
+
+  // ==========================================================================
+  // ADAPTIVE LEARNING & MODALITY VERBS
+  // ==========================================================================
+
+  /**
+   * Indicates the actor switched content modality (e.g., text to video)
+   * Used for adaptive content delivery tracking
+   */
+  switchedModality: {
+    id: 'https://lxd360.com/xapi/verbs/switched-modality',
+    display: { 'en-US': 'switched modality' },
+  },
+
+  /**
+   * Indicates the actor entered background (app/tab lost focus)
+   * Used for engagement and attention tracking
+   */
+  enteredBackground: {
+    id: 'https://lxd360.com/xapi/verbs/entered-background',
+    display: { 'en-US': 'entered background' },
+  },
+
+  /**
+   * Indicates the actor returned to foreground (app/tab regained focus)
+   * Paired with enteredBackground for session continuity
+   */
+  enteredForeground: {
+    id: 'https://lxd360.com/xapi/verbs/entered-foreground',
+    display: { 'en-US': 'entered foreground' },
+  },
+
+  /**
+   * Indicates the actor's focus state changed
+   * Used for attention tracking without specific foreground/background
+   */
+  focusChanged: {
+    id: 'https://lxd360.com/xapi/verbs/focus-changed',
+    display: { 'en-US': 'focus changed' },
+  },
+
+  /**
+   * Indicates the actor requested different content modality
+   * Explicit learner preference signal
+   */
+  requestedModality: {
+    id: 'https://lxd360.com/xapi/verbs/requested-modality',
+    display: { 'en-US': 'requested modality' },
+  },
+
+  /**
+   * Indicates the actor started a spaced repetition review
+   */
+  startedReview: {
+    id: 'https://lxd360.com/xapi/verbs/started-review',
+    display: { 'en-US': 'started review' },
+  },
+
+  /**
+   * Indicates the actor completed a spaced repetition review
+   */
+  completedReview: {
+    id: 'https://lxd360.com/xapi/verbs/completed-review',
+    display: { 'en-US': 'completed review' },
+  },
 } as const satisfies Record<string, Verb>;
 
 /**
@@ -665,6 +730,13 @@ export const VERB_CATEGORIES = {
   gamification: ['earned', 'unlocked', 'skipped', 'retried', 'hinted'] as XAPIVerbKey[],
   dragdrop: ['dragged', 'dropped', 'matched', 'sorted', 'categorized'] as XAPIVerbKey[],
   scenario: ['chose', 'decided', 'explored', 'identified', 'selected'] as XAPIVerbKey[],
+  adaptive: [
+    'switchedModality',
+    'requestedModality',
+    'startedReview',
+    'completedReview',
+  ] as XAPIVerbKey[],
+  attention: ['enteredBackground', 'enteredForeground', 'focusChanged'] as XAPIVerbKey[],
   misc: [
     'downloaded',
     'printed',
