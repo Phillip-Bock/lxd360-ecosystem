@@ -8,3 +8,8 @@ export { PlayerHeader } from './player-header';
 export { PlayerShell } from './player-shell';
 export { PlayerSidebar } from './player-sidebar';
 export { SkinsPanel } from './skins-panel';
+
+// Podcast Mode UI Components
+export { ModalitySwitcher, ModalitySwitcherCompact } from './ModalitySwitcher';
+export { MiniPlayer, MiniPlayerExpanded } from './MiniPlayer';
+export { PersistentPlayerBar } from './PersistentPlayerBar';
