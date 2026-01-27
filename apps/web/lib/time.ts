@@ -8,12 +8,11 @@ export function durationDateTime(durationSeconds: number, seekRange?: shaka.exte
     return 'PT0S';
   }
 
-  // TODO(LXD-402): Investigate potential bug - seekRange returns in seconds
+  // Convert seekRange (seconds) to milliseconds for intervalToDuration
   const duration = intervalToDuration(
-    seekRange ?? {
-      end: durationSeconds * 1000,
-      start: 0,
-    },
+    seekRange
+      ? { start: seekRange.start * 1000, end: seekRange.end * 1000 }
+      : { start: 0, end: durationSeconds * 1000 },
   );
 
   const weeks = Math.floor((duration.days ?? 0) / 7);
