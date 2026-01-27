@@ -4,14 +4,19 @@ export const dynamic = 'force-dynamic';
 
 import { Award, BookMarked, CheckCircle2, Play, Sparkles } from 'lucide-react';
 import {
+  AchievementBadges,
+  ContinueLearningWidget,
   CourseCard,
   CourseCardSkeleton,
+  DeadlinesWidget,
   LearningSection,
   WelcomeCard,
 } from '@/components/ignite/learner';
 import {
   mockAssignedCourses,
+  mockBadges,
   mockCompletedCourses,
+  mockDeadlines,
   mockInProgressCourses,
   mockProgressSummary,
   mockRecommendedCourses,
@@ -23,7 +28,8 @@ import { useSafeAuth } from '@/providers/SafeAuthProvider';
  *
  * Sections:
  * - Welcome Card with progress summary
- * - Continue Learning (in-progress courses)
+ * - Continue Learning widget (hero card for last accessed course)
+ * - Sidebar: Deadlines + Achievements
  * - Assigned Learning (required courses not started)
  * - Recommended (AI suggestions placeholder)
  * - Completed (achievement history)
@@ -42,27 +48,60 @@ export default function MyLearningPage() {
   const recommendedCourses = mockRecommendedCourses;
   const completedCourses = mockCompletedCourses;
 
+  // Get the most recently accessed course for Continue Learning widget
+  const lastAccessedCourse =
+    inProgressCourses.length > 0
+      ? [...inProgressCourses].sort((a, b) => {
+          const aDate = a.lastAccessedAt ? new Date(a.lastAccessedAt).getTime() : 0;
+          const bDate = b.lastAccessedAt ? new Date(b.lastAccessedAt).getTime() : 0;
+          return bDate - aDate;
+        })[0]
+      : null;
+
   return (
     <div className="container mx-auto p-6 space-y-8">
       {/* Welcome Section */}
       <WelcomeCard userName={userName} progressSummary={mockProgressSummary} />
 
-      {/* Continue Learning (in-progress courses) */}
-      <LearningSection
-        title="Continue Learning"
-        icon={Play}
-        itemCount={inProgressCourses.length}
-        viewAllHref="/ignite/learn/progress"
-        viewAllText="View Progress"
-        emptyMessage="You haven't started any courses yet. Browse the catalog to begin learning!"
-        isEmpty={inProgressCourses.length === 0}
-        columns={2}
-        skeleton={<CourseCardSkeleton />}
-      >
-        {inProgressCourses.map((course) => (
-          <CourseCard key={course.id} course={course} />
-        ))}
-      </LearningSection>
+      {/* Main content area with sidebar */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main column */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Continue Learning Widget (hero card) */}
+          <ContinueLearningWidget course={lastAccessedCourse} />
+
+          {/* In-progress courses (compact view) */}
+          {inProgressCourses.length > 1 && (
+            <LearningSection
+              title="In Progress"
+              icon={Play}
+              itemCount={inProgressCourses.length}
+              viewAllHref="/ignite/learn/progress"
+              viewAllText="View Progress"
+              emptyMessage="You haven't started any courses yet."
+              isEmpty={inProgressCourses.length === 0}
+              columns={2}
+              skeleton={<CourseCardSkeleton variant="compact" />}
+            >
+              {inProgressCourses
+                .filter((c) => c.id !== lastAccessedCourse?.id)
+                .slice(0, 4)
+                .map((course) => (
+                  <CourseCard key={course.id} course={course} variant="compact" />
+                ))}
+            </LearningSection>
+          )}
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Upcoming Deadlines */}
+          <DeadlinesWidget deadlines={mockDeadlines} maxItems={4} />
+
+          {/* Achievement Badges */}
+          <AchievementBadges badges={mockBadges} maxItems={6} />
+        </div>
+      </div>
 
       {/* Assigned Learning (required courses) */}
       <LearningSection

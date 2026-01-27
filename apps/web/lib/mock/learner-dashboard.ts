@@ -5,7 +5,9 @@
 
 import type {
   CompletedCourseRecord,
+  LearnerBadge,
   LearnerCourse,
+  LearnerDeadline,
   LearnerProgressSummary,
   RecommendedCourse,
 } from '@/types/lms/learner-dashboard';
@@ -268,5 +270,129 @@ export const mockCompletedCourses: CompletedCourseRecord[] = [
     badgesEarned: ['productivity-pro'],
     xpEarned: 320,
     timeSpent: 85,
+  },
+];
+
+/**
+ * Mock achievement badges
+ */
+export const mockBadges: LearnerBadge[] = [
+  {
+    id: 'badge-first-course',
+    name: 'First Steps',
+    description: 'Completed your first course. Welcome to the learning journey!',
+    icon: 'star',
+    rarity: 'common',
+    earnedAt: new Date('2025-11-15'),
+    courseId: 'course-onboarding',
+    xpReward: 50,
+  },
+  {
+    id: 'badge-perfect-score',
+    name: 'Perfect Score',
+    description: 'Achieved 100% on a course assessment. Outstanding work!',
+    icon: 'trophy',
+    rarity: 'rare',
+    earnedAt: new Date('2025-11-15'),
+    courseId: 'course-onboarding',
+    xpReward: 100,
+  },
+  {
+    id: 'badge-compliance-champion',
+    name: 'Compliance Champion',
+    description: 'Completed all required compliance training ahead of schedule.',
+    icon: 'shield',
+    rarity: 'rare',
+    earnedAt: new Date('2025-12-10'),
+    courseId: 'course-harassment-prevention',
+    xpReward: 150,
+  },
+  {
+    id: 'badge-week-streak',
+    name: 'Week Warrior',
+    description: 'Maintained a 7-day learning streak. Keep up the momentum!',
+    icon: 'flame',
+    rarity: 'common',
+    earnedAt: new Date('2026-01-10'),
+    xpReward: 75,
+  },
+  {
+    id: 'badge-productivity-pro',
+    name: 'Productivity Pro',
+    description: 'Mastered time management skills for maximum effectiveness.',
+    icon: 'zap',
+    rarity: 'epic',
+    earnedAt: new Date('2026-01-05'),
+    courseId: 'course-time-management',
+    xpReward: 200,
+  },
+  {
+    id: 'badge-knowledge-seeker',
+    name: 'Knowledge Seeker',
+    description: 'Completed 5 courses. Your dedication to learning is inspiring!',
+    icon: 'book-open',
+    rarity: 'rare',
+    earnedAt: new Date('2026-01-20'),
+    xpReward: 150,
+  },
+  {
+    id: 'badge-early-bird',
+    name: 'Early Bird',
+    description: 'Completed a course before its due date. Great planning!',
+    icon: 'target',
+    rarity: 'common',
+    earnedAt: new Date('2026-01-05'),
+    courseId: 'course-time-management',
+    xpReward: 50,
+  },
+  {
+    id: 'badge-leadership-legend',
+    name: 'Leadership Legend',
+    description: 'Demonstrated exceptional leadership competency across multiple courses.',
+    icon: 'crown',
+    rarity: 'legendary',
+    earnedAt: new Date('2026-01-25'),
+    xpReward: 500,
+  },
+];
+
+/**
+ * Mock upcoming deadlines (derived from assigned and in-progress courses)
+ */
+export const mockDeadlines: LearnerDeadline[] = [
+  {
+    courseId: 'course-safety-fundamentals',
+    courseTitle: 'Workplace Safety Fundamentals',
+    dueDate: new Date('2026-01-30'),
+    progress: 30,
+    isRequired: true,
+  },
+  {
+    courseId: 'course-leadership-101',
+    courseTitle: 'Advanced Leadership Skills',
+    dueDate: new Date('2026-02-15'),
+    progress: 65,
+    isRequired: true,
+  },
+  {
+    courseId: 'course-cybersecurity-101',
+    courseTitle: 'Cybersecurity Awareness Training',
+    dueDate: new Date('2026-02-28'),
+    progress: 0,
+    isRequired: true,
+  },
+  {
+    courseId: 'course-dei-fundamentals',
+    courseTitle: 'Diversity, Equity & Inclusion',
+    dueDate: new Date('2026-03-15'),
+    progress: 0,
+    isRequired: true,
+  },
+  {
+    courseId: 'course-project-management',
+    courseTitle: 'Project Management Fundamentals',
+    dueDate: new Date('2026-04-01'),
+    progress: 0,
+    isRequired: false,
   },
 ];
