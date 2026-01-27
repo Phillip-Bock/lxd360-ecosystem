@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import {
   Captions,
+  Check,
   Gauge,
   Maximize,
   Minimize,
@@ -29,6 +30,10 @@ interface PlayerControlsProps {
   onNext: () => void;
   onGoToSlide: (index: number) => void;
   onToggleFullscreen: () => void;
+  /** Whether the current slide is marked as complete */
+  isSlideCompleted?: boolean;
+  /** Callback when mark complete button is clicked */
+  onMarkComplete?: () => void;
 }
 
 export function PlayerControls({
@@ -40,6 +45,8 @@ export function PlayerControls({
   onNext,
   onGoToSlide,
   onToggleFullscreen,
+  isSlideCompleted = false,
+  onMarkComplete,
 }: PlayerControlsProps) {
   const progressPercentage = ((currentSlideIndex + 1) / totalSlides) * 100;
 
@@ -160,11 +167,42 @@ export function PlayerControls({
           </div>
         </div>
 
-        {/* Center - Time/Duration */}
-        <div className="hidden text-sm font-mono text-[var(--hud-text-muted)] md:flex items-center gap-2 glass-panel px-3 py-1 rounded-full border border-[var(--hud-border)]">
-          <span className="text-[var(--hud-accent-bright)]">--:--</span>
-          <span className="text-[var(--hud-accent)]/50">•</span>
-          <span>--:--</span>
+        {/* Center - Mark Complete Button */}
+        <div className="flex items-center gap-4">
+          {onMarkComplete && (
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onMarkComplete}
+                disabled={isSlideCompleted}
+                className={cn(
+                  'gap-2 font-medium transition-all duration-300',
+                  isSlideCompleted
+                    ? 'bg-[var(--hud-accent-green,#22c55e)]/20 text-[var(--hud-accent-green,#22c55e)] border border-[var(--hud-accent-green,#22c55e)]/30 cursor-default'
+                    : 'bg-[var(--hud-accent)]/10 text-[var(--hud-accent-bright)] hover:bg-[var(--hud-accent)]/20 border border-[var(--hud-accent)]/20',
+                )}
+                aria-label={isSlideCompleted ? 'Slide completed' : 'Mark slide as complete'}
+              >
+                <Check
+                  className={cn(
+                    'h-4 w-4',
+                    isSlideCompleted && 'text-[var(--hud-accent-green,#22c55e)]',
+                  )}
+                />
+                <span className="hidden sm:inline">
+                  {isSlideCompleted ? 'Completed' : 'Mark Complete'}
+                </span>
+              </Button>
+            </motion.div>
+          )}
+
+          {/* Time/Duration (hidden on mobile) */}
+          <div className="hidden text-sm font-mono text-[var(--hud-text-muted)] md:flex items-center gap-2 glass-panel px-3 py-1 rounded-full border border-[var(--hud-border)]">
+            <span className="text-[var(--hud-accent-bright)]">--:--</span>
+            <span className="text-[var(--hud-accent)]/50">•</span>
+            <span>--:--</span>
+          </div>
         </div>
 
         {/* Right Controls */}

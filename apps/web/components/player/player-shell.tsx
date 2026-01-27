@@ -90,6 +90,16 @@ interface PlayerShellProps {
   onPreferencesChange?: (prefs: Partial<LearnerPreferences>) => void;
   /** Configuration for external SCORM/xAPI/cmi5/AICC content */
   externalContent?: ExternalContentConfig | null;
+  /** Set of bookmarked slide IDs */
+  bookmarks?: Set<string>;
+  /** Set of completed slide IDs */
+  completedSlides?: Set<string>;
+  /** Callback when a slide is bookmarked/unbookmarked */
+  onBookmark?: (slideId: string) => void;
+  /** Callback when a slide is marked as complete */
+  onMarkComplete?: (slideId: string) => void;
+  /** Initial slide index to start from */
+  initialSlideIndex?: number;
 }
 
 export function PlayerShell({
@@ -100,15 +110,30 @@ export function PlayerShell({
   isDemo = false,
   designerTheme,
   externalContent,
+  bookmarks = new Set(),
+  completedSlides = new Set(),
+  onBookmark,
+  onMarkComplete,
+  initialSlideIndex,
 }: PlayerShellProps) {
   // Flatten slides for navigation
   const allSlides = course.chapters.flatMap((chapter) => chapter.slides);
 
+  // Determine the initial slide index
+  const getInitialSlideIndex = (): number => {
+    if (initialSlideIndex !== undefined && initialSlideIndex >= 0) {
+      return initialSlideIndex;
+    }
+    if (progress?.current_slide_id) {
+      const index = allSlides.findIndex((s) => s.id === progress.current_slide_id);
+      return index >= 0 ? index : 0;
+    }
+    return 0;
+  };
+
   const [state, setState] = useState<PlayerState>({
     isPlaying: false,
-    currentSlideIndex: progress?.current_slide_id
-      ? allSlides.findIndex((s) => s.id === progress.current_slide_id)
-      : 0,
+    currentSlideIndex: getInitialSlideIndex(),
     volume: 1,
     playbackSpeed: profile?.default_playback_speed ?? 1,
     isFullscreen: false,
@@ -132,6 +157,16 @@ export function PlayerShell({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Close sidebar on mobile screens after initial render
+  useEffect(() => {
+    const checkMobile = () => {
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        setState((prev) => ({ ...prev, sidebarOpen: false }));
+      }
+    };
+    checkMobile();
+  }, []);
 
   // ==========================================================================
   // CONTENT WRAPPER INTEGRATION
@@ -385,6 +420,8 @@ export function PlayerShell({
         onToggleNeuronaut={toggleNeuronaut}
         sidebarOpen={state.sidebarOpen}
         onOpenAccessibility={() => setShowAccessibility(true)}
+        isBookmarked={bookmarks.has(currentSlide?.id ?? '')}
+        onBookmark={onBookmark ? () => onBookmark(currentSlide?.id ?? '') : undefined}
       />
 
       {/* Main Content Area */}
@@ -505,6 +542,18 @@ export function PlayerShell({
         onNext={nextSlide}
         onGoToSlide={goToSlide}
         onToggleFullscreen={toggleFullscreen}
+        isSlideCompleted={completedSlides.has(currentSlide?.id ?? '')}
+        onMarkComplete={
+          onMarkComplete
+            ? () => {
+                onMarkComplete(currentSlide?.id ?? '');
+                // Auto-advance to next slide after marking complete
+                if (state.currentSlideIndex < allSlides.length - 1) {
+                  nextSlide();
+                }
+              }
+            : undefined
+        }
       />
 
       {/* Keyboard Shortcuts Overlay */}
