@@ -1,5 +1,3 @@
-// Organization context
-
 // Achievement hooks
 export {
   type UseBadgesActions,
@@ -20,6 +18,19 @@ export {
   useLearnerCertificates,
   useRecentBadges,
 } from './use-achievements';
+
+// Course progress hooks
+export {
+  type ProgressSummary,
+  type UseCourseProgressReturn,
+  type UseCourseProgressState,
+  type UseModuleProgressReturn,
+  type UseProgressSummaryReturn,
+  useCourseProgress,
+  useModuleProgress,
+  useProgressSummary,
+} from './use-course-progress';
+
 // Dashboard stats hooks
 export {
   type DashboardStats,
@@ -34,6 +45,7 @@ export {
   type UseDashboardStatsReturn,
   useDashboardStats,
 } from './use-dashboard-stats';
+
 // Enrollment hooks
 export {
   type UseEnrollmentsActions,
@@ -46,6 +58,7 @@ export {
   useIsEnrolled,
   useLearnerEnrollments,
 } from './use-enrollments';
+
 // Learner hooks
 export {
   type UseLearnerReturn,
@@ -55,4 +68,16 @@ export {
   useLearner,
   useLearners,
 } from './use-learners';
+
+// Lesson status hooks
+export {
+  type LessonStatusType,
+  type UseLessonStatusActions,
+  type UseLessonStatusReturn,
+  type UseLessonStatusState,
+  useLessonCompletion,
+  useLessonStatus,
+} from './use-lesson-status';
+
+// Organization context
 export { type UseOrganizationReturn, useOrganization } from './use-organization';
