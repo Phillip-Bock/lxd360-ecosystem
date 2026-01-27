@@ -9,13 +9,14 @@
  * - SectionBadge: Floating badge for section titles
  */
 
+// Coming Soon Placeholder
+export { ComingSoon } from './ComingSoon';
 // Section Components
 export {
   SectionBadge,
   SectionHeader,
   SectionWrapper,
 } from './SectionBadge';
-
 // Shimmer Border Cards
 export {
   ShimmerBorderCard,
