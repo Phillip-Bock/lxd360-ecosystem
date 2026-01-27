@@ -9,6 +9,10 @@ import type {
   AccordionConfig,
   AccordionContent,
   BlockInstance,
+  CarouselConfig,
+  CarouselContent,
+  DataConfig,
+  DataContent,
   FITBQuestionConfig,
   FITBQuestionContent,
   FlipCardConfig,
@@ -21,6 +25,8 @@ import type {
   MCQuestionContent,
   ParagraphConfig,
   ParagraphContent,
+  ProcessConfig,
+  ProcessContent,
   QuoteConfig,
   QuoteContent,
   TabsConfig,
@@ -33,7 +39,10 @@ import { FITBQuestionBlock } from './assessment/fitb-question-block';
 import { MCQuestionBlock } from './assessment/mc-question-block';
 // Interactive blocks
 import { AccordionBlock } from './interactive/accordion-block';
+import { CarouselBlock } from './interactive/carousel-block';
+import { DataBlock } from './interactive/data-block';
 import { FlipCardBlock } from './interactive/flip-card-block';
+import { ProcessBlock } from './interactive/process-block';
 import { TabsBlock } from './interactive/tabs-block';
 // Media blocks
 import { ImageBlock } from './media/image-block';
@@ -172,6 +181,36 @@ export function BlockRenderer({
           content={block.content as FlipCardContent}
           config={block.config as FlipCardConfig}
           onContentChange={onContentChange as ((content: FlipCardContent) => void) | undefined}
+        />
+      );
+
+    case 'carousel':
+      return (
+        <CarouselBlock
+          {...commonProps}
+          content={block.content as CarouselContent}
+          config={block.config as CarouselConfig}
+          onContentChange={onContentChange as ((content: CarouselContent) => void) | undefined}
+        />
+      );
+
+    case 'process':
+      return (
+        <ProcessBlock
+          {...commonProps}
+          content={block.content as ProcessContent}
+          config={block.config as ProcessConfig}
+          onContentChange={onContentChange as ((content: ProcessContent) => void) | undefined}
+        />
+      );
+
+    case 'data':
+      return (
+        <DataBlock
+          {...commonProps}
+          content={block.content as DataContent}
+          config={block.config as DataConfig}
+          onContentChange={onContentChange as ((content: DataContent) => void) | undefined}
         />
       );
 

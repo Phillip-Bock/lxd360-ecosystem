@@ -705,6 +705,9 @@ function getBlockName(block: BlockInstance): string {
     accordion: 'Accordion',
     tabs: 'Tabs',
     'flip-card': 'Flip Card',
+    carousel: 'Carousel',
+    process: 'Process',
+    data: 'Data Chart',
   };
 
   return names[block.type] ?? 'Content Block';
@@ -725,6 +728,9 @@ function getBlockDescription(block: BlockInstance): string {
     accordion: 'Expandable accordion sections',
     tabs: 'Tabbed content panels',
     'flip-card': 'Interactive flip card',
+    carousel: 'Image/content carousel with navigation',
+    process: 'Step-by-step workflow visualization',
+    data: 'Data visualization chart',
   };
 
   return descriptions[block.type] ?? 'Learning content block';

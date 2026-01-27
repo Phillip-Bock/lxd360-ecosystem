@@ -5,6 +5,10 @@ import type {
   BlockContentMap,
   BlockDefinition,
   BlockInstance,
+  CarouselConfig,
+  CarouselContent,
+  DataConfig,
+  DataContent,
   FITBQuestionConfig,
   FITBQuestionContent,
   FlipCardConfig,
@@ -17,6 +21,8 @@ import type {
   MCQuestionContent,
   ParagraphConfig,
   ParagraphContent,
+  ProcessConfig,
+  ProcessContent,
   QuoteConfig,
   QuoteContent,
   StarterBlockType,
@@ -47,6 +53,9 @@ export const BLOCK_ICONS: Record<StarterBlockType, string> = {
   accordion: 'ChevronDownIcon',
   tabs: 'RectangleGroupIcon',
   'flip-card': 'ArrowPathRoundedSquareIcon',
+  carousel: 'RectangleStackIcon',
+  process: 'ArrowRightCircleIcon',
+  data: 'ChartBarIcon',
 } as const;
 
 // =============================================================================
@@ -177,6 +186,42 @@ export const BLOCK_DEFINITIONS: Record<StarterBlockType, BlockDefinition> = {
     a11yRequirements: BLOCK_A11Y_REQUIREMENTS['flip-card'],
     defaultDuration: 30,
   },
+  carousel: {
+    type: 'carousel',
+    category: 'interactive',
+    interactivityLevel: 2,
+    xapiVerbs: BLOCK_XAPI_VERBS.carousel,
+    label: 'Carousel',
+    description: 'Image/content carousel with navigation',
+    icon: BLOCK_ICONS.carousel,
+    cognitiveLoadWeight: BLOCK_COGNITIVE_WEIGHTS.carousel,
+    a11yRequirements: BLOCK_A11Y_REQUIREMENTS.carousel,
+    defaultDuration: 60,
+  },
+  process: {
+    type: 'process',
+    category: 'interactive',
+    interactivityLevel: 1,
+    xapiVerbs: BLOCK_XAPI_VERBS.process,
+    label: 'Process',
+    description: 'Step-by-step workflow visualization',
+    icon: BLOCK_ICONS.process,
+    cognitiveLoadWeight: BLOCK_COGNITIVE_WEIGHTS.process,
+    a11yRequirements: BLOCK_A11Y_REQUIREMENTS.process,
+    defaultDuration: 45,
+  },
+  data: {
+    type: 'data',
+    category: 'interactive',
+    interactivityLevel: 1,
+    xapiVerbs: BLOCK_XAPI_VERBS.data,
+    label: 'Data',
+    description: 'Simple data visualization (bar/pie/line chart)',
+    icon: BLOCK_ICONS.data,
+    cognitiveLoadWeight: BLOCK_COGNITIVE_WEIGHTS.data,
+    a11yRequirements: BLOCK_A11Y_REQUIREMENTS.data,
+    defaultDuration: 30,
+  },
 } as const;
 
 // =============================================================================
@@ -288,6 +333,31 @@ export const DEFAULT_CONTENT_FACTORIES: {
       content: 'Here is the answer!',
     },
   }),
+
+  carousel: (): CarouselContent => ({
+    items: [
+      { id: 'slide-1', title: 'Slide 1', content: 'Content for slide 1...' },
+      { id: 'slide-2', title: 'Slide 2', content: 'Content for slide 2...' },
+      { id: 'slide-3', title: 'Slide 3', content: 'Content for slide 3...' },
+    ],
+  }),
+
+  process: (): ProcessContent => ({
+    steps: [
+      { id: 'step-1', title: 'Step 1', content: 'Description for step 1...' },
+      { id: 'step-2', title: 'Step 2', content: 'Description for step 2...' },
+      { id: 'step-3', title: 'Step 3', content: 'Description for step 3...' },
+    ],
+  }),
+
+  data: (): DataContent => ({
+    title: 'Chart Title',
+    data: [
+      { label: 'Category A', value: 30 },
+      { label: 'Category B', value: 45 },
+      { label: 'Category C', value: 25 },
+    ],
+  }),
 };
 
 // =============================================================================
@@ -379,6 +449,31 @@ export const DEFAULT_CONFIG_FACTORIES: {
     aspectRatio: '4:3',
     animationDuration: 600,
     trackInteractions: true,
+  }),
+
+  carousel: (): CarouselConfig => ({
+    autoPlay: false,
+    autoPlayInterval: 5000,
+    showIndicators: true,
+    showNavigation: true,
+    loop: true,
+    trackInteractions: true,
+  }),
+
+  process: (): ProcessConfig => ({
+    orientation: 'horizontal',
+    variant: 'default',
+    showConnectors: true,
+    trackInteractions: false,
+  }),
+
+  data: (): DataConfig => ({
+    chartType: 'bar',
+    showLegend: true,
+    showValues: true,
+    animated: true,
+    height: 200,
+    trackInteractions: false,
   }),
 };
 
