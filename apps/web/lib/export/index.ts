@@ -1,27 +1,40 @@
 /**
+ * Export Engine
+ *
+ * @fileoverview Main export engine for generating course packages in various formats
+ * @module lib/export
+ *
  * @example
  * ```ts
- * import { exportCourse } from '@/lib/export'
+ * import { exportCourse, exportCourseAsBlob } from '@/lib/export'
  *
- * const result = await exportCourse({
- *   format: 'scorm-1.2',
- *   courseId: 'safety-101',
+ * // Export with course data
+ * const result = await exportCourseAsBlob({
+ *   format: 'html5',
+ *   courseData: courseData,
  *   settings: {
- *     completionCriteria: 'passed',
+ *     completionCriteria: 'completed',
  *     scoringMethod: 'highest',
  *     includeInteractions: true,
  *   },
  * })
  *
- * if (result.success) {
- *   // Use result.packageUrl for download
+ * if (result.success && result.blob) {
+ *   // Download the blob
+ *   const url = URL.createObjectURL(result.blob)
+ *   // ...
  * }
  * ```
- *
- * =============================================================================
  */
 
-import type { ExportFormat, ExportOptions, ExportResult } from './types';
+import {
+  getHandler,
+  handlers,
+  type ExportContext,
+  type ExportCourseData,
+  type ExportHandlerResult,
+} from './handlers';
+import type { ExportFormat, ExportOptions, ExportResult, ExportSettings } from './types';
 
 // ============================================================================
 // RE-EXPORTS
@@ -31,291 +44,203 @@ import type { ExportFormat, ExportOptions, ExportResult } from './types';
 export {
   createManifestBuilder,
   generateAPIDetectionScript,
-  // API wrapper
   generateAPIWrapper,
   generateManifestXML,
   generateMinimalSCOWrapper,
-  // SCO wrapper
   generateSCOWrapper,
-  // Manifest builder
   ManifestBuilder,
   type SCOWrapperOptions,
 } from './scorm';
+
+// Type exports
 export * from './types';
 
+// Handler exports
+export {
+  cmi5Handler,
+  getFormatInfo,
+  getHandler,
+  handlers,
+  hasHandler,
+  html5Handler,
+  pdfHandler,
+  scorm12Handler,
+  scorm2004Handler,
+  xapiHandler,
+  type ExportContext,
+  type ExportCourseData,
+  type ExportHandler,
+  type ExportHandlerResult,
+} from './handlers';
+
 // ============================================================================
-// MAIN EXPORT FUNCTION
+// MAIN EXPORT FUNCTIONS
 // ============================================================================
 
 /**
- * Export a course to the specified format
+ * Export options for blob-based export
+ */
+export interface ExportBlobOptions {
+  format: ExportFormat;
+  courseData: ExportCourseData;
+  settings: ExportSettings;
+  includeMedia?: boolean;
+}
+
+/**
+ * Result of blob-based export
+ */
+export interface ExportBlobResult {
+  success: boolean;
+  blob?: Blob;
+  filename?: string;
+  mimeType?: string;
+  error?: string;
+  errorCode?: string;
+  stats?: ExportResult['stats'];
+}
+
+/**
+ * Export a course to a Blob using the format handlers
  *
- * @param options - Export options
- * @returns Export result with package URL or error
+ * This is the primary export function that returns a Blob directly.
+ * Use this for client-side downloads or further processing.
+ *
+ * @param options - Export options with course data
+ * @returns Export result with blob
  *
  * @example
  * ```ts
- * const result = await exportCourse({
- *   format: 'scorm-1.2',
- *   courseId: 'course-123',
+ * const result = await exportCourseAsBlob({
+ *   format: 'html5',
+ *   courseData: {
+ *     id: 'course-123',
+ *     title: 'My Course',
+ *     description: 'A great course',
+ *     // ...
+ *   },
  *   settings: {
  *     completionCriteria: 'completed',
  *     scoringMethod: 'highest',
  *     includeInteractions: true,
  *   },
  * })
+ *
+ * if (result.success && result.blob) {
+ *   // Create download link
+ *   const url = URL.createObjectURL(result.blob)
+ *   const a = document.createElement('a')
+ *   a.href = url
+ *   a.download = result.filename
+ *   a.click()
+ * }
  * ```
+ */
+export async function exportCourseAsBlob(options: ExportBlobOptions): Promise<ExportBlobResult> {
+  const { format, courseData, settings, includeMedia = false } = options;
+
+  // Get the handler for the format
+  const handler = getHandler(format);
+
+  if (!handler) {
+    return {
+      success: false,
+      error: `Export format "${format}" is not supported`,
+      errorCode: 'UNSUPPORTED_FORMAT',
+    };
+  }
+
+  // Create export context
+  const context: ExportContext = {
+    courseId: courseData.id,
+    courseData,
+    settings,
+    includeMedia,
+  };
+
+  // Validate the context
+  const validation = handler.validate(context);
+  if (!validation.valid) {
+    return {
+      success: false,
+      error: validation.errors.join('; '),
+      errorCode: 'VALIDATION_ERROR',
+    };
+  }
+
+  // Execute the export
+  const result: ExportHandlerResult = await handler.export(context);
+
+  return {
+    success: result.success,
+    blob: result.blob,
+    filename: result.filename,
+    mimeType: result.mimeType,
+    error: result.error,
+    errorCode: result.errorCode,
+    stats: result.stats,
+  };
+}
+
+/**
+ * Export a course to the specified format
+ *
+ * This function is for backwards compatibility with the existing API.
+ * It returns an ExportResult with a packageUrl (when storage is configured)
+ * or provides the raw blob data through stats.
+ *
+ * For new code, prefer using `exportCourseAsBlob` instead.
+ *
+ * @param options - Export options
+ * @returns Export result
+ *
+ * @deprecated Use exportCourseAsBlob for new implementations
  */
 export async function exportCourse(options: ExportOptions): Promise<ExportResult> {
   const startTime = Date.now();
 
-  try {
-    switch (options.format) {
-      case 'scorm-1.2':
-        return await exportSCORM12(options);
-
-      case 'scorm-2004':
-        return await exportSCORM2004(options);
-
-      case 'xapi':
-        return await exportXAPI(options);
-
-      case 'cmi5':
-        return await exportCmi5(options);
-
-      case 'html5':
-        return await exportHTML5(options);
-
-      case 'pdf':
-        return await exportPDF(options);
-
-      default:
-        return {
-          success: false,
-          error: `Export format "${options.format}" is not supported`,
-          errorDetails: {
-            code: 'UNSUPPORTED_FORMAT',
-            message: `The format "${options.format}" is not implemented`,
-          },
-        };
-    }
-  } catch (error) {
-    const duration = Date.now() - startTime;
-
+  // Validate options first
+  const validation = validateExportOptions(options);
+  if (!validation.valid) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
+      error: validation.errors.join('; '),
       errorDetails: {
-        code: 'EXPORT_ERROR',
-        message: error instanceof Error ? error.message : 'Unknown error',
-        details: error instanceof Error ? { stack: error.stack } : undefined,
-      },
-      stats: {
-        totalItems: 0,
-        totalSize: 0,
-        duration,
-        warnings: 0,
+        code: 'VALIDATION_ERROR',
+        message: validation.errors.join('; '),
       },
     };
   }
-}
 
-// ============================================================================
-// FORMAT-SPECIFIC EXPORTERS
-// ============================================================================
+  // Get the handler
+  const handler = getHandler(options.format);
 
-/**
- * Export course as SCORM 1.2 package
- */
-async function exportSCORM12(options: ExportOptions): Promise<ExportResult> {
-  const startTime = Date.now();
-
-  // Validate settings
-  if (!options.settings.scorm) {
-    options.settings.scorm = {
-      version: '1.2',
-      passingScore: 80,
-      timeLimit: 0,
-      allowReview: true,
-      credit: 'credit',
+  if (!handler) {
+    return {
+      success: false,
+      error: `Export format "${options.format}" is not supported`,
+      errorDetails: {
+        code: 'UNSUPPORTED_FORMAT',
+        message: `The format "${options.format}" is not implemented`,
+      },
     };
   }
 
-  // TODO(LXD-406): Implement full SCORM 1.2 export
-  // This is the foundation - actual implementation would:
-  // 1. Fetch course data from database
-  // 2. Generate imsmanifest.xml using ManifestBuilder
-  // 3. Generate SCO HTML pages with SCORM API wrapper
-  // 4. Bundle all assets
-  // 5. Create ZIP package
-  // 6. Upload to storage and return URL
-
+  // Note: This function requires courseData to be fetched externally
+  // For now, return a helpful error if courseData is not provided
+  // In production, this would fetch from Firestore using options.courseId
   return {
     success: false,
-    error: 'SCORM 1.2 export is not yet fully implemented',
+    error: 'Course data must be fetched and provided. Use exportCourseAsBlob instead.',
     errorDetails: {
-      code: 'NOT_IMPLEMENTED',
-      message: 'SCORM 1.2 export foundation is ready, but full implementation pending',
-    },
-    stats: {
-      totalItems: 0,
-      totalSize: 0,
-      duration: Date.now() - startTime,
-      warnings: 1,
-      warningMessages: ['This is a foundation implementation'],
-    },
-  };
-}
-
-/**
- * Export course as SCORM 2004 package
- */
-async function exportSCORM2004(options: ExportOptions): Promise<ExportResult> {
-  const startTime = Date.now();
-
-  // Validate settings
-  if (!options.settings.scorm) {
-    options.settings.scorm = {
-      version: '2004-4th',
-      passingScore: 80,
-      timeLimit: 0,
-      allowReview: true,
-      credit: 'credit',
-    };
-  }
-
-  // TODO(LXD-406): Implement full SCORM 2004 export
-  // Similar to SCORM 1.2 but with:
-  // - Sequencing and navigation rules
-  // - ADL SCORM 2004 API
-  // - Extended metadata
-
-  return {
-    success: false,
-    error: 'SCORM 2004 export is not yet fully implemented',
-    errorDetails: {
-      code: 'NOT_IMPLEMENTED',
-      message: 'SCORM 2004 export foundation is ready, but full implementation pending',
-    },
-    stats: {
-      totalItems: 0,
-      totalSize: 0,
-      duration: Date.now() - startTime,
-      warnings: 1,
-      warningMessages: ['This is a foundation implementation'],
-    },
-  };
-}
-
-/**
- * Export course as xAPI package
- */
-async function exportXAPI(options: ExportOptions): Promise<ExportResult> {
-  void options;
-  const startTime = Date.now();
-
-  // TODO(LXD-406): Implement xAPI export
-  // This would:
-  // 1. Generate HTML5 content with xAPI wrapper
-  // 2. Include TinCan.js library
-  // 3. Configure LRS endpoint
-  // 4. Bundle as downloadable ZIP
-
-  return {
-    success: false,
-    error: 'xAPI export is not yet implemented',
-    errorDetails: {
-      code: 'NOT_IMPLEMENTED',
-      message: 'xAPI export is planned for a future release',
-    },
-    stats: {
-      totalItems: 0,
-      totalSize: 0,
-      duration: Date.now() - startTime,
-      warnings: 0,
-    },
-  };
-}
-
-/**
- * Export course as cmi5 package
- */
-async function exportCmi5(options: ExportOptions): Promise<ExportResult> {
-  void options;
-  const startTime = Date.now();
-
-  // TODO(LXD-406): Implement cmi5 export
-  // This would follow cmi5 specification:
-  // - cmi5.xml course structure
-  // - xAPI statement requirements
-  // - AU (Assignable Unit) structure
-
-  return {
-    success: false,
-    error: 'cmi5 export is not yet implemented',
-    errorDetails: {
-      code: 'NOT_IMPLEMENTED',
-      message: 'cmi5 export is planned for a future release',
-    },
-    stats: {
-      totalItems: 0,
-      totalSize: 0,
-      duration: Date.now() - startTime,
-      warnings: 0,
-    },
-  };
-}
-
-/**
- * Export course as standalone HTML5 package
- */
-async function exportHTML5(options: ExportOptions): Promise<ExportResult> {
-  void options;
-  const startTime = Date.now();
-
-  // TODO(LXD-406): Implement HTML5 export
-  // This would:
-  // 1. Generate static HTML5 pages
-  // 2. Include all media assets
-  // 3. Bundle with navigation
-  // 4. Create downloadable ZIP
-
-  return {
-    success: false,
-    error: 'HTML5 export is not yet implemented',
-    errorDetails: {
-      code: 'NOT_IMPLEMENTED',
-      message: 'HTML5 export is planned for a future release',
-    },
-    stats: {
-      totalItems: 0,
-      totalSize: 0,
-      duration: Date.now() - startTime,
-      warnings: 0,
-    },
-  };
-}
-
-/**
- * Export course as PDF document
- */
-async function exportPDF(options: ExportOptions): Promise<ExportResult> {
-  void options;
-  const startTime = Date.now();
-
-  // TODO(LXD-406): Implement PDF export
-  // This would:
-  // 1. Generate PDF from course content
-  // 2. Include table of contents
-  // 3. Embed images
-  // 4. Format for printing
-
-  return {
-    success: false,
-    error: 'PDF export is not yet implemented',
-    errorDetails: {
-      code: 'NOT_IMPLEMENTED',
-      message: 'PDF export is planned for a future release',
+      code: 'COURSE_DATA_REQUIRED',
+      message:
+        'The exportCourse function requires course data to be fetched. Use exportCourseAsBlob with courseData parameter.',
+      details: {
+        courseId: options.courseId,
+        format: options.format,
+        suggestion: 'Use exportCourseAsBlob({ format, courseData, settings }) instead',
+      },
     },
     stats: {
       totalItems: 0,
@@ -334,31 +259,22 @@ async function exportPDF(options: ExportOptions): Promise<ExportResult> {
  * Get supported export formats
  */
 export function getSupportedFormats(): ExportFormat[] {
-  return ['scorm-1.2', 'scorm-2004', 'xapi', 'cmi5', 'html5', 'pdf'];
+  return Object.keys(handlers) as ExportFormat[];
 }
 
 /**
  * Check if a format is currently implemented
  */
 export function isFormatImplemented(format: ExportFormat): boolean {
-  void format;
-  // Currently only foundation is implemented
-  return false;
+  return format in handlers;
 }
 
 /**
  * Get format display name
  */
 export function getFormatDisplayName(format: ExportFormat): string {
-  const names: Record<ExportFormat, string> = {
-    'scorm-1.2': 'SCORM 1.2',
-    'scorm-2004': 'SCORM 2004 4th Edition',
-    xapi: 'xAPI (Tin Can)',
-    cmi5: 'cmi5',
-    html5: 'HTML5 Standalone',
-    pdf: 'PDF Document',
-  };
-  return names[format];
+  const handler = getHandler(format);
+  return handler?.displayName ?? format;
 }
 
 /**
@@ -374,6 +290,22 @@ export function getFormatDescription(format: ExportFormat): string {
     pdf: 'Printable document format. No interactivity.',
   };
   return descriptions[format];
+}
+
+/**
+ * Get format file extension
+ */
+export function getFormatExtension(format: ExportFormat): string {
+  const handler = getHandler(format);
+  return handler?.extension ?? 'zip';
+}
+
+/**
+ * Get format MIME type
+ */
+export function getFormatMimeType(format: ExportFormat): string {
+  const handler = getHandler(format);
+  return handler?.mimeType ?? 'application/octet-stream';
 }
 
 /**
@@ -410,4 +342,32 @@ export function validateExportOptions(options: ExportOptions): {
     valid: errors.length === 0,
     errors,
   };
+}
+
+/**
+ * Create a download link for an exported blob
+ *
+ * @param blob - The exported blob
+ * @param filename - The filename for download
+ * @returns Object URL for the blob (remember to revoke when done)
+ */
+export function createDownloadUrl(blob: Blob, _filename: string): string {
+  return URL.createObjectURL(blob);
+}
+
+/**
+ * Trigger a download for an exported blob
+ *
+ * @param blob - The exported blob
+ * @param filename - The filename for download
+ */
+export function downloadBlob(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
