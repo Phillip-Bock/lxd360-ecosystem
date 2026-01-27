@@ -34,5 +34,6 @@ export type {
   TranscriptEntry,
 } from './progress';
 export * from './quiz';
+export * from './recommendation';
 export * from './skill';
 export * from './social';
