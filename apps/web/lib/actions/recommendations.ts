@@ -9,13 +9,13 @@ import { analyzeGap, getTopRecommendations } from '@/lib/onet/gap-engine';
 import { getOccupationByCode } from '@/lib/onet/seed-data';
 import type { UserSkillMastery } from '@/lib/onet/types';
 import {
+  generateRecommendationsRequestSchema,
   type Recommendation,
   type RecommendationStats,
   type RecommendationWithDetails,
-  type SkillRecommendation,
-  generateRecommendationsRequestSchema,
   recommendationApprovalSchema,
   recommendationResponseSchema,
+  type SkillRecommendation,
 } from '@/types/lms/recommendation';
 
 const log = logger.child({ module: 'actions-recommendations' });
@@ -233,12 +233,12 @@ export async function generateRecommendations(
       const skillRec: SkillRecommendation = {
         skillId: gap.skill.onetElementId,
         skillName: gap.skill.name,
-        currentLevel: gapAnalysis.missingSkills.find(
-          (g) => g.skill.onetElementId === gap.skill.onetElementId,
-        )?.currentLevel || 0,
-        targetLevel: gapAnalysis.missingSkills.find(
-          (g) => g.skill.onetElementId === gap.skill.onetElementId,
-        )?.requiredLevel || 5,
+        currentLevel:
+          gapAnalysis.missingSkills.find((g) => g.skill.onetElementId === gap.skill.onetElementId)
+            ?.currentLevel || 0,
+        targetLevel:
+          gapAnalysis.missingSkills.find((g) => g.skill.onetElementId === gap.skill.onetElementId)
+            ?.requiredLevel || 5,
         gap:
           gapAnalysis.missingSkills.find((g) => g.skill.onetElementId === gap.skill.onetElementId)
             ?.gap || 3,
@@ -609,7 +609,9 @@ export async function getMyRecommendations(): Promise<
       .limit(20)
       .get();
 
-    const recommendations = snapshot.docs.map((doc) => firestoreToRecommendation(doc.id, doc.data()));
+    const recommendations = snapshot.docs.map((doc) =>
+      firestoreToRecommendation(doc.id, doc.data()),
+    );
 
     // Enrich with course details
     const enrichedRecs: RecommendationWithDetails[] = [];
@@ -671,7 +673,9 @@ export async function getPendingApprovalRecommendations(): Promise<
       .limit(100)
       .get();
 
-    const recommendations = snapshot.docs.map((doc) => firestoreToRecommendation(doc.id, doc.data()));
+    const recommendations = snapshot.docs.map((doc) =>
+      firestoreToRecommendation(doc.id, doc.data()),
+    );
 
     // Enrich with course and learner details
     const enrichedRecs: RecommendationWithDetails[] = [];
@@ -773,7 +777,10 @@ export async function getRecommendationStats(): Promise<ActionResult<Recommendat
       enrolled,
       expired,
       averageConfidence: total > 0 ? Math.round((totalConfidence / total) * 100) / 100 : 0,
-      acceptanceRate: totalResponded > 0 ? Math.round(((accepted + pendingApproval + enrolled) / totalResponded) * 100) : 0,
+      acceptanceRate:
+        totalResponded > 0
+          ? Math.round(((accepted + pendingApproval + enrolled) / totalResponded) * 100)
+          : 0,
       conversionRate: total > 0 ? Math.round((enrolled / total) * 100) : 0,
     };
 

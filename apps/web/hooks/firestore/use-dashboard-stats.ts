@@ -10,13 +10,13 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { useSafeAuth } from '@/providers/SafeAuthProvider';
+import { getCoursesByOrg } from '@/lib/firestore/services/courses';
 import {
   getCompletedEnrollments,
   getInProgressEnrollments,
 } from '@/lib/firestore/services/enrollments';
-import { getCoursesByOrg } from '@/lib/firestore/services/courses';
 import { getLearners } from '@/lib/firestore/services/learners';
+import { useSafeAuth } from '@/providers/SafeAuthProvider';
 import { useOrganization } from './use-organization';
 
 // =============================================================================
@@ -168,7 +168,8 @@ export function useDashboardStats(): UseDashboardStatsReturn {
 
       // TODO(LXD-367): Calculate compliance from required course enrollments
       // For now, estimate based on active vs total
-      const complianceRate = learners.length > 0 ? Math.round((activeCount / learners.length) * 100) : 0;
+      const complianceRate =
+        learners.length > 0 ? Math.round((activeCount / learners.length) * 100) : 0;
 
       return {
         teamMembers: learners.length,

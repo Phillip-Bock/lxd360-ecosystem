@@ -2,16 +2,16 @@
 
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
+import {
+  isEditorStats,
+  isLearnerStats,
+  isManagerStats,
+  isOwnerStats,
+  useDashboardStats,
+} from '@/hooks/firestore';
 import type { Persona } from '@/lib/rbac/personas';
 import { cn } from '@/lib/utils';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
-import {
-  useDashboardStats,
-  isLearnerStats,
-  isEditorStats,
-  isManagerStats,
-  isOwnerStats,
-} from '@/hooks/firestore';
 import { NeuronautCompanion } from './NeuronautCompanion';
 // Types
 import type {
@@ -414,34 +414,94 @@ export function MissionControlDashboard({
     if (dashboardStats && !statsLoading) {
       if (isLearnerStats(dashboardStats)) {
         return [
-          { label: 'Courses Active', value: dashboardStats.coursesActive, icon: '📚', change: { value: 0, label: 'new' } },
-          { label: 'Courses Completed', value: dashboardStats.coursesCompleted, icon: '🎯', color: 'success' },
-          { label: 'Skills Mastered', value: dashboardStats.skillsMastered, icon: '🏆', color: 'purple' },
-          { label: 'Learning Streak', value: `${dashboardStats.learningStreak} days`, icon: '🔥', color: 'warning' },
+          {
+            label: 'Courses Active',
+            value: dashboardStats.coursesActive,
+            icon: '📚',
+            change: { value: 0, label: 'new' },
+          },
+          {
+            label: 'Courses Completed',
+            value: dashboardStats.coursesCompleted,
+            icon: '🎯',
+            color: 'success',
+          },
+          {
+            label: 'Skills Mastered',
+            value: dashboardStats.skillsMastered,
+            icon: '🏆',
+            color: 'purple',
+          },
+          {
+            label: 'Learning Streak',
+            value: `${dashboardStats.learningStreak} days`,
+            icon: '🔥',
+            color: 'warning',
+          },
         ];
       }
       if (isEditorStats(dashboardStats)) {
         return [
           { label: 'Active Courses', value: dashboardStats.activeCourses, icon: '📚' },
-          { label: 'Draft Courses', value: dashboardStats.draftCourses, icon: '📝', color: 'warning' },
-          { label: 'Total Students', value: dashboardStats.totalStudents, icon: '👥', change: { value: 0, label: 'month' } },
-          { label: 'Avg Completion', value: `${dashboardStats.avgCompletion}%`, icon: '📊', color: 'success' },
+          {
+            label: 'Draft Courses',
+            value: dashboardStats.draftCourses,
+            icon: '📝',
+            color: 'warning',
+          },
+          {
+            label: 'Total Students',
+            value: dashboardStats.totalStudents,
+            icon: '👥',
+            change: { value: 0, label: 'month' },
+          },
+          {
+            label: 'Avg Completion',
+            value: `${dashboardStats.avgCompletion}%`,
+            icon: '📊',
+            color: 'success',
+          },
         ];
       }
       if (isManagerStats(dashboardStats)) {
         return [
           { label: 'Team Members', value: dashboardStats.teamMembers, icon: '👥' },
-          { label: 'Compliance', value: `${dashboardStats.complianceRate}%`, icon: '✅', color: 'success' },
+          {
+            label: 'Compliance',
+            value: `${dashboardStats.complianceRate}%`,
+            icon: '✅',
+            color: 'success',
+          },
           { label: 'At Risk', value: dashboardStats.atRiskCount, icon: '⚠️', color: 'danger' },
-          { label: 'Avg Progress', value: `${dashboardStats.avgProgress}%`, icon: '📈', color: 'cyan' },
+          {
+            label: 'Avg Progress',
+            value: `${dashboardStats.avgProgress}%`,
+            icon: '📈',
+            color: 'cyan',
+          },
         ];
       }
       if (isOwnerStats(dashboardStats)) {
         return [
           { label: 'Total Courses', value: dashboardStats.totalCourses, icon: '📚' },
-          { label: 'Total Learners', value: dashboardStats.totalLearners, icon: '👥', change: { value: 0, label: 'week' } },
-          { label: 'Active Enrollments', value: dashboardStats.activeEnrollments, icon: '📡', color: 'cyan' },
-          { label: 'Completion Rate', value: `${dashboardStats.completionRate}%`, icon: '⚡', color: 'success' },
+          {
+            label: 'Total Learners',
+            value: dashboardStats.totalLearners,
+            icon: '👥',
+            change: { value: 0, label: 'week' },
+          },
+          {
+            label: 'Active Enrollments',
+            value: dashboardStats.activeEnrollments,
+            icon: '📡',
+            color: 'cyan',
+          },
+          {
+            label: 'Completion Rate',
+            value: `${dashboardStats.completionRate}%`,
+            icon: '⚡',
+            color: 'success',
+          },
         ];
       }
     }

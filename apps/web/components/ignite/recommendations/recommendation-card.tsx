@@ -18,12 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import type { RecommendationPriority, RecommendationWithDetails } from '@/types/lms/recommendation';
 
@@ -156,7 +151,11 @@ export function RecommendationCard({
           <div className="flex items-center gap-4">
             {/* Priority indicator */}
             <div
-              className={cn('p-2 rounded-lg shrink-0', priorityConfig.bgColor, priorityConfig.color)}
+              className={cn(
+                'p-2 rounded-lg shrink-0',
+                priorityConfig.bgColor,
+                priorityConfig.color,
+              )}
             >
               <PriorityIcon className="w-5 h-5" aria-hidden />
             </div>
@@ -308,7 +307,9 @@ export function RecommendationCard({
         {/* Target skills */}
         {recommendation.targetSkills.length > 0 && (
           <div>
-            <p className="text-xs font-medium text-muted-foreground mb-2">Skills you&apos;ll develop:</p>
+            <p className="text-xs font-medium text-muted-foreground mb-2">
+              Skills you&apos;ll develop:
+            </p>
             <div className="space-y-2">
               {recommendation.targetSkills.slice(0, 3).map((skill) => (
                 <div key={skill.skillId} className="flex items-center gap-2">

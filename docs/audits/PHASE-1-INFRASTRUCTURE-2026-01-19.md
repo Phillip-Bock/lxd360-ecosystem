@@ -352,7 +352,7 @@ Legacy route redirects including:
 **Finding:** 🔴 **CRITICAL**
 `CLAUDE.md` line 579 contains hardcoded Firebase API key:
 ```
-apiKey: "AIzaSyAofpfEisG-fZy6feF_QF2HviP7yRKG9YI"
+apiKey: "[REDACTED - API KEY REMOVED FOR SECURITY]"
 ```
 
 **Note:** This is in documentation, not runtime code, but still a security concern as it could be copied accidentally.

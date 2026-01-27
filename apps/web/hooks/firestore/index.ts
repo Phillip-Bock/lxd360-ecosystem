@@ -20,6 +20,20 @@ export {
   useLearnerCertificates,
   useRecentBadges,
 } from './use-achievements';
+// Dashboard stats hooks
+export {
+  type DashboardStats,
+  type EditorDashboardStats,
+  isEditorStats,
+  isLearnerStats,
+  isManagerStats,
+  isOwnerStats,
+  type LearnerDashboardStats,
+  type ManagerDashboardStats,
+  type OwnerDashboardStats,
+  type UseDashboardStatsReturn,
+  useDashboardStats,
+} from './use-dashboard-stats';
 // Enrollment hooks
 export {
   type UseEnrollmentsActions,
@@ -42,18 +56,3 @@ export {
   useLearners,
 } from './use-learners';
 export { type UseOrganizationReturn, useOrganization } from './use-organization';
-
-// Dashboard stats hooks
-export {
-  type DashboardStats,
-  type EditorDashboardStats,
-  type LearnerDashboardStats,
-  type ManagerDashboardStats,
-  type OwnerDashboardStats,
-  type UseDashboardStatsReturn,
-  isEditorStats,
-  isLearnerStats,
-  isManagerStats,
-  isOwnerStats,
-  useDashboardStats,
-} from './use-dashboard-stats';
