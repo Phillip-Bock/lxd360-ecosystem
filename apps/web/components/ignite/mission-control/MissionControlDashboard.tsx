@@ -5,6 +5,13 @@ import { useEffect, useMemo, useState } from 'react';
 import type { Persona } from '@/lib/rbac/personas';
 import { cn } from '@/lib/utils';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
+import {
+  useDashboardStats,
+  isLearnerStats,
+  isEditorStats,
+  isManagerStats,
+  isOwnerStats,
+} from '@/hooks/firestore';
 import { NeuronautCompanion } from './NeuronautCompanion';
 // Types
 import type {
@@ -387,6 +394,9 @@ export function MissionControlDashboard({
   const { user, persona: authPersona } = useSafeAuth();
   const [missionTime, setMissionTime] = useState(new Date());
 
+  // Fetch real dashboard stats from Firestore
+  const { stats: dashboardStats, loading: statsLoading } = useDashboardStats();
+
   // Determine dashboard view based on persona
   const persona = personaOverride ?? authPersona ?? 'learner';
   const dashboardView = mapPersonaToDashboardView(persona);
@@ -398,8 +408,45 @@ export function MissionControlDashboard({
     return () => clearInterval(timer);
   }, []);
 
-  // Get stats for current view
-  const stats = useMemo(() => {
+  // Convert real stats to StatMetric format, with fallback to mock data during loading
+  const stats = useMemo((): StatMetric[] => {
+    // Use real data if available
+    if (dashboardStats && !statsLoading) {
+      if (isLearnerStats(dashboardStats)) {
+        return [
+          { label: 'Courses Active', value: dashboardStats.coursesActive, icon: '📚', change: { value: 0, label: 'new' } },
+          { label: 'Courses Completed', value: dashboardStats.coursesCompleted, icon: '🎯', color: 'success' },
+          { label: 'Skills Mastered', value: dashboardStats.skillsMastered, icon: '🏆', color: 'purple' },
+          { label: 'Learning Streak', value: `${dashboardStats.learningStreak} days`, icon: '🔥', color: 'warning' },
+        ];
+      }
+      if (isEditorStats(dashboardStats)) {
+        return [
+          { label: 'Active Courses', value: dashboardStats.activeCourses, icon: '📚' },
+          { label: 'Draft Courses', value: dashboardStats.draftCourses, icon: '📝', color: 'warning' },
+          { label: 'Total Students', value: dashboardStats.totalStudents, icon: '👥', change: { value: 0, label: 'month' } },
+          { label: 'Avg Completion', value: `${dashboardStats.avgCompletion}%`, icon: '📊', color: 'success' },
+        ];
+      }
+      if (isManagerStats(dashboardStats)) {
+        return [
+          { label: 'Team Members', value: dashboardStats.teamMembers, icon: '👥' },
+          { label: 'Compliance', value: `${dashboardStats.complianceRate}%`, icon: '✅', color: 'success' },
+          { label: 'At Risk', value: dashboardStats.atRiskCount, icon: '⚠️', color: 'danger' },
+          { label: 'Avg Progress', value: `${dashboardStats.avgProgress}%`, icon: '📈', color: 'cyan' },
+        ];
+      }
+      if (isOwnerStats(dashboardStats)) {
+        return [
+          { label: 'Total Courses', value: dashboardStats.totalCourses, icon: '📚' },
+          { label: 'Total Learners', value: dashboardStats.totalLearners, icon: '👥', change: { value: 0, label: 'week' } },
+          { label: 'Active Enrollments', value: dashboardStats.activeEnrollments, icon: '📡', color: 'cyan' },
+          { label: 'Completion Rate', value: `${dashboardStats.completionRate}%`, icon: '⚡', color: 'success' },
+        ];
+      }
+    }
+
+    // Fallback to mock data while loading or if no org context
     switch (dashboardView) {
       case 'learner':
         return getLearnerStats();
@@ -410,7 +457,7 @@ export function MissionControlDashboard({
       case 'admin':
         return getAdminStats();
     }
-  }, [dashboardView]);
+  }, [dashboardView, dashboardStats, statsLoading]);
 
   // Mock data for widgets (replace with real hooks)
   const skillMasteryData = useMemo(() => getMockSkillMasteryData(), []);
