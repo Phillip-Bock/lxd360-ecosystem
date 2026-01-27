@@ -341,9 +341,8 @@ var LXD360_XAPI = (function() {
     var statement = createStatement(params);
 
     if (!_initialized) {
-      // Queue statement for later
+      // Queue statement for later (offline mode)
       _statementQueue.push({ statement: params, callback: callback });
-      console.log('LXD360_XAPI: Statement queued (offline mode):', statement.verb.display['en-US']);
       if (callback) callback(null, statement);
       return;
     }
@@ -361,10 +360,9 @@ var LXD360_XAPI = (function() {
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4) {
         if (xhr.status >= 200 && xhr.status < 300) {
-          console.log('LXD360_XAPI: Statement sent:', statement.verb.display['en-US']);
           if (callback) callback(null, statement);
         } else {
-          console.error('LXD360_XAPI: Failed to send statement:', xhr.status);
+          // Statement send failed
           if (callback) callback(new Error('Failed to send statement'), null);
         }
       }
@@ -628,14 +626,8 @@ function generateXAPINavigation(
 
   // Initialize xAPI on page load
   document.addEventListener('DOMContentLoaded', function() {
-    LXD360_XAPI.initialize(function(success) {
-      if (success) {
-        console.log('xAPI initialized successfully');
-      } else {
-        console.log('Running in offline mode');
-      }
-
-      // Track current lesson
+    LXD360_XAPI.initialize(function() {
+      // Track current lesson after initialization
       trackCurrentLesson();
     });
   });
@@ -930,7 +922,7 @@ function renderXAPIBlock(block: ExportBlockData, _settings: XAPISettings): strin
         <p>${escapeHtml(String(content.text || ''))}</p>
       </div>`;
 
-    case 'accordion':
+    case 'accordion': {
       const sections = Array.isArray(content.sections) ? content.sections : [];
       const accordionItems = sections
         .map(
@@ -943,8 +935,9 @@ function renderXAPIBlock(block: ExportBlockData, _settings: XAPISettings): strin
         )
         .join('\n');
       return `<div class="block block-accordion" data-block-id="${blockId}">${accordionItems}</div>`;
+    }
 
-    case 'mc-question':
+    case 'mc-question': {
       const choices = Array.isArray(content.choices) ? content.choices : [];
       const correctIds = choices
         .filter((c: { correct?: boolean }) => c.correct)
@@ -976,6 +969,7 @@ function renderXAPIBlock(block: ExportBlockData, _settings: XAPISettings): strin
           feedbackEl.textContent = correct ? 'Correct!' : 'Incorrect. Try again.';
         }
       </script>`;
+    }
 
     default:
       // Default rendering without special tracking
@@ -992,9 +986,10 @@ function renderDefaultBlock(block: ExportBlockData): string {
   const content = block.content;
 
   switch (block.type) {
-    case 'heading':
+    case 'heading': {
       const level = Math.min(6, Math.max(1, Number(content.level) || 2));
       return `<h${level}>${escapeHtml(String(content.text || ''))}</h${level}>`;
+    }
 
     case 'image':
       return `<figure>
@@ -1013,10 +1008,11 @@ function renderDefaultBlock(block: ExportBlockData): string {
         ${content.author ? `<cite>- ${escapeHtml(String(content.author))}</cite>` : ''}
       </blockquote>`;
 
-    case 'list':
+    case 'list': {
       const items = Array.isArray(content.items) ? content.items : [];
       const listItems = items.map((item) => `<li>${escapeHtml(String(item))}</li>`).join('');
       return content.ordered ? `<ol>${listItems}</ol>` : `<ul>${listItems}</ul>`;
+    }
 
     case 'divider':
       return '<hr />';

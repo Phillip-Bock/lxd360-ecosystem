@@ -126,3 +126,16 @@ export {
   XAPI_VERBS,
   XApiWrapper,
 } from './wrappers';
+
+// xAPI Integration exports (LXD-349)
+export {
+  type CompletionResult,
+  createPlayerSyncHandler,
+  createPlayerXAPIEmitter,
+  type EngagementData,
+  type HesitationData,
+  type OfflineResumeData,
+  type PlayerXAPIConfig,
+  PlayerXAPIEmitter,
+  type UsePlayerXAPIOptions,
+} from './xapi-integration';

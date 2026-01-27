@@ -661,6 +661,50 @@ export const XAPI_VERBS = {
     id: 'https://lxd360.com/xapi/verbs/completed-review',
     display: { 'en-US': 'completed review' },
   },
+
+  // ==========================================================================
+  // DEEP PROFILE VERBS (LXD-349)
+  // ==========================================================================
+
+  /**
+   * Indicates the actor hesitated before responding (false confidence indicator)
+   */
+  hesitated: {
+    id: 'https://lxd360.com/xapi/verbs/hesitated',
+    display: { 'en-US': 'hesitated' },
+  },
+
+  /**
+   * Indicates the actor skimmed the content (low engagement indicator)
+   */
+  skimmed: {
+    id: 'https://lxd360.com/xapi/verbs/skimmed',
+    display: { 'en-US': 'skimmed' },
+  },
+
+  /**
+   * Indicates the actor consumed content (video/audio/text)
+   */
+  consumed: {
+    id: 'https://lxd360.com/xapi/verbs/consumed',
+    display: { 'en-US': 'consumed' },
+  },
+
+  /**
+   * Indicates content was downloaded for offline use
+   */
+  downloadedOffline: {
+    id: 'https://lxd360.com/xapi/verbs/downloaded-offline',
+    display: { 'en-US': 'downloaded for offline' },
+  },
+
+  /**
+   * Indicates offline data was synced back to server
+   */
+  syncedOffline: {
+    id: 'https://lxd360.com/xapi/verbs/synced-offline',
+    display: { 'en-US': 'synced offline data' },
+  },
 } as const satisfies Record<string, Verb>;
 
 /**

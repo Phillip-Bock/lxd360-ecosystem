@@ -11,7 +11,13 @@
 import JSZip from 'jszip';
 
 import type { ExportContext, ExportHandler, ExportHandlerResult, ExportLessonData } from './base';
-import { createErrorResult, createSuccessResult, escapeHtml, escapeXml, generateFilename } from './base';
+import {
+  createErrorResult,
+  createSuccessResult,
+  escapeHtml,
+  escapeXml,
+  generateFilename,
+} from './base';
 
 // ============================================================================
 // CONSTANTS
@@ -157,17 +163,15 @@ interface XAPISettings {
 /**
  * Generate cmi5.xml course structure
  */
-function generateCmi5Xml(
-  courseData: ExportContext['courseData'],
-  settings: XAPISettings,
-): string {
+function generateCmi5Xml(courseData: ExportContext['courseData'], settings: XAPISettings): string {
   const courseId = `${settings.activityIdPrefix}/course/${courseData.id}`;
 
   // Build AU entries
-  const auEntries = courseData.modules.flatMap((module) =>
-    module.lessons.map((lesson) => {
-      const auId = `${settings.activityIdPrefix}/au/${lesson.id}`;
-      return `
+  const auEntries = courseData.modules
+    .flatMap((module) =>
+      module.lessons.map((lesson) => {
+        const auId = `${settings.activityIdPrefix}/au/${lesson.id}`;
+        return `
       <au id="${escapeXml(auId)}">
         <title>
           <langstring lang="${courseData.language || 'en'}">${escapeXml(lesson.title)}</langstring>
@@ -180,8 +184,9 @@ function generateCmi5Xml(
         <moveOn>CompletedOrPassed</moveOn>
         <masteryScore>0.8</masteryScore>
       </au>`;
-    }),
-  ).join('\n');
+      }),
+    )
+    .join('\n');
 
   // Build block entries for course structure
   const blockEntries = courseData.modules
@@ -372,7 +377,7 @@ var Cmi5 = (function() {
    */
   function sendStatement(statement, callback) {
     if (!_config.endpoint || !_config.authToken) {
-      console.log('Cmi5: Statement (offline):', statement.verb.display['en-US']);
+      // Offline mode - skip sending
       if (callback) callback(true);
       return;
     }
@@ -618,16 +623,19 @@ function generateAUHtml(
 /**
  * Render content block for cmi5
  */
-function renderCmi5Block(block: ExportContext['courseData']['modules'][0]['lessons'][0]['blocks'][0]): string {
+function renderCmi5Block(
+  block: ExportContext['courseData']['modules'][0]['lessons'][0]['blocks'][0],
+): string {
   const content = block.content;
 
   switch (block.type) {
     case 'paragraph':
       return `<div class="block"><p>${escapeHtml(String(content.text || ''))}</p></div>`;
 
-    case 'heading':
+    case 'heading': {
       const level = Math.min(6, Math.max(1, Number(content.level) || 2));
       return `<div class="block"><h${level}>${escapeHtml(String(content.text || ''))}</h${level}></div>`;
+    }
 
     case 'image':
       return `<figure class="block block-image">
@@ -641,10 +649,11 @@ function renderCmi5Block(block: ExportContext['courseData']['modules'][0]['lesso
         ${content.author ? `<cite>- ${escapeHtml(String(content.author))}</cite>` : ''}
       </blockquote>`;
 
-    case 'list':
+    case 'list': {
       const items = Array.isArray(content.items) ? content.items : [];
       const listItems = items.map((item) => `<li>${escapeHtml(String(item))}</li>`).join('');
       return `<div class="block">${content.ordered ? `<ol>${listItems}</ol>` : `<ul>${listItems}</ul>`}</div>`;
+    }
 
     case 'divider':
       return '<hr class="block" />';

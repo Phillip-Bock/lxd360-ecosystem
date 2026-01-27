@@ -398,6 +398,8 @@ export function createPlayerStore(
     onStateChange: (state: PlayerStateValue) => void;
     onComplete: (progress: AtomProgress) => void;
     onStatementQueued: (statement: DeepXAPIStatement) => void;
+    /** Handler to sync xAPI statements to LRS. Pass from createPlayerSyncHandler() */
+    syncHandler: (statements: DeepXAPIStatement[]) => Promise<void>;
   }>,
 ) {
   return create<PlayerStore>()(
@@ -780,9 +782,11 @@ export function createPlayerStore(
         get().dispatch({ type: 'SYNC_START' });
 
         try {
-          // TODO(LXD-XXX): Implement actual sync to LRS/Firestore
-          // For now, simulate successful sync
-          await new Promise((resolve) => setTimeout(resolve, 500));
+          if (options?.syncHandler) {
+            // Use provided sync handler to send to LRS
+            await options.syncHandler(current.pendingStatements);
+          }
+          // Sync complete - clear the queue
           get().dispatch({ type: 'SYNC_COMPLETE' });
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Unknown error';
