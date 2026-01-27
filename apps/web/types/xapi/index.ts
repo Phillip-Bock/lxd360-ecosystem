@@ -780,3 +780,11 @@ export interface QueueStatus {
   isOnline: boolean;
   isFlushing: boolean;
 }
+
+// =============================================================================
+// DEEP XAPI PROFILE EXPORTS
+// =============================================================================
+// Extended types for deep learning analytics: hesitation, engagement, modality
+// See deep-profile.ts for full documentation
+
+export * from './deep-profile';
