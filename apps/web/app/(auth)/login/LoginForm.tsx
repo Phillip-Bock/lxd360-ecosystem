@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { getFirebaseAuth } from '@/lib/firebase/client';
+import { ForgotPasswordModal } from './ForgotPasswordModal';
 
 export default function LoginForm() {
   const [status, setStatus] = useState<string>('idle');
@@ -97,9 +98,7 @@ export default function LoginForm() {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
-            <Link href="#" className="text-sm text-blue-500 hover:text-blue-400">
-              Forgot password?
-            </Link>
+            <ForgotPasswordModal />
           </div>
           <Input
             id="password"
