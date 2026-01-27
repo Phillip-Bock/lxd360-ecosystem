@@ -18,6 +18,7 @@ import { Slider } from '@/components/ui/slider';
 import { usePersistentPlayer } from '@/hooks/use-persistent-player';
 import { cn } from '@/lib/utils';
 import { ModalitySwitcher, ModalitySwitcherCompact } from './ModalitySwitcher';
+import { SpeedControl } from './speed-control';
 
 interface PersistentPlayerBarProps {
   /** Additional class names */
@@ -179,6 +180,13 @@ export function PersistentPlayerBar({
             onModalityChange={(m) => player.switchModality(m)}
             hasAudio={!!contentAtom.audioSrc}
             hasVideo={!!contentAtom.videoSrc}
+          />
+
+          {/* Speed control */}
+          <SpeedControl
+            speed={player.playbackRate}
+            onSpeedChange={(rate) => player.setPlaybackRate(rate)}
+            size="sm"
           />
 
           {/* Playback controls */}
@@ -393,6 +401,14 @@ export function PersistentPlayerBar({
                     <SkipForward className="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
+
+                {/* Speed control */}
+                <SpeedControl
+                  speed={player.playbackRate}
+                  onSpeedChange={(rate) => player.setPlaybackRate(rate)}
+                  size="md"
+                  showLabel
+                />
 
                 {/* Volume slider */}
                 <div className="flex items-center gap-2">

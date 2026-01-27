@@ -49,6 +49,17 @@ export {
   selectPendingStatementCount,
   usePlayerStore,
 } from './machine';
+// Media Session API exports (Lock Screen Controls)
+export {
+  clearMediaSession,
+  isMediaSessionSupported,
+  type MediaArtwork,
+  type MediaControls,
+  type MediaSessionMetadata,
+  setupMediaSession,
+  updateMediaSessionPlaybackState,
+  updateMediaSessionPosition,
+} from './media-session';
 // Content Wrapper Hook exports
 export {
   type ContentWrapperState,

@@ -4,6 +4,9 @@
  * =============================================================================
  */
 
+// Podcast Mode Tracking (Modality Switches)
+export type { PodcastModeTrackingConfig } from '../use-podcast-mode-tracking';
+export { usePodcastModeTracking } from '../use-podcast-mode-tracking';
 // xAPI Emitter Hook (Singleton Pattern)
 export type {
   ActivityContext,

@@ -15,6 +15,22 @@ import {
 export type PlaybackModality = 'watch' | 'listen';
 
 /**
+ * Modality switch event data for xAPI tracking
+ */
+export interface ModalitySwitchEvent {
+  /** Previous modality before switch */
+  fromModality: PlaybackModality;
+  /** New modality after switch */
+  toModality: PlaybackModality;
+  /** Current playback time when switch occurred */
+  currentTime: number;
+  /** Content atom being played */
+  contentAtom: ContentAtom;
+  /** Reason for the switch */
+  reason: 'user_initiated' | 'ai_recommended' | 'background_mode' | 'foreground_mode';
+}
+
+/**
  * Content atom information for the player
  */
 export interface ContentAtom {
@@ -25,6 +41,37 @@ export interface ContentAtom {
   audioSrc?: string;
   videoSrc?: string;
   duration?: number;
+}
+
+/**
+ * Modality switch listener callback
+ */
+export type ModalitySwitchListener = (event: ModalitySwitchEvent) => void;
+
+/**
+ * Internal listeners for modality switch events
+ */
+const modalitySwitchListeners = new Set<ModalitySwitchListener>();
+
+/**
+ * Subscribe to modality switch events (for xAPI tracking)
+ */
+export function onModalitySwitch(listener: ModalitySwitchListener): () => void {
+  modalitySwitchListeners.add(listener);
+  return () => modalitySwitchListeners.delete(listener);
+}
+
+/**
+ * Emit modality switch event to all listeners
+ */
+function emitModalitySwitchEvent(event: ModalitySwitchEvent): void {
+  for (const listener of modalitySwitchListeners) {
+    try {
+      listener(event);
+    } catch (error) {
+      console.error('[PersistentPlayer] Modality switch listener error:', error);
+    }
+  }
 }
 
 /**
@@ -150,6 +197,10 @@ export const usePersistentPlayerStore = create<PersistentPlayerState>()(
       const state = get();
       const currentTime = state.currentTime;
       const wasPlaying = state.isPlaying;
+      const previousModality = state.modality;
+
+      // Skip if no change
+      if (previousModality === newModality) return;
 
       // If switching to listen mode, load audio into background service
       if (newModality === 'listen' && state.contentAtom?.audioSrc) {
@@ -177,11 +228,22 @@ export const usePersistentPlayerStore = create<PersistentPlayerState>()(
       }
 
       // If switching away from listen mode, pause background audio
-      if (state.modality === 'listen' && newModality === 'watch') {
+      if (previousModality === 'listen' && newModality === 'watch') {
         backgroundAudio.pause();
       }
 
       set({ modality: newModality });
+
+      // Emit xAPI modality switch event
+      if (state.contentAtom) {
+        emitModalitySwitchEvent({
+          fromModality: previousModality,
+          toModality: newModality,
+          currentTime,
+          contentAtom: state.contentAtom,
+          reason: 'user_initiated',
+        });
+      }
     },
 
     // Load new content
