@@ -89,7 +89,7 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="mb-6"
         >
-          <AnimatedLinesBadge>Coming Soon</AnimatedLinesBadge>
+          <AnimatedLinesBadge>Neuroscience-Backed Learning</AnimatedLinesBadge>
         </motion.div>
 
         {/* Headline */}
@@ -134,7 +134,7 @@ export function HeroSection() {
           transition={{ duration: 0.6, delay: 1.0 }}
           className="mt-6 text-sm text-white/50"
         >
-          Join 5,000+ L&D professionals already on the waitlist
+          Join 5,000+ L&D professionals transforming their organizations
         </motion.p>
       </motion.div>
 
