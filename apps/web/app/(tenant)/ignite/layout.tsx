@@ -50,6 +50,12 @@ export default function IgniteLayout({ children }: { children: ReactNode }) {
         return;
       }
 
+      // Email not verified - redirect to verification page
+      if (!user.emailVerified) {
+        router.push('/verify-email');
+        return;
+      }
+
       // Skip RBAC for exempt routes (learner pages have their own layout)
       if (isExemptRoute) {
         setRbacChecked(true);
