@@ -1,4 +1,8 @@
 export { AccessibilityPanel } from './accessibility-panel';
+// LXD-332: Course Player Components
+export { CoursePlayerHeader } from './CoursePlayerHeader';
+export { CoursePlayerNavigation } from './CoursePlayerNavigation';
+export { CoursePlayerSidebar } from './CoursePlayerSidebar';
 export { KeyboardShortcutsOverlay } from './keyboard-shortcuts-overlay';
 export { MiniPlayer, MiniPlayerExpanded } from './MiniPlayer';
 // Podcast Mode UI Components
