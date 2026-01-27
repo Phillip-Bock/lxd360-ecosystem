@@ -321,7 +321,7 @@ export default function SignUpPage(): React.JSX.Element | null {
               {/* Branding Headline */}
               <motion.div variants={fadeInUp}>
                 <h2 className="text-3xl font-bold text-brand-primary mb-3">
-                  Join LXP360 and start your journey
+                  Join LXD360 and start your journey
                 </h2>
                 <p className="text-brand-primary text-base">
                   Create your account to access personalized learning experiences.

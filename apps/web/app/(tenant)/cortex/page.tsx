@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Cortex | LXD360 Blog',
+  title: 'INSPIRE Cortex | AI-Powered Learning Experience',
   description:
-    'Insights on learning experience design, neuroscience, and educational technology from LXD360.',
+    'INSPIRE Cortex — AI-powered adaptive learning platform with personalized recommendations and xAPI analytics.',
 };
 
 export default function CortexPage() {
@@ -21,27 +21,40 @@ export default function CortexPage() {
           INSPIRE Cortex
         </h1>
         <p className="text-xl text-lxd-text-dark/70 dark:text-lxd-text-light/70 mb-12 max-w-2xl mx-auto">
-          Thought leadership on learning experience design, cognitive science, and the future of
-          education. Powered by our Medium publication.
+          AI-powered adaptive learning platform with personalized recommendations, skill mastery
+          tracking, and Glass Box explainability. Your learners deserve more than a
+          one-size-fits-all experience.
         </p>
 
-        {/* Placeholder Categories */}
+        {/* Platform Features */}
         <div className="grid sm:grid-cols-2 gap-6 mb-12">
           {[
-            { title: 'Learning Science', desc: 'Evidence-based insights on how the brain learns' },
-            { title: 'Design Patterns', desc: 'Best practices in instructional design' },
-            { title: 'Technology Trends', desc: 'AI, XR, and the future of learning tech' },
-            { title: 'Case Studies', desc: 'Real-world implementation stories' },
-          ].map((category) => (
+            {
+              title: 'Adaptive Learning',
+              desc: "AI-driven pathways that adjust to each learner's pace and mastery level",
+            },
+            {
+              title: 'Glass Box AI',
+              desc: 'Transparent recommendations with full explainability—no black boxes',
+            },
+            {
+              title: 'Skill Mastery',
+              desc: 'Track competencies with Bayesian Knowledge Tracing and spaced repetition',
+            },
+            {
+              title: 'xAPI Analytics',
+              desc: 'Rich learning data with xAPI 1.0.3 statements flowing to your LRS',
+            },
+          ].map((feature) => (
             <div
-              key={category.title}
+              key={feature.title}
               className="rounded-2xl bg-lxd-light-surface dark:bg-lxd-dark-surface border border-lxd-light-border dark:border-lxd-dark-border p-6 text-left"
             >
               <h3 className="text-lg font-semibold text-lxd-text-dark dark:text-lxd-text-light mb-2">
-                {category.title}
+                {feature.title}
               </h3>
               <p className="text-sm text-lxd-text-dark/60 dark:text-lxd-text-light/60">
-                {category.desc}
+                {feature.desc}
               </p>
             </div>
           ))}
@@ -50,16 +63,16 @@ export default function CortexPage() {
         {/* CTA */}
         <div className="bg-lxd-light-card dark:bg-lxd-dark-surface rounded-2xl p-8 border border-lxd-light-border dark:border-lxd-dark-border">
           <h2 className="text-2xl font-bold text-lxd-text-dark dark:text-lxd-text-light mb-4">
-            Subscribe to Cortex
+            Interested in INSPIRE Cortex?
           </h2>
           <p className="text-lxd-text-dark/70 dark:text-lxd-text-light/70 mb-6">
-            Get the latest insights delivered to your inbox.
+            Join the waitlist for early access to our AI-powered learning experience platform.
           </p>
           <Link
             href="/contact"
             className="inline-flex items-center px-6 py-3 bg-lxd-purple hover:bg-lxd-purple-dark text-white rounded-lg font-medium transition-colors"
           >
-            Subscribe
+            Join Waitlist
           </Link>
         </div>
       </div>

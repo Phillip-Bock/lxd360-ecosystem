@@ -4,4 +4,4 @@
  * Centralized exports for all branding-related components.
  */
 
-export { Logo, LogoImage, type LogoProps, type LogoImageProps } from './logo';
+export { Logo, LogoImage, type LogoImageProps, type LogoProps } from './logo';

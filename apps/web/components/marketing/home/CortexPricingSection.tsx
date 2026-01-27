@@ -1,9 +1,9 @@
 'use client';
 
 /**
- * LXP360PricingSection Component
+ * CortexPricingSection Component
  * ==============================
- * Pricing section for LXP360 SaaS - the headless learning experience platform.
+ * Pricing section for INSPIRE Cortex - the AI-powered learning experience platform.
  * This is Section 2 of the pricing sections (after INSPIRE Studio).
  *
  * Layout Structure:
@@ -12,10 +12,10 @@
  * - 4 pricing tiers in horizontal cards
  *
  * Pricing Tiers:
- * 1. LXP Micro (1-5 Learners) - $49/month (Quarterly) / $40.83/month (Yearly)
- * 2. LXP Growth (5-20 Learners) - $199/month (Quarterly) / $165.83/month (Yearly) - MOST POPULAR
- * 3. LXP Scale (21-100 Learners) - $8/learner/month (Yearly Only)
- * 4. LXP Enterprise (100+ Learners) - Contact Sales
+ * 1. Cortex Micro (1-5 Learners) - $40/month (Yearly)
+ * 2. Cortex Growth (5-20 Learners) - $165/month (Yearly) - MOST POPULAR
+ * 3. Cortex Scale (21-100 Learners) - $8/learner/month (Yearly Only)
+ * 4. Cortex Enterprise (100+ Learners) - Contact Sales
  *
  * Features:
  * - Animated price switching on toggle
@@ -57,7 +57,7 @@ interface PricingTier {
 const PRICING_TIERS: PricingTier[] = [
   {
     id: 'micro',
-    name: 'LXP Micro',
+    name: 'Cortex Micro',
     focus: '1-5 Learners',
     quarterlyPrice: '40',
     yearlyPrice: '40',
@@ -79,7 +79,7 @@ const PRICING_TIERS: PricingTier[] = [
   },
   {
     id: 'growth',
-    name: 'LXP Growth',
+    name: 'Cortex Growth',
     focus: '5-20 Learners',
     quarterlyPrice: '165',
     yearlyPrice: '165',
@@ -102,7 +102,7 @@ const PRICING_TIERS: PricingTier[] = [
   },
   {
     id: 'scale',
-    name: 'LXP Scale',
+    name: 'Cortex Scale',
     focus: '21-100 Learners',
     quarterlyPrice: null,
     yearlyPrice: '8',
@@ -124,7 +124,7 @@ const PRICING_TIERS: PricingTier[] = [
   },
   {
     id: 'enterprise',
-    name: 'LXP Enterprise',
+    name: 'Cortex Enterprise',
     focus: '100+ Learners',
     quarterlyPrice: null,
     yearlyPrice: null,
@@ -375,7 +375,7 @@ function PricingCard({ tier, billingPeriod }: PricingCardProps): React.JSX.Eleme
    MAIN COMPONENT
 ============================================================================= */
 
-export function LXP360PricingSection(): React.JSX.Element {
+export function CortexPricingSection(): React.JSX.Element {
   const [billingPeriod, setBillingPeriod] = useState<'quarterly' | 'yearly'>('yearly');
 
   return (
@@ -387,7 +387,7 @@ export function LXP360PricingSection(): React.JSX.Element {
         <div className="text-center mb-8 max-w-4xl mx-auto">
           {/* Product badge */}
           <span className="inline-block mb-4 px-4 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-brand-purple text-sm font-semibold">
-            LXP360 SaaS
+            INSPIRE Cortex
           </span>
 
           {/* Title - WCAG AA compliant gradient text */}
@@ -403,8 +403,8 @@ export function LXP360PricingSection(): React.JSX.Element {
           {/* Description */}
           <p className="text-lxd-text-dark-body dark:text-lxd-text-light-muted text-lg leading-relaxed">
             Traditional LMS platforms are rigid, expensive, and trap your most valuable asset: your
-            learning data. LXP360 is the{' '}
-            <span className="text-brand-purple font-semibold">headless solution</span> that empowers
+            learning data. INSPIRE Cortex is the{' '}
+            <span className="text-brand-purple font-semibold">AI-powered LXP</span> that empowers
             you to deliver customized, adaptive learning experiences while giving you full,
             unrestricted access to the raw xAPI data that drives organizational performance.
           </p>
@@ -433,7 +433,7 @@ export function LXP360PricingSection(): React.JSX.Element {
             thousands.
           </p>
           <p className="text-xs text-lxd-text-light-muted dark:text-lxd-text-dark-body mt-2">
-            Note: LXP Micro is LXP360-branded. White labeling available in Growth tier and above.
+            Note: Cortex Micro is LXD360-branded. White labeling available in Growth tier and above.
           </p>
         </div>
       </div>

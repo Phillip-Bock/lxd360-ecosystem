@@ -71,7 +71,7 @@ export function PlayerHeader({
           className="gap-2 bg-[var(--hud-accent)]/10 text-[var(--hud-accent-bright)] hover:bg-[var(--hud-accent)]/20 border border-[var(--hud-accent)]/20 font-medium"
         >
           <Bot className="h-4 w-4" />
-          <span className="hidden sm:inline">Neuronaut</span>
+          <span className="hidden sm:inline">Neuro-naut</span>
         </Button>
 
         <Button

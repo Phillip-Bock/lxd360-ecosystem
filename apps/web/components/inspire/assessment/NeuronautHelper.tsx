@@ -39,7 +39,7 @@ These examples align with best practices for ${type} assessments.`;
           className="bg-lxd-purple-dark hover:bg-lxd-purple text-lxd-text-light-heading p-4 rounded-full shadow-xl flex items-center gap-2 transition-all hover:scale-105"
         >
           <Brain size={24} />
-          <span className="font-bold">Ask Neuronaut</span>
+          <span className="font-bold">Ask Neuro-naut</span>
         </button>
       )}
 
@@ -47,7 +47,7 @@ These examples align with best practices for ${type} assessments.`;
         <div className="bg-lxd-dark-surface rounded-2xl shadow-2xl border border-lxd-dark-surface w-80 overflow-hidden animate-in slide-in-from-bottom-10">
           <div className="bg-lxd-purple-dark p-4 text-lxd-text-light-heading flex justify-between items-center">
             <div className="flex items-center gap-2 font-bold">
-              <Brain size={18} /> Neuronaut
+              <Brain size={18} /> Neuro-naut
             </div>
             <button type="button" onClick={() => setIsOpen(false)}>
               <X size={18} />

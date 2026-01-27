@@ -78,27 +78,27 @@
   /* ─────────────────────────────────────────────────────────────────────────
      LXD360 Extended Brand Colors
      ───────────────────────────────────────────────────────────────────────── */
-  --lxd-cyan: #00CED1;
-  --lxd-purple: #8B5CF6;
-  --lxd-gradient: linear-gradient(135deg, #00CED1, #8B5CF6);
+  --lxd-cyan: #00ced1;
+  --lxd-purple: #8b5cf6;
+  --lxd-gradient: linear-gradient(135deg, #00ced1, #8b5cf6);
 
   /* Neural Theme (Dark Mode Surfaces) */
-  --neural-bg: #0A0A0F;
+  --neural-bg: #0a0a0f;
   --neural-surface: #111118;
-  --neural-surface-2: #1A1A24;
-  --neural-border: #2A2A3A;
+  --neural-surface-2: #1a1a24;
+  --neural-border: #2a2a3a;
   --neural-glow: rgba(0, 206, 209, 0.15);
 
   /* Semantic Colors (Simple Names) */
-  --success: #22C55E;
-  --warning: #F59E0B;
-  --error: #EF4444;
-  --info: #3B82F6;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
 
   /* Text Colors */
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
 
   /* Glassmorphism */
   --color-glass-bg: oklch(20% 0 0 / 0.5);

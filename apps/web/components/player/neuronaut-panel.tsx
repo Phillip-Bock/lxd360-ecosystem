@@ -67,7 +67,7 @@ export function NeuronautPanel({
     {
       id: 'welcome',
       role: 'assistant',
-      content: `Hello! I'm Neuronaut, your AI learning companion. I'm here to help you understand "${currentSlide.title}". Feel free to ask me anything about this content, or try one of the quick actions below!`,
+      content: `Hello! I'm Neuro-naut, your AI learning companion. I'm here to help you understand "${currentSlide.title}". Feel free to ask me anything about this content, or try one of the quick actions below!`,
     },
   ]);
   const [isThinking, setIsThinking] = useState(false);
@@ -207,7 +207,7 @@ export function NeuronautPanel({
             <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-[var(--hud-bg-secondary)] bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
           </div>
           <div>
-            <h3 className="font-semibold text-[var(--hud-text)]">Neuronaut</h3>
+            <h3 className="font-semibold text-[var(--hud-text)]">Neuro-naut</h3>
             <p className="text-xs text-[var(--hud-text-muted)]">
               {isThinking ? 'Thinking...' : 'Your AI Learning Companion'}
             </p>
@@ -305,7 +305,7 @@ export function NeuronautPanel({
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask Neuronaut anything..."
+              placeholder="Ask Neuro-naut anything..."
               className="border-[var(--hud-border)] bg-[var(--hud-bg)]/80 pr-10 text-[var(--hud-text)] placeholder:text-[var(--hud-text-muted)]/50"
               disabled={isThinking}
             />

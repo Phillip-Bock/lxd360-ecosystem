@@ -15,7 +15,7 @@ const shortcuts = [
   { keys: ['M'], description: 'Toggle menu sidebar' },
   { keys: ['N'], description: 'Open notes panel' },
   { keys: ['G'], description: 'Open glossary' },
-  { keys: ['A'], description: 'Toggle Neuronaut AI' },
+  { keys: ['A'], description: 'Toggle Neuro-naut AI' },
   { keys: ['F'], description: 'Toggle fullscreen' },
   { keys: ['?'], description: 'Show shortcuts' },
   { keys: ['Esc'], description: 'Close panels' },

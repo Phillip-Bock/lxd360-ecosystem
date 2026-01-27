@@ -54,7 +54,14 @@ function FullLogo({ className }: { className?: string }) {
       <circle cx="25" cy="42" r="3" fill="#00CED1" />
       <circle cx="8" cy="25" r="3" fill="#8B5CF6" />
       {/* LXD360 Text */}
-      <text x="55" y="33" fontFamily="Inter, sans-serif" fontSize="24" fontWeight="700" fill="currentColor">
+      <text
+        x="55"
+        y="33"
+        fontFamily="Inter, sans-serif"
+        fontSize="24"
+        fontWeight="700"
+        fill="currentColor"
+      >
         LXD360
       </text>
     </svg>
@@ -82,7 +89,15 @@ function IconLogo({ className }: { className?: string }) {
         </linearGradient>
       </defs>
       {/* Outer glow ring */}
-      <circle cx="25" cy="25" r="23" stroke="url(#icon-gradient)" strokeWidth="2" fill="none" opacity="0.3" />
+      <circle
+        cx="25"
+        cy="25"
+        r="23"
+        stroke="url(#icon-gradient)"
+        strokeWidth="2"
+        fill="none"
+        opacity="0.3"
+      />
       {/* Neural rings */}
       <circle cx="25" cy="25" r="18" fill="url(#icon-gradient)" opacity="0.15" />
       <circle cx="25" cy="25" r="12" fill="url(#icon-gradient)" opacity="0.3" />
@@ -121,7 +136,14 @@ function WordmarkLogo({ className }: { className?: string }) {
           <stop offset="100%" stopColor="#8B5CF6" />
         </linearGradient>
       </defs>
-      <text x="0" y="22" fontFamily="Inter, sans-serif" fontSize="20" fontWeight="700" fill="url(#wordmark-gradient)">
+      <text
+        x="0"
+        y="22"
+        fontFamily="Inter, sans-serif"
+        fontSize="20"
+        fontWeight="700"
+        fill="url(#wordmark-gradient)"
+      >
         LXD360
       </text>
     </svg>
