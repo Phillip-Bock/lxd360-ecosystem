@@ -3,6 +3,7 @@
  * TODO(LXD-337): Replace with Firestore queries
  */
 
+import type { ActivityItem } from '@/components/lms/learner/RecentActivity';
 import type {
   CompletedCourseRecord,
   LearnerBadge,
@@ -394,5 +395,52 @@ export const mockDeadlines: LearnerDeadline[] = [
     dueDate: new Date('2026-04-01'),
     progress: 0,
     isRequired: false,
+  },
+];
+
+/**
+ * Mock recent activities
+ */
+export const mockActivities: ActivityItem[] = [
+  {
+    id: 'activity-1',
+    type: 'lesson_completed',
+    title: 'Completed "Safety Protocols" lesson',
+    courseId: 'course-safety-fundamentals',
+    courseTitle: 'Workplace Safety Fundamentals',
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+  },
+  {
+    id: 'activity-2',
+    type: 'badge_earned',
+    title: 'Earned "Week Warrior" badge',
+    badgeId: 'badge-week-streak',
+    timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+    xpEarned: 75,
+  },
+  {
+    id: 'activity-3',
+    type: 'course_started',
+    title: 'Started Data Analytics Essentials',
+    courseId: 'course-data-analytics',
+    courseTitle: 'Data Analytics Essentials',
+    timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+  },
+  {
+    id: 'activity-4',
+    type: 'skill_improved',
+    title: 'Leadership skill improved to Level 3',
+    skillName: 'Leadership',
+    skillLevel: 3,
+    timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+  },
+  {
+    id: 'activity-5',
+    type: 'course_completed',
+    title: 'Completed Time Management Mastery',
+    courseId: 'course-time-management',
+    courseTitle: 'Time Management Mastery',
+    timestamp: new Date('2026-01-05'),
+    xpEarned: 320,
   },
 ];

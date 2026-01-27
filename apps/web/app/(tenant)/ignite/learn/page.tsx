@@ -12,6 +12,7 @@ import {
   RecentActivity,
   UpcomingDeadlines,
 } from '@/components/lms/learner';
+import type { Badge } from '@/components/lms/learner/AchievementBadges';
 import {
   mockActivities,
   mockAssignedCourses,
@@ -21,6 +22,46 @@ import {
 } from '@/lib/mock/learner-dashboard';
 import { cn } from '@/lib/utils';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
+
+/**
+ * Map rarity to tier for badge display
+ */
+const rarityToTier: Record<string, Badge['tier']> = {
+  common: 'bronze',
+  rare: 'silver',
+  epic: 'gold',
+  legendary: 'platinum',
+};
+
+/**
+ * Map icon string to iconType for badge display
+ */
+const iconToType: Record<string, Badge['iconType']> = {
+  star: 'star',
+  trophy: 'trophy',
+  shield: 'award',
+  flame: 'zap',
+  zap: 'zap',
+  'book-open': 'star',
+  target: 'award',
+  crown: 'trophy',
+};
+
+/**
+ * Convert LearnerBadge to Badge format expected by AchievementBadges component
+ */
+function adaptBadges(learnerBadges: typeof mockBadges): Badge[] {
+  return learnerBadges.map((badge) => ({
+    id: badge.id,
+    name: badge.name,
+    description: badge.description,
+    iconType: iconToType[badge.icon] ?? 'star',
+    tier: rarityToTier[badge.rarity] ?? 'bronze',
+    earned: true, // All mockBadges are earned
+    earnedAt: badge.earnedAt,
+    xpReward: badge.xpReward,
+  }));
+}
 
 /**
  * Learner Dashboard - Main learning hub
@@ -95,7 +136,7 @@ export default function LearnDashboardPage() {
       </section>
 
       {/* Achievement Badges */}
-      <AchievementBadges badges={mockBadges} maxItems={8} />
+      <AchievementBadges badges={adaptBadges(mockBadges)} maxItems={8} />
     </div>
   );
 }
