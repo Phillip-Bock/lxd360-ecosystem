@@ -1,7 +1,8 @@
 'use client';
 
-import { Bot, Menu, Settings } from 'lucide-react';
+import { Bookmark, Bot, Menu, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import type { CourseSlide, CourseWithContent } from '@/types/player';
 
 interface PlayerHeaderProps {
@@ -14,6 +15,10 @@ interface PlayerHeaderProps {
   onToggleNeuronaut: () => void;
   sidebarOpen: boolean;
   onOpenAccessibility: () => void;
+  /** Whether the current slide is bookmarked */
+  isBookmarked?: boolean;
+  /** Callback when bookmark button is clicked */
+  onBookmark?: () => void;
 }
 
 export function PlayerHeader({
@@ -25,6 +30,8 @@ export function PlayerHeader({
   onToggleNeuronaut,
   sidebarOpen,
   onOpenAccessibility,
+  isBookmarked = false,
+  onBookmark,
 }: PlayerHeaderProps) {
   return (
     <header className="relative z-20 flex h-14 items-center justify-between border-b border-[var(--hud-border)] bg-[var(--hud-bg)]/95 px-4 backdrop-blur-xs">
@@ -73,6 +80,23 @@ export function PlayerHeader({
           <Bot className="h-4 w-4" />
           <span className="hidden sm:inline">Neuro-naut</span>
         </Button>
+
+        {onBookmark && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onBookmark}
+            className={cn(
+              'transition-colors',
+              isBookmarked
+                ? 'text-[var(--hud-accent-bright)] bg-[var(--hud-accent)]/20'
+                : 'text-[var(--hud-text-muted)] hover:text-[var(--hud-accent-bright)]',
+            )}
+            aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+          >
+            <Bookmark className={cn('h-4 w-4', isBookmarked && 'fill-current')} />
+          </Button>
+        )}
 
         <Button
           variant="ghost"
