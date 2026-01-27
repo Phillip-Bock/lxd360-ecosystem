@@ -199,6 +199,118 @@ export async function getUserByEmail(email: string) {
   }
 }
 
+// ============================================================================
+// RBAC: SET USER ROLE
+// ============================================================================
+
+import { buildRoleClaims, isValidRoleName, ROLES, type RoleName } from '@/lib/auth/roles';
+
+/**
+ * Set the role for a user via Firebase Custom Claims
+ *
+ * This function sets the user's role using the 4-persona RBAC system.
+ * The custom claims include role, level, permissions, and tenantId.
+ *
+ * @param uid - Firebase user ID
+ * @param role - The role to assign (owner, editor, manager, learner)
+ * @param tenantId - Organization/tenant ID (optional)
+ * @returns Success status with optional error message
+ *
+ * @example
+ * ```ts
+ * // Set user as owner of a tenant
+ * const result = await setUserRole('user123', 'owner', 'tenant456');
+ * if (result.success) {
+ *   // Role updated successfully
+ * }
+ * ```
+ */
+export async function setUserRole(
+  uid: string,
+  role: RoleName,
+  tenantId: string | null = null,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    // Validate role
+    if (!isValidRoleName(role)) {
+      return { success: false, error: `Invalid role: ${role}` };
+    }
+
+    // Build claims
+    const claims = buildRoleClaims(role, tenantId);
+
+    // Set custom claims
+    await adminAuth.setCustomUserClaims(uid, claims);
+
+    log.info('User role updated via custom claims', { uid, role, tenantId });
+    return { success: true };
+  } catch (error) {
+    log.error('Failed to set user role', { uid, role, error });
+    return { success: false, error: 'Failed to update user role' };
+  }
+}
+
+/**
+ * Get the current role for a user from custom claims
+ *
+ * @param uid - Firebase user ID
+ * @returns The user's role claims, or null if not found
+ */
+export async function getUserRole(uid: string): Promise<{
+  role: RoleName;
+  level: number;
+  tenantId: string | null;
+  permissions: string[];
+} | null> {
+  try {
+    const user = await adminAuth.getUser(uid);
+    const claims = user.customClaims;
+
+    if (!claims || !claims.role || !isValidRoleName(claims.role as string)) {
+      return null;
+    }
+
+    return {
+      role: claims.role as RoleName,
+      level: (claims.level as number) ?? ROLES[claims.role as RoleName].level,
+      tenantId: (claims.tenantId as string) ?? null,
+      permissions: (claims.permissions as string[]) ?? [
+        ...ROLES[claims.role as RoleName].permissions,
+      ],
+    };
+  } catch (error) {
+    log.error('Failed to get user role', { uid, error });
+    return null;
+  }
+}
+
+/**
+ * Initialize a new user with default role (learner)
+ *
+ * @param uid - Firebase user ID
+ * @param tenantId - Organization/tenant ID (optional)
+ * @returns Success status
+ */
+export async function initializeUserRole(
+  uid: string,
+  tenantId: string | null = null,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    // Check if user already has claims
+    const existingRole = await getUserRole(uid);
+    if (existingRole) {
+      log.info('User already has role, skipping initialization', { uid });
+      return { success: true };
+    }
+
+    // Set default role (learner - least privilege)
+    return await setUserRole(uid, 'learner', tenantId);
+  } catch (error) {
+    log.error('Failed to initialize user role', { uid, error });
+    return { success: false, error: 'Failed to initialize user role' };
+  }
+}
+
 // Re-export types
 export type { App } from 'firebase-admin/app';
 export type { Auth, DecodedIdToken, UserRecord } from 'firebase-admin/auth';
@@ -213,3 +325,6 @@ export type {
   QuerySnapshot,
   Timestamp,
 } from 'firebase-admin/firestore';
+
+// Re-export role types for convenience
+export type { RoleName } from '@/lib/auth/roles';

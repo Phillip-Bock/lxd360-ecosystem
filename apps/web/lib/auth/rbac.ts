@@ -1,526 +1,289 @@
-import {
-  INTERNAL_ROLES,
-  type InternalRole,
-  isValidRole,
-  ROLE_CATEGORY_MAP,
-  type Role,
-  type RoleCategory,
-} from './types';
+/**
+ * LXD360 RBAC System — Main Entry Point
+ *
+ * This module provides the unified RBAC (Role-Based Access Control) system
+ * using the 4-persona model defined in CLAUDE.md v16.
+ *
+ * The 4 personas:
+ * - Owner: Full access (level 100) — billing, settings, everything
+ * - Editor: Content creation (level 70) — courses, authoring
+ * - Manager: User/report management (level 50) — learners, analytics, gradebook
+ * - Learner: Content consumption (level 20) — learning only
+ *
+ * @example
+ * ```ts
+ * import { hasPermission, canAccessRoute, ROLES } from '@/lib/auth/rbac';
+ *
+ * // Check if user can manage courses
+ * if (hasPermission(userRole, 'courses:create')) {
+ *   // Allow course creation
+ * }
+ *
+ * // Check if user can access a route
+ * if (canAccessRoute(userRole, '/ignite/billing')) {
+ *   // Show billing page
+ * }
+ * ```
+ *
+ * @see CLAUDE.md Section 9 for full RBAC documentation
+ */
 
 // ============================================================================
-// ROLE HIERARCHY
+// RE-EXPORTS FROM ROLE DEFINITIONS
 // ============================================================================
+
+export {
+  // Claims helpers
+  buildRoleClaims,
+  canAssignRole,
+  getHighestRole,
+  getRole,
+  getRoleFromClaims,
+  getRoleLabel,
+  getRoleLevel,
+  getRolePermissions,
+  getRoleRoutes,
+  getRoleSafe,
+  getRolesForRoute,
+  // Role comparison
+  hasHigherOrEqualLevel,
+  // Role utilities
+  isValidRoleName,
+  meetsMinimumLevel,
+  ROLE_NAMES,
+  ROLE_ROUTES,
+  // Constants
+  ROLES,
+  type RoleClaims,
+  type RoleConfig,
+  // Types
+  type RoleName,
+  roleCanAccessRoute,
+} from './roles';
+
+// ============================================================================
+// RE-EXPORTS FROM PERMISSIONS
+// ============================================================================
+
+export {
+  // Route access
+  canAccessRoute,
+  canAccessRouteFromClaims,
+  canManageBilling,
+  // API permission guards
+  canManageCourses,
+  canManageEnrollments,
+  canManageSettings,
+  canManageUsers,
+  canViewCourses,
+  canViewReports,
+  getExpandedPermissions,
+  getRouteAccess,
+  getRouteConfig,
+  hasAllPermissions,
+  hasAnyPermission,
+  // Permission checking
+  hasPermission,
+  // Claims-based checking
+  hasPermissionFromClaims,
+  isEditorOrAbove,
+  isLearnerOrAbove,
+  isManagerOrAbove,
+  isOwner,
+  PERMISSION_ACTIONS,
+  // Constants
+  PERMISSION_NAMESPACES,
+  type Permission,
+  type PermissionAction,
+  // Types
+  type PermissionNamespace,
+  PROTECTED_ROUTES,
+  type RouteAccessResult,
+  type RouteConfig,
+  // Role requirement utilities
+  requireRole,
+} from './permissions';
+
+// ============================================================================
+// UNIFIED RBAC UTILITIES
+// ============================================================================
+
+import { canAccessRoute as checkRouteAccess, hasPermission } from './permissions';
+import { getRoleLevel, getRolePermissions, isValidRoleName, ROLES, type RoleName } from './roles';
 
 /**
- * Numeric hierarchy levels for each role (lower = more access)
- * Range: 1 (super_admin_lxd360) to 100 (learner roles)
+ * Complete user authorization context
  */
-export const ROLE_HIERARCHY: Record<Role, number> = {
-  // Internal roles (1-20)
-  super_admin_lxd360: 1,
-  admin_lxd360: 5,
-  sales_lxd360: 10,
-  legal_federal_lxd360: 10,
-  legal_private_lxd360: 10,
-  it_compliance_lxd360: 10,
-  saas_engineer_lxd360: 10,
-  finance_lxd360: 10,
-  smart_app_lxd360: 15,
-  moderator_lxd360: 20,
-
-  // Ecosystem roles (30-100)
-  program_admin_ecosystem: 30,
-  admin_ecosystem: 35,
-  sales_ecosystem: 40,
-  manager_ecosystem: 45,
-  lms_admin_ecosystem: 50,
-  designer_ecosystem: 55,
-  instructor_ecosystem: 60,
-  reviewer_ecosystem: 65,
-  learner_ecosystem: 100,
-
-  // LXP360 roles (35-100)
-  admin_lxp360: 35,
-  manager_lxp360: 45,
-  lms_admin_lxp360: 50,
-  reviewer_lxp360: 65,
-  learner_lxp360: 100,
-
-  // INSPIRE roles (35-65)
-  admin_inspire: 35,
-  sales_inspire: 40,
-  manager_inspire: 45,
-  designer_inspire: 55,
-  reviewer_inspire: 65,
-
-  // Nexus roles (25-90)
-  moderator_nexus: 25,
-  mentor_nexus: 70,
-  mentee_nexus: 80,
-  member_nexus: 90,
-
-  // VIP roles (85-95)
-  vip_converted: 85,
-  vip_prospect: 95,
-};
-
-// ============================================================================
-// PRIVILEGE LEVELS (for database compatibility)
-// ============================================================================
-
-/**
- * Privilege levels for database operations (higher = more access)
- * Range: 100 (learner roles) to 1000 (super_admin_lxd360)
- */
-export const PRIVILEGE_LEVELS: Record<Role, number> = {
-  // Internal roles
-  super_admin_lxd360: 1000,
-  admin_lxd360: 950,
-  sales_lxd360: 900,
-  legal_federal_lxd360: 900,
-  legal_private_lxd360: 900,
-  it_compliance_lxd360: 900,
-  saas_engineer_lxd360: 900,
-  finance_lxd360: 900,
-  smart_app_lxd360: 850,
-  moderator_lxd360: 800,
-
-  // Ecosystem roles
-  program_admin_ecosystem: 750,
-  admin_ecosystem: 700,
-  sales_ecosystem: 650,
-  manager_ecosystem: 600,
-  lms_admin_ecosystem: 550,
-  designer_ecosystem: 500,
-  instructor_ecosystem: 450,
-  reviewer_ecosystem: 400,
-  learner_ecosystem: 100,
-
-  // LXP360 roles
-  admin_lxp360: 700,
-  manager_lxp360: 600,
-  lms_admin_lxp360: 550,
-  reviewer_lxp360: 400,
-  learner_lxp360: 100,
-
-  // INSPIRE roles
-  admin_inspire: 700,
-  sales_inspire: 650,
-  manager_inspire: 600,
-  designer_inspire: 500,
-  reviewer_inspire: 400,
-
-  // Nexus roles
-  moderator_nexus: 800,
-  mentor_nexus: 350,
-  mentee_nexus: 250,
-  member_nexus: 150,
-
-  // VIP roles
-  vip_converted: 200,
-  vip_prospect: 120,
-};
-
-// ============================================================================
-// ROLE CHECKING FUNCTIONS
-// ============================================================================
-
-/**
- * Check if user has the required role or higher in hierarchy
- * @param userRoles - Array of roles the user has
- * @param requiredRole - The minimum role required
- * @returns true if user has sufficient access
- */
-export function hasRequiredRole(userRoles: Role[], requiredRole: Role): boolean {
-  const requiredLevel = ROLE_HIERARCHY[requiredRole];
-  return userRoles.some((role) => ROLE_HIERARCHY[role] <= requiredLevel);
+export interface AuthorizationContext {
+  role: RoleName;
+  level: number;
+  permissions: readonly string[];
+  tenantId: string | null;
 }
 
 /**
- * Check if user has the exact role
- * @param userRoles - Array of roles the user has
- * @param role - The role to check for
- * @returns true if user has the exact role
+ * Create authorization context from role name and tenant
  */
-export function hasRole(userRoles: Role[], role: Role): boolean {
-  return userRoles.includes(role);
+export function createAuthorizationContext(
+  roleName: RoleName,
+  tenantId: string | null = null,
+): AuthorizationContext {
+  return {
+    role: roleName,
+    level: getRoleLevel(roleName),
+    permissions: getRolePermissions(roleName),
+    tenantId,
+  };
 }
 
 /**
- * Check if user has unknown of the specified roles
- * @param userRoles - Array of roles the user has
- * @param allowedRoles - Array of allowed roles
- * @returns true if user has unknown of the allowed roles
+ * Authorization check result with details
  */
-export function hasAnyRole(userRoles: Role[], allowedRoles: Role[]): boolean {
-  return userRoles.some((role) => allowedRoles.includes(role));
+export interface AuthorizationResult {
+  authorized: boolean;
+  reason: string;
+  requiredLevel?: number;
+  requiredPermission?: string;
 }
 
 /**
- * Check if user has all of the specified roles
- * @param userRoles - Array of roles the user has
- * @param requiredRoles - Array of required roles
- * @returns true if user has all required roles
+ * Check if user is authorized for a permission
  */
-export function hasAllRoles(userRoles: Role[], requiredRoles: Role[]): boolean {
-  return requiredRoles.every((role) => userRoles.includes(role));
+export function checkPermissionAuthorization(
+  context: AuthorizationContext,
+  permission: string,
+): AuthorizationResult {
+  const authorized = hasPermission(context.role, permission);
+  return {
+    authorized,
+    reason: authorized
+      ? 'Permission granted'
+      : `Role '${context.role}' does not have permission '${permission}'`,
+    requiredPermission: permission,
+  };
+}
+
+/**
+ * Check if user is authorized for a route
+ */
+export function checkRouteAuthorization(
+  context: AuthorizationContext,
+  route: string,
+): AuthorizationResult {
+  const authorized = checkRouteAccess(context.role, route);
+  return {
+    authorized,
+    reason: authorized
+      ? 'Route access granted'
+      : `Role '${context.role}' cannot access route '${route}'`,
+  };
+}
+
+/**
+ * Check if user is authorized for a minimum role level
+ */
+export function checkLevelAuthorization(
+  context: AuthorizationContext,
+  minimumLevel: number,
+): AuthorizationResult {
+  const authorized = context.level >= minimumLevel;
+  return {
+    authorized,
+    reason: authorized
+      ? 'Level requirement met'
+      : `Role level ${context.level} is below required level ${minimumLevel}`,
+    requiredLevel: minimumLevel,
+  };
 }
 
 // ============================================================================
-// SUPER ADMIN FUNCTIONS
+// ROUTE GUARD HELPERS
 // ============================================================================
 
 /**
- * Check if user is the super admin (super_admin_lxd360)
- * @param userRoles - Array of roles the user has
- * @returns true if user is super admin
+ * Options for route guard
  */
-export function isSuperAdmin(userRoles: Role[]): boolean {
-  return userRoles.includes('super_admin_lxd360');
+export interface RouteGuardOptions {
+  /** Minimum role required */
+  minimumRole?: RoleName;
+  /** Specific permission required */
+  requiredPermission?: string;
+  /** Redirect path for unauthorized users */
+  redirectTo?: string;
 }
 
 /**
- * Check if user is unknown LXD360 admin (super_admin or admin_lxd360)
- * @param userRoles - Array of roles the user has
- * @returns true if user is an LXD360 admin
+ * Route guard result
  */
-export function isLxd360Admin(userRoles: Role[]): boolean {
-  return userRoles.includes('super_admin_lxd360') || userRoles.includes('admin_lxd360');
-}
-
-// ============================================================================
-// INTERNAL USER FUNCTIONS
-// ============================================================================
-
-/**
- * Check if user is an internal LXD360 employee
- * @param userRoles - Array of roles the user has
- * @returns true if user has unknown internal role
- */
-export function isInternalUser(userRoles: Role[]): boolean {
-  return userRoles.some((role) => INTERNAL_ROLES.includes(role as InternalRole));
+export interface RouteGuardResult {
+  allowed: boolean;
+  redirectTo: string | null;
+  reason: string;
 }
 
 /**
- * Check if user is an internal user by checking role category
- * @param userRoles - Array of roles the user has
- * @returns true if unknown role is in the 'internal' category
+ * Check route guard for a user role
  */
-export function isInternalByCategory(userRoles: Role[]): boolean {
-  return userRoles.some((role) => ROLE_CATEGORY_MAP[role] === 'internal');
-}
+export function checkRouteGuard(
+  userRole: RoleName | undefined,
+  options: RouteGuardOptions,
+): RouteGuardResult {
+  const defaultRedirect = '/ignite/dashboard';
 
-// ============================================================================
-// PRODUCT CATEGORY FUNCTIONS
-// ============================================================================
-
-/**
- * Get all product categories the user has access to
- * @param userRoles - Array of roles the user has
- * @returns Array of unique product categories
- */
-export function getUserProductCategories(userRoles: Role[]): RoleCategory[] {
-  const categories = new Set<RoleCategory>();
-  for (const role of userRoles) {
-    categories.add(ROLE_CATEGORY_MAP[role]);
+  // No role = not authenticated
+  if (!userRole || !isValidRoleName(userRole)) {
+    return {
+      allowed: false,
+      redirectTo: '/login',
+      reason: 'User is not authenticated',
+    };
   }
-  return Array.from(categories);
-}
 
-/**
- * Check if user has access to a specific product category
- * @param userRoles - Array of roles the user has
- * @param category - The product category to check
- * @returns true if user has access to the category
- */
-export function hasProductCategoryAccess(userRoles: Role[], category: RoleCategory): boolean {
-  // Internal users have access to all categories
-  if (isInternalUser(userRoles)) {
-    return true;
+  // Check minimum role
+  if (options.minimumRole) {
+    const requiredLevel = ROLES[options.minimumRole].level;
+    const userLevel = ROLES[userRole].level;
+
+    if (userLevel < requiredLevel) {
+      return {
+        allowed: false,
+        redirectTo: options.redirectTo ?? defaultRedirect,
+        reason: `Required role: ${options.minimumRole} (level ${requiredLevel}), user has: ${userRole} (level ${userLevel})`,
+      };
+    }
   }
-  return userRoles.some((role) => ROLE_CATEGORY_MAP[role] === category);
-}
 
-/**
- * Check if user can access ecosystem product
- */
-export function canAccessEcosystem(userRoles: Role[]): boolean {
-  return hasProductCategoryAccess(userRoles, 'ecosystem');
-}
-
-/**
- * Check if user can access LXP360 product
- */
-export function canAccessLxp360(userRoles: Role[]): boolean {
-  return hasProductCategoryAccess(userRoles, 'lxp360');
-}
-
-/**
- * Check if user can access INSPIRE Studio product
- */
-export function canAccessInspire(userRoles: Role[]): boolean {
-  return hasProductCategoryAccess(userRoles, 'inspire');
-}
-
-/**
- * Check if user can access LXD Nexus
- */
-export function canAccessNexus(userRoles: Role[]): boolean {
-  return hasProductCategoryAccess(userRoles, 'nexus');
-}
-
-/**
- * Check if user is in VIP program
- */
-export function isVipUser(userRoles: Role[]): boolean {
-  return hasProductCategoryAccess(userRoles, 'vip');
-}
-
-// ============================================================================
-// HIERARCHY COMPARISON FUNCTIONS
-// ============================================================================
-
-/**
- * Get the hierarchy level for a role
- * @param role - The role to get the level for
- * @returns The hierarchy level (lower = more access)
- */
-export function getRoleHierarchyLevel(role: Role): number {
-  return ROLE_HIERARCHY[role];
-}
-
-/**
- * Get the privilege level for a role
- * @param role - The role to get the level for
- * @returns The privilege level (higher = more access)
- */
-export function getRolePrivilegeLevel(role: Role): number {
-  return PRIVILEGE_LEVELS[role];
-}
-
-/**
- * Get the highest privilege role from an array of roles
- * @param userRoles - Array of roles
- * @returns The role with the highest privilege (lowest hierarchy level)
- */
-export function getHighestRole(userRoles: Role[]): Role | null {
-  if (userRoles.length === 0) return null;
-
-  return userRoles.reduce((highest, current) => {
-    return ROLE_HIERARCHY[current] < ROLE_HIERARCHY[highest] ? current : highest;
-  });
-}
-
-/**
- * Compare two roles
- * @param role1 - First role
- * @param role2 - Second role
- * @returns negative if role1 > role2, positive if role1 < role2, 0 if equal
- */
-export function compareRoles(role1: Role, role2: Role): number {
-  return ROLE_HIERARCHY[role1] - ROLE_HIERARCHY[role2];
-}
-
-/**
- * Check if role1 has higher or equal privilege than role2
- * @param role1 - Role to check
- * @param role2 - Role to compare against
- * @returns true if role1 has higher or equal privilege
- */
-export function hasHigherOrEqualPrivilege(role1: Role, role2: Role): boolean {
-  return ROLE_HIERARCHY[role1] <= ROLE_HIERARCHY[role2];
-}
-
-// ============================================================================
-// ROLE FILTERING FUNCTIONS
-// ============================================================================
-
-/**
- * Filter roles by category
- * @param userRoles - Array of roles
- * @param category - Category to filter by
- * @returns Array of roles in the specified category
- */
-export function filterRolesByCategory(userRoles: Role[], category: RoleCategory): Role[] {
-  return userRoles.filter((role) => ROLE_CATEGORY_MAP[role] === category);
-}
-
-/**
- * Get roles that are at or above a certain hierarchy level
- * @param userRoles - Array of roles
- * @param maxLevel - Maximum hierarchy level (inclusive)
- * @returns Array of roles at or above the level
- */
-export function getRolesAtOrAboveLevel(userRoles: Role[], maxLevel: number): Role[] {
-  return userRoles.filter((role) => ROLE_HIERARCHY[role] <= maxLevel);
-}
-
-/**
- * Get admin-level roles from user roles
- * @param userRoles - Array of roles
- * @returns Array of admin-level roles (hierarchy level <= 35)
- */
-export function getAdminRoles(userRoles: Role[]): Role[] {
-  return getRolesAtOrAboveLevel(userRoles, 35);
-}
-
-/**
- * Get manager-level roles from user roles
- * @param userRoles - Array of roles
- * @returns Array of manager-level roles (hierarchy level <= 50)
- */
-export function getManagerRoles(userRoles: Role[]): Role[] {
-  return getRolesAtOrAboveLevel(userRoles, 50);
-}
-
-// ============================================================================
-// ROLE VALIDATION
-// ============================================================================
-
-/**
- * Validate and filter an array of role strings
- * @param roles - Array of strings to validate
- * @returns Array of valid Role types
- */
-export function validateRoles(roles: string[]): Role[] {
-  return roles.filter(isValidRole) as Role[];
-}
-
-/**
- * Safely get role hierarchy level (returns Infinity for invalid roles)
- * @param role - Role string to check
- * @returns Hierarchy level or Infinity if invalid
- */
-export function safeGetHierarchyLevel(role: string): number {
-  if (isValidRole(role)) {
-    return ROLE_HIERARCHY[role as Role];
+  // Check specific permission
+  if (options.requiredPermission) {
+    if (!hasPermission(userRole, options.requiredPermission)) {
+      return {
+        allowed: false,
+        redirectTo: options.redirectTo ?? defaultRedirect,
+        reason: `Missing permission: ${options.requiredPermission}`,
+      };
+    }
   }
-  return Infinity;
+
+  return {
+    allowed: true,
+    redirectTo: null,
+    reason: 'Access granted',
+  };
 }
 
 // ============================================================================
-// ROLE CAPABILITY CHECKS
+// LEGACY SYSTEM RE-EXPORTS (for backward compatibility)
 // ============================================================================
 
 /**
- * Check if user can manage other users
- * @param userRoles - Array of roles the user has
- * @returns true if user can manage users
+ * Legacy types re-exported for backward compatibility
+ * @deprecated Use the new 4-persona system instead
  */
-export function canManageUsers(userRoles: Role[]): boolean {
-  // Roles that can manage users (hierarchy level <= 35)
-  return userRoles.some((role) => ROLE_HIERARCHY[role] <= 35);
-}
+export * as legacy from './rbac-legacy';
 
 /**
- * Check if user can manage content
- * @param userRoles - Array of roles the user has
- * @returns true if user can manage content
+ * Legacy function re-exports for backward compatibility with existing API routes.
+ * These functions are from the old 35-role system.
+ * @deprecated Migrate to the new 4-persona system
  */
-export function canManageContent(userRoles: Role[]): boolean {
-  // Designers, instructors, and above can manage content
-  const contentRoles: Role[] = [
-    'super_admin_lxd360',
-    'admin_lxd360',
-    'designer_ecosystem',
-    'designer_inspire',
-    'instructor_ecosystem',
-    'lms_admin_ecosystem',
-    'lms_admin_lxp360',
-  ];
-  return hasAnyRole(userRoles, contentRoles) || isInternalUser(userRoles);
-}
-
-/**
- * Check if user can view analytics
- * @param userRoles - Array of roles the user has
- * @returns true if user can view analytics
- */
-export function canViewAnalytics(userRoles: Role[]): boolean {
-  // Managers and above can view analytics
-  return userRoles.some((role) => ROLE_HIERARCHY[role] <= 50);
-}
-
-/**
- * Check if user can moderate community content
- * @param userRoles - Array of roles the user has
- * @returns true if user can moderate
- */
-export function canModerate(userRoles: Role[]): boolean {
-  const moderatorRoles: Role[] = [
-    'super_admin_lxd360',
-    'admin_lxd360',
-    'moderator_lxd360',
-    'moderator_nexus',
-  ];
-  return hasAnyRole(userRoles, moderatorRoles);
-}
-
-// ============================================================================
-// DASHBOARD ROUTING
-// ============================================================================
-
-/**
- * Dashboard routes for each role
- */
-export const ROLE_DASHBOARD_ROUTES: Record<Role, string> = {
-  // Internal roles
-  super_admin_lxd360: '/dashboard/super-admin',
-  admin_lxd360: '/dashboard/admin',
-  sales_lxd360: '/dashboard/sales',
-  legal_federal_lxd360: '/dashboard/legal/federal',
-  legal_private_lxd360: '/dashboard/legal/private',
-  it_compliance_lxd360: '/dashboard/it-compliance',
-  saas_engineer_lxd360: '/dashboard/engineering',
-  finance_lxd360: '/dashboard/finance',
-  smart_app_lxd360: '/dashboard/smart-app',
-  moderator_lxd360: '/dashboard/moderator',
-
-  // Ecosystem roles
-  program_admin_ecosystem: '/dashboard/program-admin',
-  admin_ecosystem: '/dashboard/ecosystem-admin',
-  sales_ecosystem: '/dashboard/ecosystem-sales',
-  manager_ecosystem: '/dashboard/ecosystem-manager',
-  lms_admin_ecosystem: '/dashboard/ecosystem-lms-admin',
-  designer_ecosystem: '/dashboard/ecosystem-designer',
-  instructor_ecosystem: '/dashboard/ecosystem-instructor',
-  reviewer_ecosystem: '/dashboard/ecosystem-reviewer',
-  learner_ecosystem: '/dashboard/ecosystem-learner',
-
-  // LXP360 roles
-  admin_lxp360: '/dashboard/lxp360-admin',
-  manager_lxp360: '/dashboard/lxp360-manager',
-  lms_admin_lxp360: '/dashboard/lxp360-lms-admin',
-  reviewer_lxp360: '/dashboard/lxp360-reviewer',
-  learner_lxp360: '/dashboard/lxp360-learner',
-
-  // INSPIRE roles
-  admin_inspire: '/dashboard/inspire-admin',
-  sales_inspire: '/dashboard/inspire-sales',
-  manager_inspire: '/dashboard/inspire-manager',
-  designer_inspire: '/dashboard/inspire-designer',
-  reviewer_inspire: '/dashboard/inspire-reviewer',
-
-  // Nexus roles
-  mentor_nexus: '/dashboard/nexus-mentor',
-  mentee_nexus: '/dashboard/nexus-mentee',
-  member_nexus: '/dashboard/nexus-member',
-  moderator_nexus: '/dashboard/nexus-moderator',
-
-  // VIP roles
-  vip_prospect: '/dashboard/vip',
-  vip_converted: '/dashboard/vip-customer',
-};
-
-/**
- * Get the appropriate dashboard route for a user
- * @param userRoles - Array of roles the user has
- * @returns The dashboard route for the highest privilege role
- */
-export function getDashboardRoute(userRoles: Role[]): string {
-  const highestRole = getHighestRole(userRoles);
-  if (highestRole) {
-    return ROLE_DASHBOARD_ROUTES[highestRole];
-  }
-  return '/dashboard'; // Default fallback
-}
+export { canManageContent, validateRoles } from './rbac-legacy';
