@@ -13,7 +13,15 @@ import { NextResponse } from 'next/server';
  */
 
 // Public routes that don't need any special handling
-const PUBLIC_ROUTES = ['/', '/login', '/sign-up', '/reset-password', '/coming-soon'];
+const PUBLIC_ROUTES = [
+  '/',
+  '/login',
+  '/sign-up',
+  '/reset-password',
+  '/coming-soon',
+  '/verify-email',
+  '/auth/action',
+];
 
 // Routes that are always public (APIs, static, etc.)
 const ALWAYS_ALLOWED_PATTERNS = [

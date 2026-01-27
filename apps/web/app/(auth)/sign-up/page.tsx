@@ -15,6 +15,7 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   OAuthProvider,
+  sendEmailVerification,
   signInWithPopup,
   updateProfile,
 } from 'firebase/auth';
@@ -167,10 +168,9 @@ export default function SignUpPage(): React.JSX.Element | null {
       await updateProfile(userCredential.user, {
         displayName: `${firstName} ${lastName}`.trim(),
       });
+      // Send verification email
+      await sendEmailVerification(userCredential.user);
       setSuccess(true);
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 2000);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'An error occurred';
       setError(
@@ -256,10 +256,21 @@ export default function SignUpPage(): React.JSX.Element | null {
             className="relative w-full max-w-md bg-linear-to-br from-(--blue-dark-700) via-(--blue-dark-600) to-(--blue-dark-700) rounded-2xl border-2 border-[color-mix(in srgb, var(--brand-secondary) 40%, transparent)] p-10"
           >
             <div className="text-center space-y-4">
+              <div className="mx-auto w-16 h-16 bg-[color-mix(in_srgb,var(--brand-secondary)_20%,transparent)] rounded-full flex items-center justify-center">
+                <Mail className="w-8 h-8 text-(--brand-secondary)" />
+              </div>
               <h1 className="text-2xl font-bold text-brand-primary">Check Your Email</h1>
               <p className="text-brand-primary text-base">
-                We&apos;ve sent you a confirmation email. Please check your inbox and click the link
-                to verify your account.
+                We&apos;ve sent a verification email to{' '}
+                <span className="font-semibold">{email}</span>. Please check your inbox and click
+                the link to verify your account.
+              </p>
+              <p className="text-brand-primary/60 text-sm">
+                Didn&apos;t receive the email? Check your spam folder or{' '}
+                <Link href="/login" className="text-(--brand-secondary) hover:underline">
+                  sign in
+                </Link>{' '}
+                to resend it.
               </p>
             </div>
           </motion.div>
