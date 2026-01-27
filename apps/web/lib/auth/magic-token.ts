@@ -68,6 +68,10 @@ export interface MagicTokenDocument {
   requestIp?: string;
   /** User agent that requested the token */
   userAgent?: string;
+  /** Optional destination URL path for deep linking (e.g., /ignite/courses/abc123) */
+  destination?: string;
+  /** Optional tenant ID for multi-tenant context */
+  tenantId?: string;
 }
 
 /**
@@ -116,6 +120,10 @@ export interface ValidateTokenResult {
   uid?: string;
   /** Firebase custom token for sign-in */
   customToken?: string;
+  /** Destination URL path for deep linking */
+  destination?: string;
+  /** Tenant ID for multi-tenant context */
+  tenantId?: string;
   /** Error message if failed */
   error?: string;
   /** Error code */
@@ -227,7 +235,7 @@ async function recordAuditLog(entry: MagicLinkAuditEntry): Promise<void> {
  * Generate a magic link token for a user
  *
  * @param email - User's email address
- * @param options - Additional options
+ * @param options - Additional options including deep linking destination
  * @returns Token generation result
  */
 export async function generateMagicToken(
@@ -235,6 +243,10 @@ export async function generateMagicToken(
   options?: {
     requestIp?: string;
     userAgent?: string;
+    /** Optional destination URL path for deep linking (e.g., /ignite/courses/abc123) */
+    destination?: string;
+    /** Optional tenant ID for multi-tenant context */
+    tenantId?: string;
   },
 ): Promise<GenerateTokenResult> {
   const normalizedEmail = email.toLowerCase().trim();
@@ -273,6 +285,8 @@ export async function generateMagicToken(
       used: false,
       requestIp: options?.requestIp,
       userAgent: options?.userAgent,
+      destination: options?.destination,
+      tenantId: options?.tenantId,
     };
 
     await adminDb.collection(COLLECTIONS.MAGIC_TOKENS).doc(tokenHash).set(tokenDoc);
@@ -431,13 +445,21 @@ export async function validateMagicToken(
       timestamp: new Date(),
     });
 
-    log.info('Magic token validated successfully', { tokenHash, email: tokenData.email, uid });
+    log.info('Magic token validated successfully', {
+      tokenHash,
+      email: tokenData.email,
+      uid,
+      destination: tokenData.destination,
+      tenantId: tokenData.tenantId,
+    });
 
     return {
       success: true,
       email: tokenData.email,
       uid,
       customToken,
+      destination: tokenData.destination,
+      tenantId: tokenData.tenantId,
     };
   } catch (error) {
     log.error('Failed to validate magic token', error, { tokenHash });

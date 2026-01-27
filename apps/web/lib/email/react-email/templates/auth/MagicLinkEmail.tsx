@@ -14,6 +14,8 @@ export interface MagicLinkEmailProps {
   expiresIn: string;
   /** Optional: OTP code if using code-based auth */
   otpCode?: string;
+  /** Optional destination path for deep linking context */
+  destination?: string;
   /** Optional unsubscribe URL */
   unsubscribeUrl?: string;
 }
@@ -22,24 +24,65 @@ export interface MagicLinkEmailProps {
 // COMPONENT
 // ============================================================================
 
+/**
+ * Get a human-friendly description of the destination path
+ */
+function getDestinationContext(destination: string | undefined): string | null {
+  if (!destination) return null;
+
+  // Map common paths to friendly descriptions
+  if (destination.includes('/ignite/learn/')) {
+    return 'your learning content';
+  }
+  if (destination.includes('/ignite/courses/')) {
+    return 'the course';
+  }
+  if (destination.includes('/ignite/analytics')) {
+    return 'analytics';
+  }
+  if (destination.includes('/ignite/gradebook')) {
+    return 'the gradebook';
+  }
+  if (destination.includes('/inspire/')) {
+    return 'INSPIRE Studio';
+  }
+
+  // Default for other destinations
+  return 'your requested page';
+}
+
 export function MagicLinkEmail({
   email,
   magicLinkUrl,
   expiresIn,
   otpCode,
+  destination,
   unsubscribeUrl,
 }: MagicLinkEmailProps) {
-  const previewText = `Sign in to your LXD360 account`;
+  const hasCustomDestination = destination && destination !== '/ignite/dashboard';
+  const destinationContext = getDestinationContext(destination);
+  const previewText = hasCustomDestination
+    ? `Sign in to access ${destinationContext} on LXD360`
+    : 'Sign in to your LXD360 account';
 
   return (
     <EmailLayout preview={previewText} unsubscribeUrl={unsubscribeUrl}>
       <H1>Sign In to LXD360</H1>
 
-      <Paragraph>
-        Click the button below to sign in to your account. This link will expire in {expiresIn}.
-      </Paragraph>
+      {hasCustomDestination && destinationContext ? (
+        <Paragraph>
+          Click the button below to sign in and go directly to {destinationContext}. This link will
+          expire in {expiresIn}.
+        </Paragraph>
+      ) : (
+        <Paragraph>
+          Click the button below to sign in to your account. This link will expire in {expiresIn}.
+        </Paragraph>
+      )}
 
-      <EmailButton href={magicLinkUrl}>Sign In</EmailButton>
+      <EmailButton href={magicLinkUrl}>
+        {hasCustomDestination ? 'Sign In & Continue' : 'Sign In'}
+      </EmailButton>
 
       {otpCode && (
         <>
@@ -81,8 +124,9 @@ export function MagicLinkEmail({
 MagicLinkEmail.PreviewProps = {
   email: 'alex@example.com',
   magicLinkUrl: 'https://lxd360.com/auth/magic-link?token=abc123',
-  expiresIn: '15 minutes',
+  expiresIn: '24 hours',
   otpCode: '123456',
+  destination: '/ignite/learn/course-abc123',
 } as MagicLinkEmailProps;
 
 export default MagicLinkEmail;

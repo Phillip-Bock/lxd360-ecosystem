@@ -25,6 +25,42 @@ interface ValidationError {
   code?: string;
 }
 
+/** Default redirect destination if none specified */
+const DEFAULT_DESTINATION = '/ignite/dashboard';
+
+/**
+ * Validate and sanitize destination path to prevent open redirect attacks.
+ * Only allows relative paths that start with / and don't contain protocol or host.
+ */
+function sanitizeDestination(destination: string | undefined | null): string {
+  if (!destination) {
+    return DEFAULT_DESTINATION;
+  }
+
+  // Ensure it starts with /
+  if (!destination.startsWith('/')) {
+    return DEFAULT_DESTINATION;
+  }
+
+  // Block protocol-relative URLs (//example.com)
+  if (destination.startsWith('//')) {
+    return DEFAULT_DESTINATION;
+  }
+
+  // Block URLs with protocols
+  if (/^[a-z][a-z0-9+.-]*:/i.test(destination)) {
+    return DEFAULT_DESTINATION;
+  }
+
+  // Only allow alphanumeric, /, -, _, and reasonable query params
+  const validPathPattern = /^\/[a-zA-Z0-9\-_/?.=&%]+$/;
+  if (!validPathPattern.test(destination)) {
+    return DEFAULT_DESTINATION;
+  }
+
+  return destination;
+}
+
 // =============================================================================
 // Component
 // =============================================================================
@@ -37,6 +73,7 @@ export function MagicLinkHandler() {
   const [state, setState] = useState<ValidationState>('loading');
   const [error, setError] = useState<ValidationError | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+  const [destination, setDestination] = useState<string>(DEFAULT_DESTINATION);
 
   const validateAndSignIn = useCallback(
     async (magicToken: string) => {
@@ -75,13 +112,15 @@ export function MagicLinkHandler() {
         // Sign in with custom token
         await signInWithCustomToken(auth, data.customToken);
 
-        // Set email for success message
+        // Set email and destination for success message
         setEmail(data.email);
+        const sanitizedDestination = sanitizeDestination(data.destination);
+        setDestination(sanitizedDestination);
         setState('success');
 
-        // Redirect to dashboard after short delay
+        // Redirect to destination after short delay
         setTimeout(() => {
-          router.push('/ignite/dashboard');
+          router.push(sanitizedDestination);
         }, 1500);
       } catch (_err) {
         setError({
@@ -109,7 +148,7 @@ export function MagicLinkHandler() {
   }
 
   if (state === 'success') {
-    return <SuccessState email={email} />;
+    return <SuccessState email={email} destination={destination} />;
   }
 
   if (state === 'no-token') {
@@ -137,7 +176,12 @@ function LoadingState() {
   );
 }
 
-function SuccessState({ email }: { email: string | null }) {
+function SuccessState({ email, destination }: { email: string | null; destination: string }) {
+  const isCustomDestination = destination !== DEFAULT_DESTINATION;
+  const redirectText = isCustomDestination
+    ? 'Redirecting to your content...'
+    : 'Redirecting to dashboard...';
+
   return (
     <div className="flex flex-col items-center gap-6 text-center">
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-lxd-success)]/10">
@@ -156,7 +200,7 @@ function SuccessState({ email }: { email: string | null }) {
         </p>
         <p className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
-          Redirecting to dashboard...
+          {redirectText}
         </p>
       </div>
     </div>
