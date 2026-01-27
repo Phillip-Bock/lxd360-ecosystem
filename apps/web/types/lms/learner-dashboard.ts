@@ -93,3 +93,46 @@ export interface CompletedCourseRecord extends LearnerCourse {
   /** Time spent on course (minutes) */
   timeSpent: number;
 }
+
+/**
+ * Badge rarity levels
+ */
+export type BadgeRarity = 'common' | 'rare' | 'epic' | 'legendary';
+
+/**
+ * Achievement badge earned by learner
+ */
+export interface LearnerBadge {
+  /** Unique badge identifier */
+  id: string;
+  /** Badge display name */
+  name: string;
+  /** Description of achievement */
+  description: string;
+  /** Icon name (from Lucide) */
+  icon: string;
+  /** Badge rarity */
+  rarity: BadgeRarity;
+  /** When the badge was earned */
+  earnedAt: Date;
+  /** Course ID that triggered badge (optional) */
+  courseId?: string;
+  /** XP reward for earning badge */
+  xpReward: number;
+}
+
+/**
+ * Deadline item for upcoming deadlines widget
+ */
+export interface LearnerDeadline {
+  /** Course ID */
+  courseId: string;
+  /** Course title */
+  courseTitle: string;
+  /** Due date */
+  dueDate: Date;
+  /** Current progress */
+  progress: number;
+  /** Whether this is required/mandatory */
+  isRequired: boolean;
+}
