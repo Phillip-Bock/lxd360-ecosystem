@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic';
 import {
   BarChart3,
   Building,
+  CheckSquare,
   FileText,
   LayoutDashboard,
   Settings,
@@ -27,6 +28,11 @@ const manageNavItems = [
     label: 'Users',
     href: '/(tenant)/ignite/manage/users',
     icon: Users,
+  },
+  {
+    label: 'Approvals',
+    href: '/(tenant)/ignite/manage/approvals',
+    icon: CheckSquare,
   },
   {
     label: 'Organizations',
