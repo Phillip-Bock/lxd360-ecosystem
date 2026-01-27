@@ -1,10 +1,15 @@
 'use client';
 
-import { Download, Filter, Search } from 'lucide-react';
+import { Filter, Search } from 'lucide-react';
 import { useState } from 'react';
 import type { Assignment, GradebookEntry, LearnerStatus } from '@/components/ignite/gradebook';
-import { CourseSelector, GradebookTable, GradeSummary } from '@/components/ignite/gradebook';
-import { Button } from '@/components/ui/button';
+import {
+  CourseSelector,
+  ExportButton,
+  GradebookTable,
+  GradeSummary,
+  StudentDrilldownModal,
+} from '@/components/ignite/gradebook';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Select,
@@ -502,6 +507,15 @@ export default function GradebookPage(): React.ReactElement {
   const [selectedCourse, setSelectedCourse] = useState(mockCourses[0].id);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<LearnerStatus | 'all'>('all');
+  const [selectedEntry, setSelectedEntry] = useState<GradebookEntry | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const selectedCourseName = mockCourses.find((c) => c.id === selectedCourse)?.name;
+
+  const handleRowClick = (entry: GradebookEntry): void => {
+    setSelectedEntry(entry);
+    setIsModalOpen(true);
+  };
 
   // Convert mock data to summary format for GradeSummary
   const summaryEntries = mockLearners.map((l) => ({
@@ -520,10 +534,12 @@ export default function GradebookPage(): React.ReactElement {
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Gradebook</h1>
           <p className="text-muted-foreground mt-1">View and manage learner grades and progress</p>
         </div>
-        <Button type="button" variant="outline" className="gap-2 self-start sm:self-auto">
-          <Download className="w-4 h-4" aria-hidden="true" />
-          Export Grades
-        </Button>
+        <ExportButton
+          entries={mockLearners}
+          assignments={mockAssignments}
+          courseName={selectedCourseName}
+          className="self-start sm:self-auto"
+        />
       </div>
 
       {/* Filters Card */}
@@ -585,6 +601,14 @@ export default function GradebookPage(): React.ReactElement {
         assignments={mockAssignments}
         statusFilter={statusFilter}
         searchQuery={searchQuery}
+        onRowClick={handleRowClick}
+      />
+
+      {/* Student Drilldown Modal */}
+      <StudentDrilldownModal
+        entry={selectedEntry}
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
       />
     </div>
   );
