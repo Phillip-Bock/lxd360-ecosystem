@@ -2121,7 +2121,10 @@ export type StarterBlockType =
   | 'fitb-question'
   | 'accordion'
   | 'tabs'
-  | 'flip-card';
+  | 'flip-card'
+  | 'carousel'
+  | 'process'
+  | 'data';
 
 /**
  * Block definition for registry
@@ -2264,6 +2267,36 @@ export interface FlipCardContent {
   back: FlipCardSide;
 }
 
+/** Carousel item for image/content carousel */
+export interface CarouselItem {
+  id: string;
+  image?: string;
+  title: string;
+  content: string;
+}
+
+export interface CarouselContent {
+  items: CarouselItem[];
+}
+
+/** Process step for workflow visualization - uses content field for consistency */
+
+export interface ProcessContent {
+  steps: ProcessStep[];
+}
+
+/** Data point for chart visualization */
+export interface DataPoint {
+  label: string;
+  value: number;
+  color?: string;
+}
+
+export interface DataContent {
+  title?: string;
+  data: DataPoint[];
+}
+
 // =============================================================================
 // STARTER 10 CONFIG TYPES
 // =============================================================================
@@ -2361,6 +2394,31 @@ export interface FlipCardConfig {
   trackInteractions?: boolean;
 }
 
+export interface CarouselConfig {
+  autoPlay?: boolean;
+  autoPlayInterval?: number;
+  showIndicators?: boolean;
+  showNavigation?: boolean;
+  loop?: boolean;
+  trackInteractions?: boolean;
+}
+
+export interface ProcessConfig {
+  orientation: 'horizontal' | 'vertical';
+  variant?: 'default' | 'numbered' | 'icon' | 'timeline';
+  showConnectors?: boolean;
+  trackInteractions?: boolean;
+}
+
+export interface DataConfig {
+  chartType: 'bar' | 'pie' | 'line';
+  showLegend?: boolean;
+  showValues?: boolean;
+  animated?: boolean;
+  height?: number;
+  trackInteractions?: boolean;
+}
+
 // =============================================================================
 // BLOCK CONTENT & CONFIG MAPS
 // =============================================================================
@@ -2379,6 +2437,9 @@ export interface BlockContentMap {
   accordion: AccordionContent;
   tabs: TabsContent;
   'flip-card': FlipCardContent;
+  carousel: CarouselContent;
+  process: ProcessContent;
+  data: DataContent;
 }
 
 /**
@@ -2395,6 +2456,9 @@ export interface BlockConfigMap {
   accordion: AccordionConfig;
   tabs: TabsConfig;
   'flip-card': FlipCardConfig;
+  carousel: CarouselConfig;
+  process: ProcessConfig;
+  data: DataConfig;
 }
 
 // =============================================================================
@@ -2415,6 +2479,9 @@ export const BLOCK_COGNITIVE_WEIGHTS: Record<StarterBlockType, number> = {
   accordion: 4,
   tabs: 4,
   'flip-card': 5,
+  carousel: 4,
+  process: 5,
+  data: 6,
 };
 
 /**
@@ -2443,6 +2510,9 @@ export const BLOCK_XAPI_VERBS: Record<StarterBlockType, string[]> = {
   accordion: ['http://adlnet.gov/expapi/verbs/interacted'],
   tabs: ['http://adlnet.gov/expapi/verbs/interacted'],
   'flip-card': ['http://adlnet.gov/expapi/verbs/interacted'],
+  carousel: ['http://adlnet.gov/expapi/verbs/interacted'],
+  process: ['http://adlnet.gov/expapi/verbs/experienced'],
+  data: ['http://adlnet.gov/expapi/verbs/experienced'],
 };
 
 /**
@@ -2459,4 +2529,7 @@ export const BLOCK_A11Y_REQUIREMENTS: Record<StarterBlockType, string[]> = {
   accordion: ['keyboard-navigation', 'aria-expanded', 'focus-indicators'],
   tabs: ['keyboard-navigation', 'aria-selected', 'focus-indicators'],
   'flip-card': ['keyboard-navigation', 'aria-labels', 'focus-indicators', 'reduced-motion'],
+  carousel: ['keyboard-navigation', 'aria-labels', 'focus-indicators', 'reduced-motion'],
+  process: ['screen-reader', 'aria-labels', 'focus-indicators'],
+  data: ['screen-reader', 'aria-labels', 'alt-text'],
 };
