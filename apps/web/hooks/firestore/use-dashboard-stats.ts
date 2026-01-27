@@ -254,8 +254,8 @@ export function useDashboardStats(): UseDashboardStatsReturn {
         case 'manager':
           fetchedStats = await fetchManagerStats();
           break;
-        case 'owner':
         default:
+          // Owner persona (default case)
           fetchedStats = await fetchOwnerStats();
           break;
       }

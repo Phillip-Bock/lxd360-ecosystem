@@ -156,7 +156,7 @@ export function RestrictedModeToggle({
         </Tooltip>
 
         <DropdownMenuContent
-          className="w-72 bg-[#1a1a2e] border-white/10"
+          className="w-72 bg-(--studio-surface) border-white/10"
           align="end"
           sideOffset={8}
         >

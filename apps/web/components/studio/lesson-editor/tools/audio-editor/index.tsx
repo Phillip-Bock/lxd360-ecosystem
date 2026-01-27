@@ -92,7 +92,7 @@ export function AudioEditor({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl bg-[#1a1a2e] border-white/10">
+      <DialogContent className="max-w-4xl bg-(--studio-surface) border-white/10">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Music className="h-5 w-5 text-primary" />
@@ -103,7 +103,7 @@ export function AudioEditor({
         <div className="space-y-4">
           {/* Waveform Display */}
           {audioUrl ? (
-            <div className="bg-[#0d0d14] rounded-lg p-4">
+            <div className="bg-(--studio-bg) rounded-lg p-4">
               <WaveformEditor
                 audioUrl={audioUrl}
                 onReady={handleReady}
@@ -139,7 +139,7 @@ export function AudioEditor({
           {/* Edit Tabs */}
           {audioUrl && (
             <Tabs defaultValue="trim" className="w-full">
-              <TabsList className="bg-[#0d0d14] border border-white/10">
+              <TabsList className="bg-(--studio-bg) border border-white/10">
                 <TabsTrigger value="trim" className="gap-2">
                   <Scissors className="h-4 w-4" />
                   Trim

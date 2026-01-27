@@ -28,11 +28,11 @@
  */
 
 import {
-  getHandler,
-  handlers,
   type ExportContext,
   type ExportCourseData,
   type ExportHandlerResult,
+  getHandler,
+  handlers,
 } from './handlers';
 import type { ExportFormat, ExportOptions, ExportResult, ExportSettings } from './types';
 
@@ -40,6 +40,23 @@ import type { ExportFormat, ExportOptions, ExportResult, ExportSettings } from '
 // RE-EXPORTS
 // ============================================================================
 
+// Handler exports
+export {
+  cmi5Handler,
+  type ExportContext,
+  type ExportCourseData,
+  type ExportHandler,
+  type ExportHandlerResult,
+  getFormatInfo,
+  getHandler,
+  handlers,
+  hasHandler,
+  html5Handler,
+  pdfHandler,
+  scorm12Handler,
+  scorm2004Handler,
+  xapiHandler,
+} from './handlers';
 // SCORM module exports
 export {
   createManifestBuilder,
@@ -51,27 +68,8 @@ export {
   ManifestBuilder,
   type SCOWrapperOptions,
 } from './scorm';
-
 // Type exports
 export * from './types';
-
-// Handler exports
-export {
-  cmi5Handler,
-  getFormatInfo,
-  getHandler,
-  handlers,
-  hasHandler,
-  html5Handler,
-  pdfHandler,
-  scorm12Handler,
-  scorm2004Handler,
-  xapiHandler,
-  type ExportContext,
-  type ExportCourseData,
-  type ExportHandler,
-  type ExportHandlerResult,
-} from './handlers';
 
 // ============================================================================
 // MAIN EXPORT FUNCTIONS

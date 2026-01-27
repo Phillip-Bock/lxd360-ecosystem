@@ -115,7 +115,7 @@ export function VideoHotspotOverlay({
 
   return (
     <TooltipProvider>
-      <div className="space-y-4 p-4 bg-[#0d0d14] rounded-lg">
+      <div className="space-y-4 p-4 bg-(--studio-bg) rounded-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm text-zinc-400">
             <MousePointer2 className="h-4 w-4" />
@@ -201,7 +201,7 @@ export function VideoHotspotOverlay({
               <Input
                 value={selectedHotspot.label}
                 onChange={(e) => updateHotspot(selectedHotspot.id, { label: e.target.value })}
-                className="bg-[#1a1a2e] border-white/10"
+                className="bg-(--studio-surface) border-white/10"
               />
             </div>
 
@@ -240,7 +240,7 @@ export function VideoHotspotOverlay({
                         startTime: parseFloat(e.target.value) || 0,
                       })
                     }
-                    className="bg-[#1a1a2e] border-white/10 text-sm"
+                    className="bg-(--studio-surface) border-white/10 text-sm"
                     step={0.1}
                   />
                   <span className="text-xs text-zinc-500">s</span>
@@ -257,7 +257,7 @@ export function VideoHotspotOverlay({
                         endTime: parseFloat(e.target.value) || 0,
                       })
                     }
-                    className="bg-[#1a1a2e] border-white/10 text-sm"
+                    className="bg-(--studio-surface) border-white/10 text-sm"
                     step={0.1}
                   />
                   <span className="text-xs text-zinc-500">s</span>
@@ -312,7 +312,7 @@ export function VideoHotspotOverlay({
                 <textarea
                   value={selectedHotspot.content}
                   onChange={(e) => updateHotspot(selectedHotspot.id, { content: e.target.value })}
-                  className="w-full h-16 bg-[#1a1a2e] border border-white/10 rounded-md p-2 text-sm resize-none"
+                  className="w-full h-16 bg-(--studio-surface) border border-white/10 rounded-md p-2 text-sm resize-none"
                 />
               </div>
             )}
@@ -324,7 +324,7 @@ export function VideoHotspotOverlay({
                   value={selectedHotspot.url || ''}
                   onChange={(e) => updateHotspot(selectedHotspot.id, { url: e.target.value })}
                   placeholder="https://..."
-                  className="bg-[#1a1a2e] border-white/10"
+                  className="bg-(--studio-surface) border-white/10"
                 />
               </div>
             )}
@@ -340,7 +340,7 @@ export function VideoHotspotOverlay({
                       skipToTime: parseFloat(e.target.value) || 0,
                     })
                   }
-                  className="bg-[#1a1a2e] border-white/10"
+                  className="bg-(--studio-surface) border-white/10"
                   step={0.1}
                 />
               </div>

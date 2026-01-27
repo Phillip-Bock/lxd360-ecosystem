@@ -616,7 +616,7 @@ export function ModelViewer({
   return (
     <div
       ref={containerRef}
-      className={cn('relative bg-[#0a0a0f] overflow-hidden flex', className)}
+      className={cn('relative bg-(--neural-bg) overflow-hidden flex', className)}
       style={{ height }}
     >
       {/* Parts Tree Sidebar */}

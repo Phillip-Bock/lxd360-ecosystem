@@ -383,7 +383,9 @@ function generateLessonContent(
 /**
  * Render content block for SCORM
  */
-function renderSCORMBlock(block: ExportContext['courseData']['modules'][0]['lessons'][0]['blocks'][0]): string {
+function renderSCORMBlock(
+  block: ExportContext['courseData']['modules'][0]['lessons'][0]['blocks'][0],
+): string {
   const content = block.content;
 
   switch (block.type) {
@@ -392,11 +394,12 @@ function renderSCORMBlock(block: ExportContext['courseData']['modules'][0]['less
         <p>${escapeHtml(String(content.text || ''))}</p>
       </div>`;
 
-    case 'heading':
+    case 'heading': {
       const level = Math.min(6, Math.max(1, Number(content.level) || 2));
       return `<div class="block block-heading">
         <h${level}>${escapeHtml(String(content.text || ''))}</h${level}>
       </div>`;
+    }
 
     case 'image':
       return `<figure class="block block-image">
@@ -415,18 +418,19 @@ function renderSCORMBlock(block: ExportContext['courseData']['modules'][0]['less
         ${content.author ? `<cite>- ${escapeHtml(String(content.author))}</cite>` : ''}
       </blockquote>`;
 
-    case 'list':
+    case 'list': {
       const items = Array.isArray(content.items) ? content.items : [];
       const listItems = items.map((item) => `<li>${escapeHtml(String(item))}</li>`).join('\n');
       const listTag = content.ordered ? 'ol' : 'ul';
       return `<div class="block block-list">
         <${listTag}>${listItems}</${listTag}>
       </div>`;
+    }
 
     case 'divider':
       return '<hr class="block block-divider" />';
 
-    case 'mc-question':
+    case 'mc-question': {
       const choices = Array.isArray(content.choices) ? content.choices : [];
       const choiceItems = choices
         .map(
@@ -441,6 +445,7 @@ function renderSCORMBlock(block: ExportContext['courseData']['modules'][0]['less
         <p class="question-text"><strong>${escapeHtml(String(content.question || 'Question'))}</strong></p>
         <div class="choices">${choiceItems}</div>
       </div>`;
+    }
 
     default:
       return `<div class="block block-${block.type}">
@@ -552,7 +557,7 @@ Contents
 Settings
 --------
 - Passing Score: ${settings.passingScore}%
-- Time Limit: ${settings.timeLimit > 0 ? settings.timeLimit + ' minutes' : 'Unlimited'}
+- Time Limit: ${settings.timeLimit > 0 ? `${settings.timeLimit} minutes` : 'Unlimited'}
 - Credit Mode: ${settings.credit}
 - Allow Review: ${settings.allowReview ? 'Yes' : 'No'}
 
@@ -572,7 +577,7 @@ Support
 -------
 For technical support, contact support@lxd360.com
 
-Copyright: ${courseData.metadata?.copyright || new Date().getFullYear() + ' All Rights Reserved'}
+Copyright: ${courseData.metadata?.copyright || `${new Date().getFullYear()} All Rights Reserved`}
 `;
 }
 

@@ -100,7 +100,7 @@ export function TextOverlayTool({
 
   return (
     <TooltipProvider>
-      <div className="space-y-4 p-4 bg-[#0d0d14] rounded-lg">
+      <div className="space-y-4 p-4 bg-(--studio-bg) rounded-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm text-zinc-400">
             <Type className="h-4 w-4" />
@@ -162,7 +162,7 @@ export function TextOverlayTool({
               <Input
                 value={selectedOverlay.text}
                 onChange={(e) => updateOverlay(selectedOverlay.id, { text: e.target.value })}
-                className="bg-[#1a1a2e] border-white/10"
+                className="bg-(--studio-surface) border-white/10"
               />
             </div>
 
@@ -172,7 +172,7 @@ export function TextOverlayTool({
               <select
                 value={selectedOverlay.fontFamily}
                 onChange={(e) => updateOverlay(selectedOverlay.id, { fontFamily: e.target.value })}
-                className="w-full bg-[#1a1a2e] border border-white/10 rounded-md px-3 py-2 text-sm"
+                className="w-full bg-(--studio-surface) border border-white/10 rounded-md px-3 py-2 text-sm"
               >
                 {FONT_FAMILIES.map((font) => (
                   <option key={font.value} value={font.value}>

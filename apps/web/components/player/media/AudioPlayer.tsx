@@ -298,7 +298,7 @@ export function AudioPlayer({
   const sources = typeof src === 'string' ? [{ src, type: 'audio/mpeg' }] : src;
 
   return (
-    <div
+    <section
       ref={containerRef}
       className={cn(
         'relative w-full overflow-hidden rounded-xl',
@@ -307,7 +307,6 @@ export function AudioPlayer({
         'focus-within:ring-2 focus-within:ring-cyan-500/50',
         className,
       )}
-      role="region"
       aria-label={`Audio player: ${title}`}
     >
       <div className="pointer-events-none absolute -inset-1 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-cyan-500/10 blur-xl" />
@@ -399,7 +398,7 @@ export function AudioPlayer({
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }
 

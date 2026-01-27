@@ -8,7 +8,7 @@ export function NotFoundContent() {
   return (
     <div
       className="min-h-screen flex flex-col"
-      style={{ backgroundColor: 'var(--lxd-blue-dark-700)' }}
+      style={{ backgroundColor: 'var(--color-lxd-primary-dark)' }}
     >
       {/* Full Brand Header */}
       <Header />
@@ -23,7 +23,7 @@ export function NotFoundContent() {
           <span
             className="text-[40vw] md:text-[35vw] lg:text-[30vw] font-black leading-none tracking-tighter whitespace-nowrap"
             style={{
-              color: 'rgba(26, 104, 255, 0.2)',
+              color: 'oklch(55% 0.2 260 / 0.2)',
               fontFamily: 'system-ui, -apple-system, sans-serif',
             }}
           >
@@ -36,7 +36,11 @@ export function NotFoundContent() {
           <div className="w-full max-w-md">
             <div
               className="rounded-2xl p-8 shadow-2xl"
-              style={{ backgroundColor: '#111c2e', borderColor: '#1e3a5f', borderWidth: '1px' }}
+              style={{
+                backgroundColor: 'var(--neural-surface)',
+                borderColor: 'var(--neural-border)',
+                borderWidth: '1px',
+              }}
             >
               {/* Search Icon */}
               <div className="flex justify-center mb-6">
@@ -72,7 +76,7 @@ export function NotFoundContent() {
               {/* Go Home Button */}
               <Link
                 href="/"
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold rounded-full text-brand-primary transition-all bg-[var(--brand-primary)] hover:bg-[#0066d6]"
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold rounded-full text-brand-primary transition-all bg-[var(--brand-primary)] hover:bg-primary/90"
               >
                 Go back home
                 <svg

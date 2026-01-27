@@ -132,7 +132,7 @@ export const CROSS_TENANT_ADMIN: MasGroceryUser = {
 
 export const OWNERS: MasGroceryUser[] = [
   {
-    email: 'ma@mas_grocery.com',
+    email: 'ma@masgrocery.com',
     displayName: 'Martha "Ma" Jenkins',
     firstName: 'Martha',
     lastName: 'Jenkins',
@@ -150,7 +150,7 @@ export const OWNERS: MasGroceryUser[] = [
     },
   },
   {
-    email: 'pa@mas_grocery.com',
+    email: 'pa@masgrocery.com',
     displayName: 'Robert "Pa" Jenkins',
     firstName: 'Robert',
     lastName: 'Jenkins',
@@ -175,7 +175,7 @@ export const OWNERS: MasGroceryUser[] = [
 
 export const EDITORS: MasGroceryUser[] = [
   {
-    email: 'sarah.mitchell@mas_grocery.com',
+    email: 'sarah.mitchell@masgrocery.com',
     displayName: 'Sarah Mitchell',
     firstName: 'Sarah',
     lastName: 'Mitchell',
@@ -186,7 +186,7 @@ export const EDITORS: MasGroceryUser[] = [
     age: 34,
     gender: 'F',
     hireDate: '2019-06-01',
-    managerId: 'ma@mas_grocery.com',
+    managerId: 'ma@masgrocery.com',
     notifications: {
       email: true,
       push: true,
@@ -194,7 +194,7 @@ export const EDITORS: MasGroceryUser[] = [
     },
   },
   {
-    email: 'david.chen@mas_grocery.com',
+    email: 'david.chen@masgrocery.com',
     displayName: 'David Chen',
     firstName: 'David',
     lastName: 'Chen',
@@ -205,7 +205,7 @@ export const EDITORS: MasGroceryUser[] = [
     age: 29,
     gender: 'M',
     hireDate: '2021-02-15',
-    managerId: 'sarah.mitchell@mas_grocery.com',
+    managerId: 'sarah.mitchell@masgrocery.com',
     notifications: {
       email: true,
       push: true,
@@ -220,7 +220,7 @@ export const EDITORS: MasGroceryUser[] = [
 
 export const MANAGERS: MasGroceryUser[] = [
   {
-    email: 'james.washington@mas_grocery.com',
+    email: 'james.washington@masgrocery.com',
     displayName: 'James Washington',
     firstName: 'James',
     lastName: 'Washington',
@@ -231,7 +231,7 @@ export const MANAGERS: MasGroceryUser[] = [
     age: 42,
     gender: 'M',
     hireDate: '2010-04-12',
-    managerId: 'pa@mas_grocery.com',
+    managerId: 'pa@masgrocery.com',
     notifications: {
       email: true,
       push: true,
@@ -239,7 +239,7 @@ export const MANAGERS: MasGroceryUser[] = [
     },
   },
   {
-    email: 'maria.garcia@mas_grocery.com',
+    email: 'maria.garcia@masgrocery.com',
     displayName: 'Maria Garcia',
     firstName: 'Maria',
     lastName: 'Garcia',
@@ -250,7 +250,7 @@ export const MANAGERS: MasGroceryUser[] = [
     age: 38,
     gender: 'F',
     hireDate: '2012-08-20',
-    managerId: 'ma@mas_grocery.com',
+    managerId: 'ma@masgrocery.com',
     notifications: {
       email: true,
       push: true,
@@ -258,7 +258,7 @@ export const MANAGERS: MasGroceryUser[] = [
     },
   },
   {
-    email: 'tyrone.jackson@mas_grocery.com',
+    email: 'tyrone.jackson@masgrocery.com',
     displayName: 'Tyrone Jackson',
     firstName: 'Tyrone',
     lastName: 'Jackson',
@@ -269,7 +269,7 @@ export const MANAGERS: MasGroceryUser[] = [
     age: 45,
     gender: 'M',
     hireDate: '2008-11-03',
-    managerId: 'pa@mas_grocery.com',
+    managerId: 'pa@masgrocery.com',
     notifications: {
       email: true,
       push: true,
@@ -285,7 +285,7 @@ export const MANAGERS: MasGroceryUser[] = [
 export const STAFF: MasGroceryUser[] = [
   // Front End Staff
   {
-    email: 'emily.thompson@mas_grocery.com',
+    email: 'emily.thompson@masgrocery.com',
     displayName: 'Emily Thompson',
     firstName: 'Emily',
     lastName: 'Thompson',
@@ -296,10 +296,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 19,
     gender: 'F',
     hireDate: '2025-05-15',
-    managerId: 'james.washington@mas_grocery.com',
+    managerId: 'james.washington@masgrocery.com',
   },
   {
-    email: 'marcus.williams@mas_grocery.com',
+    email: 'marcus.williams@masgrocery.com',
     displayName: 'Marcus Williams',
     firstName: 'Marcus',
     lastName: 'Williams',
@@ -310,10 +310,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 24,
     gender: 'M',
     hireDate: '2022-03-10',
-    managerId: 'james.washington@mas_grocery.com',
+    managerId: 'james.washington@masgrocery.com',
   },
   {
-    email: 'ashley.brown@mas_grocery.com',
+    email: 'ashley.brown@masgrocery.com',
     displayName: 'Ashley Brown',
     firstName: 'Ashley',
     lastName: 'Brown',
@@ -324,10 +324,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 22,
     gender: 'F',
     hireDate: '2024-01-08',
-    managerId: 'james.washington@mas_grocery.com',
+    managerId: 'james.washington@masgrocery.com',
   },
   {
-    email: 'hannah.wilson@mas_grocery.com',
+    email: 'hannah.wilson@masgrocery.com',
     displayName: 'Hannah Wilson',
     firstName: 'Hannah',
     lastName: 'Wilson',
@@ -338,10 +338,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 21,
     gender: 'F',
     hireDate: '2024-08-01',
-    managerId: 'james.washington@mas_grocery.com',
+    managerId: 'james.washington@masgrocery.com',
   },
   {
-    email: 'crystal.jones@mas_grocery.com',
+    email: 'crystal.jones@masgrocery.com',
     displayName: 'Crystal Jones',
     firstName: 'Crystal',
     lastName: 'Jones',
@@ -352,12 +352,12 @@ export const STAFF: MasGroceryUser[] = [
     age: 27,
     gender: 'F',
     hireDate: '2023-04-17',
-    managerId: 'james.washington@mas_grocery.com',
+    managerId: 'james.washington@masgrocery.com',
   },
 
   // Deli & Bakery Staff
   {
-    email: 'deshawn.harris@mas_grocery.com',
+    email: 'deshawn.harris@masgrocery.com',
     displayName: 'DeShawn Harris',
     firstName: 'DeShawn',
     lastName: 'Harris',
@@ -368,10 +368,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 28,
     gender: 'M',
     hireDate: '2021-09-22',
-    managerId: 'maria.garcia@mas_grocery.com',
+    managerId: 'maria.garcia@masgrocery.com',
   },
   {
-    email: 'jennifer.martinez@mas_grocery.com',
+    email: 'jennifer.martinez@masgrocery.com',
     displayName: 'Jennifer Martinez',
     firstName: 'Jennifer',
     lastName: 'Martinez',
@@ -382,10 +382,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 35,
     gender: 'F',
     hireDate: '2018-02-14',
-    managerId: 'maria.garcia@mas_grocery.com',
+    managerId: 'maria.garcia@masgrocery.com',
   },
   {
-    email: 'lakisha.johnson@mas_grocery.com',
+    email: 'lakisha.johnson@masgrocery.com',
     displayName: 'Lakisha Johnson',
     firstName: 'Lakisha',
     lastName: 'Johnson',
@@ -396,10 +396,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 29,
     gender: 'F',
     hireDate: '2020-06-30',
-    managerId: 'maria.garcia@mas_grocery.com',
+    managerId: 'maria.garcia@masgrocery.com',
   },
   {
-    email: 'rosa.hernandez@mas_grocery.com',
+    email: 'rosa.hernandez@masgrocery.com',
     displayName: 'Rosa Hernandez',
     firstName: 'Rosa',
     lastName: 'Hernandez',
@@ -410,10 +410,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 47,
     gender: 'F',
     hireDate: '2015-11-01',
-    managerId: 'maria.garcia@mas_grocery.com',
+    managerId: 'maria.garcia@masgrocery.com',
   },
   {
-    email: 'ahmad.hassan@mas_grocery.com',
+    email: 'ahmad.hassan@masgrocery.com',
     displayName: 'Ahmad Hassan',
     firstName: 'Ahmad',
     lastName: 'Hassan',
@@ -424,12 +424,12 @@ export const STAFF: MasGroceryUser[] = [
     age: 39,
     gender: 'M',
     hireDate: '2019-03-18',
-    managerId: 'maria.garcia@mas_grocery.com',
+    managerId: 'maria.garcia@masgrocery.com',
   },
 
   // Warehouse Staff
   {
-    email: 'nguyen.tran@mas_grocery.com',
+    email: 'nguyen.tran@masgrocery.com',
     displayName: 'Nguyen Tran',
     firstName: 'Nguyen',
     lastName: 'Tran',
@@ -440,10 +440,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 31,
     gender: 'M',
     hireDate: '2020-01-06',
-    managerId: 'tyrone.jackson@mas_grocery.com',
+    managerId: 'tyrone.jackson@masgrocery.com',
   },
   {
-    email: 'robert.taylor@mas_grocery.com',
+    email: 'robert.taylor@masgrocery.com',
     displayName: 'Robert Taylor',
     firstName: 'Robert',
     lastName: 'Taylor',
@@ -454,10 +454,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 58,
     gender: 'M',
     hireDate: '2005-07-11',
-    managerId: 'tyrone.jackson@mas_grocery.com',
+    managerId: 'tyrone.jackson@masgrocery.com',
   },
   {
-    email: 'brandon.lee@mas_grocery.com',
+    email: 'brandon.lee@masgrocery.com',
     displayName: 'Brandon Lee',
     firstName: 'Brandon',
     lastName: 'Lee',
@@ -468,10 +468,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 26,
     gender: 'M',
     hireDate: '2022-10-24',
-    managerId: 'tyrone.jackson@mas_grocery.com',
+    managerId: 'tyrone.jackson@masgrocery.com',
   },
   {
-    email: 'jerome.davis@mas_grocery.com',
+    email: 'jerome.davis@masgrocery.com',
     displayName: 'Jerome Davis',
     firstName: 'Jerome',
     lastName: 'Davis',
@@ -482,10 +482,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 33,
     gender: 'M',
     hireDate: '2019-09-02',
-    managerId: 'tyrone.jackson@mas_grocery.com',
+    managerId: 'tyrone.jackson@masgrocery.com',
   },
   {
-    email: 'billy.thompson@mas_grocery.com',
+    email: 'billy.thompson@masgrocery.com',
     displayName: 'Billy Ray Thompson',
     firstName: 'Billy Ray',
     lastName: 'Thompson',
@@ -496,12 +496,12 @@ export const STAFF: MasGroceryUser[] = [
     age: 48,
     gender: 'M',
     hireDate: '2010-05-17',
-    managerId: 'tyrone.jackson@mas_grocery.com',
+    managerId: 'tyrone.jackson@masgrocery.com',
   },
 
   // Meat Department Staff
   {
-    email: 'wei.zhang@mas_grocery.com',
+    email: 'wei.zhang@masgrocery.com',
     displayName: 'Wei Zhang',
     firstName: 'Wei',
     lastName: 'Zhang',
@@ -512,10 +512,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 44,
     gender: 'F',
     hireDate: '2016-04-25',
-    managerId: 'pa@mas_grocery.com',
+    managerId: 'pa@masgrocery.com',
   },
   {
-    email: 'michael.anderson@mas_grocery.com',
+    email: 'michael.anderson@masgrocery.com',
     displayName: 'Michael Anderson',
     firstName: 'Michael',
     lastName: 'Anderson',
@@ -526,10 +526,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 62,
     gender: 'M',
     hireDate: '1998-08-10',
-    managerId: 'pa@mas_grocery.com',
+    managerId: 'pa@masgrocery.com',
   },
   {
-    email: 'daniel.kim@mas_grocery.com',
+    email: 'daniel.kim@masgrocery.com',
     displayName: 'Daniel Kim',
     firstName: 'Daniel',
     lastName: 'Kim',
@@ -540,12 +540,12 @@ export const STAFF: MasGroceryUser[] = [
     age: 30,
     gender: 'M',
     hireDate: '2021-12-01',
-    managerId: 'pa@mas_grocery.com',
+    managerId: 'pa@masgrocery.com',
   },
 
   // Produce Staff
   {
-    email: 'patricia.moore@mas_grocery.com',
+    email: 'patricia.moore@masgrocery.com',
     displayName: 'Patricia Moore',
     firstName: 'Patricia',
     lastName: 'Moore',
@@ -556,10 +556,10 @@ export const STAFF: MasGroceryUser[] = [
     age: 55,
     gender: 'F',
     hireDate: '2007-03-05',
-    managerId: 'ma@mas_grocery.com',
+    managerId: 'ma@masgrocery.com',
   },
   {
-    email: 'aisha.patel@mas_grocery.com',
+    email: 'aisha.patel@masgrocery.com',
     displayName: 'Aisha Patel',
     firstName: 'Aisha',
     lastName: 'Patel',
@@ -570,7 +570,7 @@ export const STAFF: MasGroceryUser[] = [
     age: 36,
     gender: 'F',
     hireDate: '2020-11-16',
-    managerId: 'ma@mas_grocery.com',
+    managerId: 'ma@masgrocery.com',
   },
 ];
 

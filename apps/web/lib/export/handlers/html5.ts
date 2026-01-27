@@ -306,11 +306,12 @@ function renderContentBlock(block: ExportBlockData): string {
         <p>${escapeHtml(String(content.text || ''))}</p>
       </div>`;
 
-    case 'heading':
+    case 'heading': {
       const level = Math.min(6, Math.max(1, Number(content.level) || 2));
       return `<div class="block block-heading">
         <h${level}>${escapeHtml(String(content.text || ''))}</h${level}>
       </div>`;
+    }
 
     case 'image':
       return `<figure class="block block-image">
@@ -334,18 +335,19 @@ function renderContentBlock(block: ExportBlockData): string {
         ${content.author ? `<cite>- ${escapeHtml(String(content.author))}</cite>` : ''}
       </blockquote>`;
 
-    case 'list':
+    case 'list': {
       const items = Array.isArray(content.items) ? content.items : [];
       const listItems = items.map((item) => `<li>${escapeHtml(String(item))}</li>`).join('\n');
       const listTag = content.ordered ? 'ol' : 'ul';
       return `<div class="block block-list">
         <${listTag}>${listItems}</${listTag}>
       </div>`;
+    }
 
     case 'divider':
       return '<hr class="block block-divider" />';
 
-    case 'accordion':
+    case 'accordion': {
       const sections = Array.isArray(content.sections) ? content.sections : [];
       const accordionItems = sections
         .map(
@@ -358,8 +360,9 @@ function renderContentBlock(block: ExportBlockData): string {
         )
         .join('\n');
       return `<div class="block block-accordion">${accordionItems}</div>`;
+    }
 
-    case 'tabs':
+    case 'tabs': {
       const tabs = Array.isArray(content.tabs) ? content.tabs : [];
       const tabButtons = tabs
         .map(
@@ -381,8 +384,9 @@ function renderContentBlock(block: ExportBlockData): string {
         <div class="tab-buttons">${tabButtons}</div>
         <div class="tab-panels">${tabPanels}</div>
       </div>`;
+    }
 
-    case 'mc-question':
+    case 'mc-question': {
       const choices = Array.isArray(content.choices) ? content.choices : [];
       const choiceItems = choices
         .map(
@@ -397,6 +401,7 @@ function renderContentBlock(block: ExportBlockData): string {
         <p class="question-text"><strong>${escapeHtml(String(content.question || 'Question'))}</strong></p>
         <div class="choices">${choiceItems}</div>
       </div>`;
+    }
 
     case 'fitb-question':
       return `<div class="block block-question block-fitb-question">

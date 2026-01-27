@@ -146,7 +146,7 @@ export function QuizOverlay({
 
   return (
     <TooltipProvider>
-      <div className="space-y-4 p-4 bg-[#0d0d14] rounded-lg">
+      <div className="space-y-4 p-4 bg-(--studio-bg) rounded-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm text-zinc-400">
             <HelpCircle className="h-4 w-4" />
@@ -228,7 +228,7 @@ export function QuizOverlay({
                       timestamp: parseFloat(e.target.value) || 0,
                     })
                   }
-                  className="w-24 bg-[#1a1a2e] border-white/10"
+                  className="w-24 bg-(--studio-surface) border-white/10"
                   step={0.1}
                 />
                 <span className="text-xs text-zinc-500">seconds</span>
@@ -281,7 +281,7 @@ export function QuizOverlay({
               <textarea
                 value={selectedQuiz.question}
                 onChange={(e) => updateQuiz(selectedQuiz.id, { question: e.target.value })}
-                className="w-full h-16 bg-[#1a1a2e] border border-white/10 rounded-md p-2 text-sm resize-none"
+                className="w-full h-16 bg-(--studio-surface) border border-white/10 rounded-md p-2 text-sm resize-none"
               />
             </div>
 
@@ -323,7 +323,7 @@ export function QuizOverlay({
                           text: e.target.value,
                         })
                       }
-                      className="flex-1 bg-[#1a1a2e] border-white/10 text-sm h-8"
+                      className="flex-1 bg-(--studio-surface) border-white/10 text-sm h-8"
                       disabled={selectedQuiz.questionType === 'true-false'}
                     />
                     {selectedQuiz.questionType === 'multiple-choice' &&
@@ -357,7 +357,7 @@ export function QuizOverlay({
                       feedback: { ...selectedQuiz.feedback, correct: e.target.value },
                     })
                   }
-                  className="bg-[#1a1a2e] border-white/10 text-sm"
+                  className="bg-(--studio-surface) border-white/10 text-sm"
                 />
               </div>
               <div className="space-y-2">
@@ -372,7 +372,7 @@ export function QuizOverlay({
                       feedback: { ...selectedQuiz.feedback, incorrect: e.target.value },
                     })
                   }
-                  className="bg-[#1a1a2e] border-white/10 text-sm"
+                  className="bg-(--studio-surface) border-white/10 text-sm"
                 />
               </div>
             </div>

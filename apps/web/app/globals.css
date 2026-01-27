@@ -89,6 +89,11 @@
   --neural-border: #2a2a3a;
   --neural-glow: rgba(0, 206, 209, 0.15);
 
+  /* Studio Theme (Authoring Tool Dark Surfaces) */
+  --studio-bg: #0d0d14;
+  --studio-surface: #1a1a2e;
+  --studio-input: #f5f5f5;
+
   /* Semantic Colors (Simple Names) */
   --success: #22c55e;
   --warning: #f59e0b;

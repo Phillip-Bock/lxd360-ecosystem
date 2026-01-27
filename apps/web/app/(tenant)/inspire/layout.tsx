@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
-import { IgniteCoach } from '@/components/ignite/player/IgniteCoach';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
 
 export default function InspireLayout({ children }: { children: ReactNode }) {
@@ -34,12 +33,5 @@ export default function InspireLayout({ children }: { children: ReactNode }) {
     return null;
   }
 
-  return (
-    <div className="relative min-h-screen bg-background text-foreground">
-      {children}
-
-      {/* Cortex AI Coach - floating bottom-right */}
-      <IgniteCoach courseTitle="INSPIRE Studio" learnerName={user.displayName || 'Creator'} />
-    </div>
-  );
+  return <div className="relative min-h-screen bg-background text-foreground">{children}</div>;
 }

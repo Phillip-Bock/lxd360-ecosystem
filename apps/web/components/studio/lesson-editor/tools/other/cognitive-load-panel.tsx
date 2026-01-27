@@ -174,7 +174,7 @@ export function CognitiveLoadPanel({
   }
 
   return (
-    <div className="rounded-lg border border-white/10 bg-[#0d0d14] overflow-hidden">
+    <div className="rounded-lg border border-white/10 bg-(--studio-bg) overflow-hidden">
       {/* Header */}
       {compact ? (
         <button

@@ -8,7 +8,11 @@
 // Deep xAPI: "User completed course with hesitation and low confidence."
 // =============================================================================
 
-import type { ConfidenceIndicator, HesitationData, InteractionPattern } from '@/types/xapi/deep-profile';
+import type {
+  ConfidenceIndicator,
+  HesitationData,
+  InteractionPattern,
+} from '@/types/xapi/deep-profile';
 
 // =============================================================================
 // CONFIGURATION CONSTANTS
@@ -108,12 +112,18 @@ export function calculateConfidence(
   }
 
   // Pattern: Reasonable speed with minimal changes = confident
-  if (answerChanges <= CONFIDENCE_THRESHOLDS.LOW_CHANGES_THRESHOLD && speedRatio < CONFIDENCE_THRESHOLDS.NORMAL_THRESHOLD) {
+  if (
+    answerChanges <= CONFIDENCE_THRESHOLDS.LOW_CHANGES_THRESHOLD &&
+    speedRatio < CONFIDENCE_THRESHOLDS.NORMAL_THRESHOLD
+  ) {
     return 'confident';
   }
 
   // Pattern: Some hesitation or changes but within bounds = uncertain
-  if (answerChanges <= CONFIDENCE_THRESHOLDS.MODERATE_CHANGES_THRESHOLD && speedRatio < CONFIDENCE_THRESHOLDS.SLOW_THRESHOLD) {
+  if (
+    answerChanges <= CONFIDENCE_THRESHOLDS.MODERATE_CHANGES_THRESHOLD &&
+    speedRatio < CONFIDENCE_THRESHOLDS.SLOW_THRESHOLD
+  ) {
     return 'uncertain';
   }
 
@@ -220,11 +230,7 @@ export function calculateConfidenceScore(
  * calculateFocusScore(0, 0, 0); // 0
  * ```
  */
-export function calculateFocusScore(
-  totalTime: number,
-  idleTime: number,
-  blurTime: number,
-): number {
+export function calculateFocusScore(totalTime: number, idleTime: number, blurTime: number): number {
   if (totalTime <= 0) {
     return 0;
   }
@@ -503,7 +509,8 @@ export function detectFalseConfidence(
   let recommendation: string | null = null;
   if (hasFalseConfidence) {
     if (scoreConfidenceGap >= 40) {
-      recommendation = 'Strong false confidence detected - recommend comprehensive review before proceeding';
+      recommendation =
+        'Strong false confidence detected - recommend comprehensive review before proceeding';
     } else {
       recommendation = 'Review material - quiz performance may not reflect true mastery';
     }

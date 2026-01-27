@@ -24,6 +24,7 @@ import type {
 } from './types';
 import { AIRecommendationsWidget } from './widgets/AIRecommendationsWidget';
 import { ComplianceGapWidget } from './widgets/ComplianceGapWidget';
+import { DashboardWidgetGrid, type WidgetDefinition } from './widgets/DashboardWidgetGrid';
 import { JITAIAlertsWidget } from './widgets/JITAIAlertsWidget';
 import { SkillHeatmapWidget } from './widgets/SkillHeatmapWidget';
 import { SkillMasteryWidget } from './widgets/SkillMasteryWidget';
@@ -528,6 +529,109 @@ export function MissionControlDashboard({
 
   const displayName = user?.displayName || user?.email?.split('@')[0] || 'Commander';
 
+  // Widget definitions for the draggable grid
+  const widgetDefinitions = useMemo((): Record<string, WidgetDefinition> => {
+    return {
+      'skill-mastery': {
+        id: 'skill-mastery',
+        label: 'Skill Mastery',
+        component: <SkillMasteryWidget skills={skillMasteryData} />,
+        defaultColSpan: 2,
+      },
+      'ai-recommendations': {
+        id: 'ai-recommendations',
+        label: 'AI Recommendations',
+        component: <AIRecommendationsWidget recommendations={[]} />,
+        defaultColSpan: 2,
+      },
+      'learning-velocity': {
+        id: 'learning-velocity',
+        label: 'Learning Velocity',
+        component: (
+          <WidgetCard
+            title="Learning Velocity"
+            subtitle="30-day progress trend"
+            icon="📊"
+            accentColor="purple"
+            size="full"
+          >
+            <LearningVelocityChart />
+          </WidgetCard>
+        ),
+        defaultColSpan: 4,
+      },
+      'jitai-alerts': {
+        id: 'jitai-alerts',
+        label: 'JITAI Alerts',
+        component: <JITAIAlertsWidget alerts={jitaiAlerts} />,
+        defaultColSpan: 2,
+      },
+      'class-analytics': {
+        id: 'class-analytics',
+        label: 'Class Analytics',
+        component: (
+          <WidgetCard
+            title="Class Analytics"
+            subtitle="Aggregate student performance"
+            icon="📊"
+            accentColor="purple"
+          >
+            <ClassAnalyticsContent />
+          </WidgetCard>
+        ),
+        defaultColSpan: 2,
+      },
+      'skill-heatmap': {
+        id: 'skill-heatmap',
+        label: 'Skill Heatmap',
+        component: <SkillHeatmapWidget data={heatmapData} />,
+        defaultColSpan: 4,
+      },
+      'compliance-gap': {
+        id: 'compliance-gap',
+        label: 'Compliance Gap',
+        component: <ComplianceGapWidget metrics={complianceMetrics} />,
+        defaultColSpan: 2,
+      },
+      'roi-analytics': {
+        id: 'roi-analytics',
+        label: 'ROI Analytics',
+        component: (
+          <WidgetCard
+            title="ROI Analytics"
+            subtitle="Learning ↔ Business correlation"
+            icon="📈"
+            accentColor="purple"
+          >
+            <ROIAnalyticsContent />
+          </WidgetCard>
+        ),
+        defaultColSpan: 2,
+      },
+      'system-health': {
+        id: 'system-health',
+        label: 'System Health',
+        component: <SystemHealthWidget services={serviceHealth} />,
+        defaultColSpan: 2,
+      },
+      'audit-log': {
+        id: 'audit-log',
+        label: 'Audit Log',
+        component: (
+          <WidgetCard
+            title="Audit Log"
+            subtitle="Recent security events"
+            icon="📋"
+            accentColor="cyan"
+          >
+            <AuditLogContent />
+          </WidgetCard>
+        ),
+        defaultColSpan: 2,
+      },
+    };
+  }, [skillMasteryData, jitaiAlerts, heatmapData, complianceMetrics, serviceHealth]);
+
   return (
     <div className={cn('relative min-h-screen', className)}>
       {/* Subtle grid background */}
@@ -594,100 +698,10 @@ export function MissionControlDashboard({
           ))}
         </motion.div>
 
-        {/* Widget Grid - View-based */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* LEARNER WIDGETS */}
-          {dashboardView === 'learner' && (
-            <>
-              <motion.div variants={itemVariants} className="lg:col-span-2">
-                <SkillMasteryWidget skills={skillMasteryData} />
-              </motion.div>
-              <motion.div variants={itemVariants} className="lg:col-span-2">
-                <AIRecommendationsWidget recommendations={[]} />
-              </motion.div>
-              <motion.div variants={itemVariants} className="lg:col-span-4">
-                <WidgetCard
-                  title="Learning Velocity"
-                  subtitle="30-day progress trend"
-                  icon="📊"
-                  accentColor="purple"
-                  size="full"
-                >
-                  <LearningVelocityChart />
-                </WidgetCard>
-              </motion.div>
-            </>
-          )}
-
-          {/* INSTRUCTOR WIDGETS */}
-          {dashboardView === 'instructor' && (
-            <>
-              <motion.div variants={itemVariants} className="lg:col-span-2">
-                <JITAIAlertsWidget alerts={jitaiAlerts} />
-              </motion.div>
-              <motion.div variants={itemVariants} className="lg:col-span-2">
-                <WidgetCard
-                  title="Class Analytics"
-                  subtitle="Aggregate student performance"
-                  icon="📊"
-                  accentColor="purple"
-                >
-                  <ClassAnalyticsContent />
-                </WidgetCard>
-              </motion.div>
-              <motion.div variants={itemVariants} className="lg:col-span-4">
-                <SkillMasteryWidget skills={skillMasteryData} />
-              </motion.div>
-            </>
-          )}
-
-          {/* MANAGER WIDGETS - GOD VIEW */}
-          {dashboardView === 'manager' && (
-            <>
-              <motion.div variants={itemVariants} className="lg:col-span-4">
-                <SkillHeatmapWidget data={heatmapData} />
-              </motion.div>
-              <motion.div variants={itemVariants} className="lg:col-span-2">
-                <ComplianceGapWidget metrics={complianceMetrics} />
-              </motion.div>
-              <motion.div variants={itemVariants} className="lg:col-span-2">
-                <WidgetCard
-                  title="ROI Analytics"
-                  subtitle="Learning ↔ Business correlation"
-                  icon="📈"
-                  accentColor="purple"
-                >
-                  <ROIAnalyticsContent />
-                </WidgetCard>
-              </motion.div>
-            </>
-          )}
-
-          {/* ADMIN WIDGETS */}
-          {dashboardView === 'admin' && (
-            <>
-              <motion.div variants={itemVariants} className="lg:col-span-2">
-                <SystemHealthWidget services={serviceHealth} />
-              </motion.div>
-              <motion.div variants={itemVariants} className="lg:col-span-2">
-                <WidgetCard
-                  title="Audit Log"
-                  subtitle="Recent security events"
-                  icon="📋"
-                  accentColor="cyan"
-                >
-                  <AuditLogContent />
-                </WidgetCard>
-              </motion.div>
-              <motion.div variants={itemVariants} className="lg:col-span-2">
-                <JITAIAlertsWidget alerts={jitaiAlerts} />
-              </motion.div>
-              <motion.div variants={itemVariants} className="lg:col-span-2">
-                <AIRecommendationsWidget recommendations={[]} />
-              </motion.div>
-            </>
-          )}
-        </div>
+        {/* Widget Grid - Draggable & Reorderable */}
+        <motion.div variants={itemVariants}>
+          <DashboardWidgetGrid persona={persona} widgets={widgetDefinitions} />
+        </motion.div>
       </motion.div>
 
       {/* Neuro-naut AI Companion */}

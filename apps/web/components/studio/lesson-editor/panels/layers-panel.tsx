@@ -231,7 +231,7 @@ function LayerItem({
             <MoreHorizontal className="h-3 w-3" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-40 bg-[#1a1a2e] border-white/10">
+        <DropdownMenuContent align="end" className="w-40 bg-(--studio-surface) border-white/10">
           <DropdownMenuItem onClick={onMoveToTop}>Bring to Front</DropdownMenuItem>
           <DropdownMenuItem onClick={onMoveUp}>Bring Forward</DropdownMenuItem>
           <DropdownMenuItem onClick={onMoveDown}>Send Backward</DropdownMenuItem>
@@ -361,7 +361,7 @@ function GroupHeader({ group, onToggleCollapse, onUngroup, onRename }: GroupHead
             <MoreHorizontal className="h-3 w-3" />
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-36 bg-[#1a1a2e] border-white/10">
+        <DropdownMenuContent align="end" className="w-36 bg-(--studio-surface) border-white/10">
           <DropdownMenuItem onClick={onUngroup}>Ungroup</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -413,7 +413,7 @@ export function LayersPanel({
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col h-full bg-[#0a0a0f]">
+      <div className="flex flex-col h-full bg-(--neural-bg)">
         {/* Header */}
         <div className="h-12 border-b border-white/10 flex items-center justify-between px-4 shrink-0">
           <div className="flex items-center gap-2">

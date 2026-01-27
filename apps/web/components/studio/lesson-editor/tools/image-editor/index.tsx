@@ -180,7 +180,7 @@ export function ImageEditor({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl bg-[#1a1a2e] border-white/10">
+      <DialogContent className="max-w-5xl bg-(--studio-surface) border-white/10">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <ImageIcon className="h-5 w-5 text-primary" />
@@ -296,7 +296,7 @@ export function ImageEditor({
           {/* Tools Panel */}
           <div className="border-l border-white/10 pl-4">
             <Tabs defaultValue="crop" className="w-full">
-              <TabsList className="w-full bg-[#0d0d14] border border-white/10">
+              <TabsList className="w-full bg-(--studio-bg) border border-white/10">
                 <TabsTrigger value="crop" className="flex-1">
                   <Crop className="h-4 w-4" />
                 </TabsTrigger>

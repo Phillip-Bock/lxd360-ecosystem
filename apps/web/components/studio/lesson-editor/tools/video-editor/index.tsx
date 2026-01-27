@@ -142,7 +142,7 @@ export function VideoEditor({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl bg-[#1a1a2e] border-white/10 max-h-[90vh] overflow-hidden">
+      <DialogContent className="max-w-5xl bg-(--studio-surface) border-white/10 max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Video className="h-5 w-5 text-primary" />
@@ -187,7 +187,7 @@ export function VideoEditor({
                 </div>
 
                 {/* Video Controls */}
-                <div className="flex items-center gap-3 bg-[#0d0d14] rounded-lg p-3">
+                <div className="flex items-center gap-3 bg-(--studio-bg) rounded-lg p-3">
                   <Button variant="ghost" size="icon" onClick={handlePlayPause}>
                     {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
                   </Button>
@@ -243,7 +243,7 @@ export function VideoEditor({
           {/* Tools Panel */}
           <div className="border-l border-white/10 pl-4 overflow-y-auto max-h-[60vh]">
             <Tabs defaultValue="trim" className="w-full">
-              <TabsList className="w-full bg-[#0d0d14] border border-white/10">
+              <TabsList className="w-full bg-(--studio-bg) border border-white/10">
                 <TabsTrigger value="trim" className="flex-1">
                   <Scissors className="h-4 w-4" />
                 </TabsTrigger>

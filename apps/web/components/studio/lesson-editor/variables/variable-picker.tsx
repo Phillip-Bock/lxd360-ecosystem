@@ -153,7 +153,7 @@ export function VariablePicker({ onSelect, triggerClassName }: VariablePickerPro
           Insert Variable
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0 bg-[#1a1a2e] border-white/10" align="start">
+      <PopoverContent className="w-80 p-0 bg-(--studio-surface) border-white/10" align="start">
         <div className="p-3 border-b border-white/10">
           <div className="relative">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -212,7 +212,7 @@ export function VariablePicker({ onSelect, triggerClassName }: VariablePickerPro
                 Create Custom Variable
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-[#1a1a2e] border-white/10">
+            <DialogContent className="bg-(--studio-surface) border-white/10">
               <DialogHeader>
                 <DialogTitle>Create Custom Variable</DialogTitle>
               </DialogHeader>

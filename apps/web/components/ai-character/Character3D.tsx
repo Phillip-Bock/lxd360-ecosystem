@@ -1,101 +1,17 @@
 'use client';
 
-import {
-  ContactShadows,
-  Environment,
-  OrbitControls,
-  useAnimations,
-  useGLTF,
-} from '@react-three/drei';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Suspense, useEffect, useMemo, useRef } from 'react';
-import * as THREE from 'three';
-import { AI_PERSONAS, type AIPersonaId } from '@/lib/ai-personas/persona-config';
-import {
-  ANIMATION_CLIPS,
-  type CharacterState,
-  LOOPING_STATES,
-  TRANSITION_DURATION,
-} from '@/lib/three/character-states';
+/**
+ * Character3D — 3D Avatar Component (TEMPORARILY STUBBED)
+ *
+ * TODO: Re-enable 3D rendering when @react-three/drei is compatible with three@0.182.0
+ * The drei library uses deprecated PlaneBufferGeometry which was removed in Three.js 0.182.0
+ *
+ * For now, this returns a simple placeholder to unblock testing.
+ */
 
-interface CharacterModelProps {
-  modelUrl: string;
-  state: CharacterState;
-  mouthOpenness?: number;
-}
-
-function CharacterModel({ modelUrl, state, mouthOpenness = 0 }: CharacterModelProps) {
-  const group = useRef<THREE.Group>(null);
-  const { scene, animations } = useGLTF(modelUrl);
-  const { actions, mixer } = useAnimations(animations, group);
-
-  const clonedScene = useMemo(() => scene.clone(), [scene]);
-  const currentAction = useRef<THREE.AnimationAction | null>(null);
-
-  // Handle animation state changes
-  useEffect(() => {
-    const clipName = ANIMATION_CLIPS[state];
-    const action = actions[clipName];
-
-    if (!action) {
-      // Try fallback to Idle if specific animation not found
-      const fallbackAction = actions.Idle || Object.values(actions)[0];
-      if (fallbackAction) {
-        fallbackAction.reset().fadeIn(0.3).play();
-        currentAction.current = fallbackAction;
-      }
-      return;
-    }
-
-    const duration = TRANSITION_DURATION[state];
-    const shouldLoop = LOOPING_STATES.includes(state);
-
-    action.setLoop(shouldLoop ? THREE.LoopRepeat : THREE.LoopOnce, shouldLoop ? Infinity : 1);
-    action.clampWhenFinished = !shouldLoop;
-
-    if (currentAction.current && currentAction.current !== action) {
-      action.reset().crossFadeFrom(currentAction.current, duration, true).play();
-    } else {
-      action.reset().fadeIn(duration).play();
-    }
-
-    currentAction.current = action;
-  }, [state, actions]);
-
-  // Lip sync via morph targets
-  useEffect(() => {
-    clonedScene.traverse((child) => {
-      if (
-        child instanceof THREE.SkinnedMesh &&
-        child.morphTargetInfluences &&
-        child.morphTargetDictionary
-      ) {
-        const mouthMorphNames = ['mouthOpen', 'jawOpen', 'viseme_aa', 'A', 'mouth_open'];
-        for (const name of mouthMorphNames) {
-          const idx = child.morphTargetDictionary[name];
-          if (idx !== undefined) {
-            child.morphTargetInfluences[idx] = mouthOpenness;
-            break;
-          }
-        }
-      }
-    });
-  }, [mouthOpenness, clonedScene]);
-
-  // Subtle idle animation
-  useFrame((_, delta) => {
-    if (group.current && state === 'idle') {
-      group.current.position.y = Math.sin(Date.now() * 0.001) * 0.02 - 1;
-    }
-    mixer?.update(delta);
-  });
-
-  return (
-    <group ref={group} position={[0, -1, 0]}>
-      <primitive object={clonedScene} />
-    </group>
-  );
-}
+import type { AIPersonaId } from '@/lib/ai-personas/persona-config';
+import { AI_PERSONAS } from '@/lib/ai-personas/persona-config';
+import type { CharacterState } from '@/lib/three/character-states';
 
 interface Character3DProps {
   modelUrl: string;
@@ -105,41 +21,41 @@ interface Character3DProps {
   className?: string;
 }
 
-export function Character3D({
-  modelUrl,
-  personaId,
-  state,
-  mouthOpenness,
-  className,
-}: Character3DProps) {
+/**
+ * Character3D - Temporarily stubbed due to Three.js version incompatibility
+ *
+ * The @react-three/drei@9.0.0-beta.6 package uses PlaneBufferGeometry which
+ * was removed in three@0.182.0. Until drei is updated, we show a placeholder.
+ */
+export function Character3D({ personaId, state, className }: Character3DProps) {
   const persona = AI_PERSONAS[personaId];
 
+  // Placeholder avatar with persona colors
   return (
-    <div className={className}>
-      <Canvas
-        shadows
-        camera={{ position: [0, 0, 2.5], fov: 50 }}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: 'transparent' }}
+    <div
+      className={`flex items-center justify-center ${className || ''}`}
+      style={{
+        background: `linear-gradient(135deg, ${persona.primaryColor}20, ${persona.accentColor}20)`,
+        borderRadius: '50%',
+        aspectRatio: '1',
+      }}
+    >
+      <div
+        className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold"
+        style={{
+          background: `linear-gradient(135deg, ${persona.primaryColor}, ${persona.accentColor})`,
+          color: 'white',
+        }}
       >
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-        <pointLight position={[-3, 3, -3]} intensity={0.5} color={persona.accentColor} />
-        <pointLight position={[3, -2, 3]} intensity={0.3} color={persona.primaryColor} />
-
-        <Suspense fallback={null}>
-          <CharacterModel modelUrl={modelUrl} state={state} mouthOpenness={mouthOpenness} />
-          <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={5} blur={2} />
-          <Environment preset="city" />
-        </Suspense>
-
-        <OrbitControls
-          enableZoom={false}
-          enablePan={false}
-          maxPolarAngle={Math.PI / 2}
-          minPolarAngle={Math.PI / 4}
+        {persona.name.charAt(0)}
+      </div>
+      {/* State indicator */}
+      {state === 'speaking' && (
+        <div
+          className="absolute bottom-2 right-2 w-3 h-3 rounded-full animate-pulse"
+          style={{ backgroundColor: persona.accentColor }}
         />
-      </Canvas>
+      )}
     </div>
   );
 }

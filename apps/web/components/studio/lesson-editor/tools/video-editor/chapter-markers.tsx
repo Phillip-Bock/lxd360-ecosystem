@@ -99,7 +99,7 @@ export function ChapterMarkers({
 
   return (
     <TooltipProvider>
-      <div className="space-y-4 p-4 bg-[#0d0d14] rounded-lg">
+      <div className="space-y-4 p-4 bg-(--studio-bg) rounded-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm text-zinc-400">
             <Bookmark className="h-4 w-4" />
@@ -189,7 +189,7 @@ export function ChapterMarkers({
                       <Input
                         value={marker.title}
                         onChange={(e) => updateMarker(marker.id, { title: e.target.value })}
-                        className="bg-[#1a1a2e] border-white/10 text-sm h-8"
+                        className="bg-(--studio-surface) border-white/10 text-sm h-8"
                         placeholder="Chapter title"
                         autoFocus
                         onBlur={() => setEditingId(null)}

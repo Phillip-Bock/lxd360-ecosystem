@@ -37,7 +37,7 @@ function ColorPicker({ value, onChange, label }: ColorPickerProps) {
             style={{ backgroundColor: value }}
           />
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-3 bg-[#1a1a2e] border-white/10">
+        <PopoverContent className="w-auto p-3 bg-(--studio-surface) border-white/10">
           <div className="space-y-2">
             <Label className="text-xs">{label}</Label>
             <Input
@@ -82,7 +82,7 @@ export function ThemeEditorPanel({ onClose }: ThemeEditorPanelProps) {
   );
 
   return (
-    <div className="fixed inset-y-0 right-0 w-96 bg-[#1a1a2e] border-l border-white/10 shadow-xl z-50 flex flex-col">
+    <div className="fixed inset-y-0 right-0 w-96 bg-(--studio-surface) border-l border-white/10 shadow-xl z-50 flex flex-col">
       {/* Header */}
       <div className="h-14 border-b border-white/10 flex items-center justify-between px-4">
         <div className="flex items-center gap-2">

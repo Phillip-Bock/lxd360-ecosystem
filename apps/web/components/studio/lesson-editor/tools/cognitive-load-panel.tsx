@@ -278,7 +278,7 @@ export function CognitiveLoadPanel({
             </CollapsibleTrigger>
 
             <CollapsibleContent className="mt-2">
-              <div className="space-y-2 bg-[#0d0d14] rounded-lg p-3">
+              <div className="space-y-2 bg-(--studio-bg) rounded-lg p-3">
                 {result.recommendations.map((rec) => (
                   <button
                     type="button"

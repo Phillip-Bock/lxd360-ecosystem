@@ -114,7 +114,7 @@ export function PreviewPanel({ blocks, lessonTitle, onClose }: PreviewPanelProps
   return (
     <div className="fixed inset-0 z-50 bg-black/90 flex flex-col">
       {/* Header Toolbar */}
-      <div className="h-14 bg-[#1a1a2e] border-b border-white/10 flex items-center justify-between px-4">
+      <div className="h-14 bg-(--studio-surface) border-b border-white/10 flex items-center justify-between px-4">
         {/* Left: Device Selector */}
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-zinc-400 mr-2">Device:</span>
@@ -320,7 +320,7 @@ export function PreviewPanel({ blocks, lessonTitle, onClose }: PreviewPanelProps
       </div>
 
       {/* Bottom Bar: Navigation Simulation */}
-      <div className="h-12 bg-[#1a1a2e] border-t border-white/10 flex items-center justify-center gap-4">
+      <div className="h-12 bg-(--studio-surface) border-t border-white/10 flex items-center justify-center gap-4">
         <Button variant="outline" size="sm" className="border-white/10" disabled>
           Previous
         </Button>

@@ -5,7 +5,6 @@ import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { AppSidebar } from '@/components/ignite/dashboard/AppSidebar';
 import { BreadcrumbsHeader } from '@/components/ignite/dashboard/BreadcrumbsHeader';
-import { IgniteCoach } from '@/components/ignite/player/IgniteCoach';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { logger } from '@/lib/logger';
 import { canAccess, getPersonaFromClaims, type Persona } from '@/lib/rbac/personas';
@@ -104,7 +103,8 @@ export default function IgniteLayout({ children }: { children: ReactNode }) {
   if (loading || (!isExemptRoute && !rbacChecked)) {
     return (
       <div className="flex h-screen w-full bg-background">
-        <div className="w-64 bg-sidebar border-r border-sidebar-border animate-pulse" />
+        {/* Match sidebar width: 16rem (256px) expanded, uses CSS variable */}
+        <div className="w-[16rem] bg-sidebar border-r border-sidebar-border animate-pulse" />
         <div className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
             <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
@@ -121,17 +121,13 @@ export default function IgniteLayout({ children }: { children: ReactNode }) {
   }
 
   // For learner routes, just pass through to their own layout
+  // NOTE: AI Coach is NOT rendered here - it only appears inside the course player
   if (isExemptRoute) {
-    return (
-      <>
-        {children}
-        {/* Cortex AI Coach - floating bottom-right */}
-        <IgniteCoach courseTitle="INSPIRE Ignite" learnerName={user.displayName || 'Learner'} />
-      </>
-    );
+    return <>{children}</>;
   }
 
   // Admin layout with sidebar
+  // NOTE: AI Coach is NOT rendered on admin dashboards - only in course player
   return (
     <SidebarProvider>
       <div className="relative flex h-screen w-full bg-background text-foreground">
@@ -145,9 +141,6 @@ export default function IgniteLayout({ children }: { children: ReactNode }) {
           </header>
           <main className="flex-1 overflow-y-auto p-6">{children}</main>
         </SidebarInset>
-
-        {/* Cortex AI Coach - floating bottom-right */}
-        <IgniteCoach courseTitle="INSPIRE Ignite" learnerName={user.displayName || 'Learner'} />
       </div>
     </SidebarProvider>
   );

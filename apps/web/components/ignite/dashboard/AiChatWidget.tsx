@@ -87,7 +87,7 @@ export function AiChatWidget() {
               'bg-card/80 border border-border/50 backdrop-blur-sm',
               'text-muted-foreground hover:text-foreground hover:border-lxd-primary/50',
               'transition-all duration-200',
-              'shadow-[0_0_15px_rgba(0,0,0,0.3)]',
+              'shadow-lg shadow-black/20',
             )}
           >
             <Sparkles className="h-4 w-4 text-lxd-primary" />
@@ -101,7 +101,7 @@ export function AiChatWidget() {
             exit={{ opacity: 0, y: -10 }}
             className={cn(
               'bg-card/95 border border-border/50 backdrop-blur-md rounded-xl',
-              'shadow-[0_0_30px_rgba(0,0,0,0.5)]',
+              'shadow-xl shadow-black/30',
               'overflow-hidden',
             )}
           >

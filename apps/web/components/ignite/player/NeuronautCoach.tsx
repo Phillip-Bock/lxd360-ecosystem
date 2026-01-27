@@ -21,7 +21,7 @@ import { useAuth } from '@/lib/firebase/useAuth';
 import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 
-const log = logger.scope('IgniteCoach');
+const log = logger.scope('NeuronautCoach');
 
 import type { AnimationState, AvatarPersona } from './avatar';
 import { VOICE_OPTIONS, VoiceSelector } from './VoiceSelector';
@@ -30,8 +30,8 @@ import { VOICE_OPTIONS, VoiceSelector } from './VoiceSelector';
 // ACCESSIBILITY CONSTANTS
 // ============================================================================
 
-const PANEL_TITLE_ID = 'cortex-coach-title';
-const PANEL_DESC_ID = 'cortex-coach-desc';
+const PANEL_TITLE_ID = 'neuronaut-coach-title';
+const PANEL_DESC_ID = 'neuronaut-coach-desc';
 
 // Dynamically import AvatarStage to avoid SSR issues with Three.js
 const AvatarStage = dynamic(() => import('./avatar/AvatarStage').then((mod) => mod.AvatarStage), {
@@ -47,7 +47,7 @@ const AvatarStage = dynamic(() => import('./avatar/AvatarStage').then((mod) => m
 // TYPES
 // ============================================================================
 
-export interface IgniteCoachProps {
+export interface NeuronautCoachProps {
   /** Course title for context */
   courseTitle: string;
   /** Course description for context */
@@ -117,10 +117,11 @@ function parseResponse(text: string): { cleanText: string; animation: AnimationS
 // ============================================================================
 
 /**
- * IgniteCoach - AI Companion Panel for Course Player
+ * NeuronautCoach - AI Companion Panel for Course Player
  *
- * A professional floating AI assistant with 3D avatar and voice.
- * Features Director Mode for contextual avatar animations.
+ * Neuro-naut is the ONLY AI assistant for learners, exclusively in the LMS Player.
+ * Features 3D avatar with voice and contextual animations.
+ * GUARDRAILED: Only answers questions about course content.
  *
  * Layout:
  * - Trigger button (bottom-right, pulse effect)
@@ -128,15 +129,15 @@ function parseResponse(text: string): { cleanText: string; animation: AnimationS
  *   - Top 40%: 3D Avatar Stage with header overlay
  *   - Bottom 60%: Chat interface
  */
-export function IgniteCoach({
+export function NeuronautCoach({
   courseTitle,
   courseDescription,
   currentLessonTitle,
   learnerName,
-  avatarPersona = 'cortex',
+  avatarPersona = 'ignite',
   disabled = false,
   className,
-}: IgniteCoachProps) {
+}: NeuronautCoachProps) {
   // Panel state
   const [isOpen, setIsOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -185,7 +186,7 @@ export function IgniteCoach({
       const greeting: Message = {
         id: 'greeting',
         role: 'assistant',
-        content: `Hello ${learnerName}! I'm Cortex, your learning companion. I'm here to help you master "${courseTitle}". What would you like to explore?`,
+        content: `Hello ${learnerName}! I'm Neuro-naut, your learning companion. I'm here to help you master "${courseTitle}". What would you like to explore?`,
         timestamp: new Date(),
       };
       setMessages([greeting]);
@@ -498,14 +499,14 @@ export function IgniteCoach({
                   {/* Title - linked to dialog aria-labelledby */}
                   <div className="flex items-center gap-2">
                     <div
-                      className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"
+                      className="h-2 w-2 rounded-full bg-lxd-success animate-pulse"
                       aria-hidden="true"
                     />
                     <span
                       id={`${uniqueId}-${PANEL_TITLE_ID}`}
                       className="text-sm font-semibold text-white"
                     >
-                      Cortex
+                      Neuro-naut
                     </span>
                     <span
                       id={`${uniqueId}-${PANEL_DESC_ID}`}
@@ -626,7 +627,7 @@ export function IgniteCoach({
                 className="flex-1 overflow-y-auto p-4 space-y-3"
                 role="log"
                 aria-live="polite"
-                aria-label="Conversation with Cortex"
+                aria-label="Conversation with Neuro-naut"
               >
                 {messages.map((message) => (
                   <motion.div
@@ -647,7 +648,7 @@ export function IgniteCoach({
                       )}
                     >
                       <span className="sr-only">
-                        {message.role === 'user' ? 'You: ' : 'Cortex: '}
+                        {message.role === 'user' ? 'You: ' : 'Neuro-naut: '}
                       </span>
                       {message.content}
                     </div>
@@ -713,7 +714,7 @@ export function IgniteCoach({
               <form onSubmit={handleSubmit} className="p-3 border-t border-border/30 bg-muted/10">
                 <div className="flex items-center gap-2">
                   <label htmlFor={`${uniqueId}-chat-input`} className="sr-only">
-                    Ask Cortex a question
+                    Ask Neuro-naut a question
                   </label>
                   <input
                     id={`${uniqueId}-chat-input`}
@@ -721,7 +722,7 @@ export function IgniteCoach({
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Ask Cortex..."
+                    placeholder="Ask Neuro-naut..."
                     disabled={isThinking}
                     aria-describedby={isThinking ? `${uniqueId}-thinking-status` : undefined}
                     className={cn(
@@ -734,7 +735,7 @@ export function IgniteCoach({
                   />
                   {isThinking && (
                     <span id={`${uniqueId}-thinking-status`} className="sr-only">
-                      Cortex is thinking, please wait
+                      Neuro-naut is thinking, please wait
                     </span>
                   )}
                   <Button
@@ -761,4 +762,4 @@ export function IgniteCoach({
   );
 }
 
-export default IgniteCoach;
+export default NeuronautCoach;

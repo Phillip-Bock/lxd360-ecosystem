@@ -91,7 +91,7 @@ function BadgeCard({ badge }: { badge: LearnerBadge }) {
   const styles = RARITY_STYLES[badge.rarity];
 
   return (
-    <div
+    <li
       className={cn(
         'relative flex flex-col items-center p-4 rounded-xl',
         'border transition-all duration-300',
@@ -101,7 +101,6 @@ function BadgeCard({ badge }: { badge: LearnerBadge }) {
         'hover:scale-105 hover:z-10',
         'group cursor-default',
       )}
-      role="listitem"
     >
       {/* Badge icon */}
       <div
@@ -153,7 +152,7 @@ function BadgeCard({ badge }: { badge: LearnerBadge }) {
           <span className="text-purple-400">+{badge.xpReward} XP</span>
         </div>
       </div>
-    </div>
+    </li>
   );
 }
 
@@ -221,9 +220,8 @@ export function AchievementBadges({
             </p>
           </div>
         ) : (
-          <div
-            className="grid grid-cols-2 sm:grid-cols-3 gap-3"
-            role="list"
+          <ul
+            className="grid grid-cols-2 sm:grid-cols-3 gap-3 list-none m-0 p-0"
             aria-label="Achievement badges"
           >
             {sortedBadges.map((badge) => (
@@ -245,7 +243,7 @@ export function AchievementBadges({
                 <span className="text-xs text-muted-foreground">more badges</span>
               </Link>
             )}
-          </div>
+          </ul>
         )}
       </CardContent>
     </Card>

@@ -9,4 +9,4 @@ export {
   preloadModel,
 } from './avatar';
 export { CoursePlayer, type CoursePlayerProps } from './CoursePlayer';
-export { IgniteCoach, type IgniteCoachProps } from './IgniteCoach';
+export { NeuronautCoach, type NeuronautCoachProps } from './NeuronautCoach';

@@ -153,7 +153,7 @@ export function WaveformEditor({
       {/* Waveform Container */}
       <div
         ref={containerRef}
-        className="w-full bg-[#0d0d14] rounded-md overflow-hidden"
+        className="w-full bg-(--studio-bg) rounded-md overflow-hidden"
         style={{ minHeight: height }}
       />
 

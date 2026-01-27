@@ -287,7 +287,7 @@ export function ProductTour({ isOpen, onComplete, onSkip }: ProductTourProps) {
       <div
         className={cn(
           'absolute w-[400px] p-6 rounded-xl',
-          'bg-[#1a1a2e]/95 backdrop-blur-xl border border-white/10',
+          'bg-(--studio-surface)/95 backdrop-blur-xl border border-white/10',
           'shadow-2xl shadow-black/50',
           'transition-all duration-200',
           isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100',

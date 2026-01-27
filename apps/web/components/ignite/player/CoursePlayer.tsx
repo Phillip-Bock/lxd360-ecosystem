@@ -18,7 +18,7 @@ import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
 import { useXAPIBridge } from '@/lib/xapi/bridge';
 import { storeStatement } from '@/lib/xapi/service';
-import { IgniteCoach } from './IgniteCoach';
+import { NeuronautCoach } from './NeuronautCoach';
 
 const log = logger.scope('CoursePlayer');
 
@@ -404,9 +404,9 @@ export function CoursePlayer({
           onError={handleIframeError}
         />
 
-        {/* Ignite Coach overlay */}
+        {/* Neuro-naut AI Coach overlay - ONLY appears in player */}
         {showCoach && playerState === 'playing' && (
-          <IgniteCoach
+          <NeuronautCoach
             courseTitle={title}
             courseDescription={description}
             learnerName={learnerName}

@@ -14,10 +14,10 @@ import { describe, expect, it } from 'vitest';
 import {
   analyzeConfidenceDistribution,
   buildHesitationData,
+  CONFIDENCE_THRESHOLDS,
   calculateConfidence,
   calculateConfidenceScore,
   calculateFocusScore,
-  CONFIDENCE_THRESHOLDS,
   detectFalseConfidence,
   detectInteractionPattern,
 } from '../confidence';
@@ -487,9 +487,17 @@ describe('detectFalseConfidence', () => {
 
 describe('CONFIDENCE_THRESHOLDS', () => {
   it('should have sensible threshold values', () => {
-    expect(CONFIDENCE_THRESHOLDS.FAST_THRESHOLD).toBeLessThan(CONFIDENCE_THRESHOLDS.NORMAL_THRESHOLD);
-    expect(CONFIDENCE_THRESHOLDS.NORMAL_THRESHOLD).toBeLessThan(CONFIDENCE_THRESHOLDS.SLOW_THRESHOLD);
-    expect(CONFIDENCE_THRESHOLDS.GUESSING_FAST_THRESHOLD).toBeLessThan(CONFIDENCE_THRESHOLDS.FAST_THRESHOLD);
-    expect(CONFIDENCE_THRESHOLDS.LOW_CHANGES_THRESHOLD).toBeLessThan(CONFIDENCE_THRESHOLDS.MODERATE_CHANGES_THRESHOLD);
+    expect(CONFIDENCE_THRESHOLDS.FAST_THRESHOLD).toBeLessThan(
+      CONFIDENCE_THRESHOLDS.NORMAL_THRESHOLD,
+    );
+    expect(CONFIDENCE_THRESHOLDS.NORMAL_THRESHOLD).toBeLessThan(
+      CONFIDENCE_THRESHOLDS.SLOW_THRESHOLD,
+    );
+    expect(CONFIDENCE_THRESHOLDS.GUESSING_FAST_THRESHOLD).toBeLessThan(
+      CONFIDENCE_THRESHOLDS.FAST_THRESHOLD,
+    );
+    expect(CONFIDENCE_THRESHOLDS.LOW_CHANGES_THRESHOLD).toBeLessThan(
+      CONFIDENCE_THRESHOLDS.MODERATE_CHANGES_THRESHOLD,
+    );
   });
 });

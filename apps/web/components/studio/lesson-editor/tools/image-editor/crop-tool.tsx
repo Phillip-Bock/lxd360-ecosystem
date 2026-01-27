@@ -122,7 +122,7 @@ export function CropTool({
 
   return (
     <TooltipProvider>
-      <div className="space-y-4 p-4 bg-[#0d0d14] rounded-lg">
+      <div className="space-y-4 p-4 bg-(--studio-bg) rounded-lg">
         <div className="flex items-center gap-2 text-sm text-zinc-400">
           <Crop className="h-4 w-4" />
           <span>Crop & Resize</span>
@@ -165,7 +165,7 @@ export function CropTool({
                 type="number"
                 value={Math.round(cropSettings.width)}
                 onChange={(e) => handleDimensionChange('width', parseInt(e.target.value, 10) || 0)}
-                className="bg-[#1a1a2e] border-white/10"
+                className="bg-(--studio-surface) border-white/10"
               />
               <span className="text-xs text-zinc-500">px</span>
             </div>
@@ -192,7 +192,7 @@ export function CropTool({
                 type="number"
                 value={Math.round(cropSettings.height)}
                 onChange={(e) => handleDimensionChange('height', parseInt(e.target.value, 10) || 0)}
-                className="bg-[#1a1a2e] border-white/10"
+                className="bg-(--studio-surface) border-white/10"
               />
               <span className="text-xs text-zinc-500">px</span>
             </div>
@@ -207,7 +207,7 @@ export function CropTool({
               type="number"
               value={Math.round(cropSettings.x)}
               onChange={(e) => handlePositionChange('x', parseInt(e.target.value, 10) || 0)}
-              className="bg-[#1a1a2e] border-white/10"
+              className="bg-(--studio-surface) border-white/10"
             />
           </div>
 
@@ -217,7 +217,7 @@ export function CropTool({
               type="number"
               value={Math.round(cropSettings.y)}
               onChange={(e) => handlePositionChange('y', parseInt(e.target.value, 10) || 0)}
-              className="bg-[#1a1a2e] border-white/10"
+              className="bg-(--studio-surface) border-white/10"
             />
           </div>
         </div>

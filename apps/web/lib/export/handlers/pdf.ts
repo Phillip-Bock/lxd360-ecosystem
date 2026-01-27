@@ -274,9 +274,10 @@ function renderBlockForPdf(block: ExportBlockData): string {
     case 'paragraph':
       return `<p class="block-paragraph">${escapeHtml(String(content.text || ''))}</p>`;
 
-    case 'heading':
+    case 'heading': {
       const level = Math.min(6, Math.max(1, Number(content.level) || 2));
       return `<h${level} class="block-heading">${escapeHtml(String(content.text || ''))}</h${level}>`;
+    }
 
     case 'image':
       return `<figure class="block-image">
@@ -296,16 +297,17 @@ function renderBlockForPdf(block: ExportBlockData): string {
         ${content.author ? `<cite>- ${escapeHtml(String(content.author))}</cite>` : ''}
       </blockquote>`;
 
-    case 'list':
+    case 'list': {
       const items = Array.isArray(content.items) ? content.items : [];
       const listItems = items.map((item) => `<li>${escapeHtml(String(item))}</li>`).join('\n');
       const tag = content.ordered ? 'ol' : 'ul';
       return `<${tag} class="block-list">${listItems}</${tag}>`;
+    }
 
     case 'divider':
       return '<hr class="block-divider" />';
 
-    case 'accordion':
+    case 'accordion': {
       const sections = Array.isArray(content.sections) ? content.sections : [];
       return sections
         .map(
@@ -316,8 +318,9 @@ function renderBlockForPdf(block: ExportBlockData): string {
           </div>`,
         )
         .join('\n');
+    }
 
-    case 'tabs':
+    case 'tabs': {
       const tabs = Array.isArray(content.tabs) ? content.tabs : [];
       return tabs
         .map(
@@ -328,8 +331,9 @@ function renderBlockForPdf(block: ExportBlockData): string {
           </div>`,
         )
         .join('\n');
+    }
 
-    case 'mc-question':
+    case 'mc-question': {
       const choices = Array.isArray(content.choices) ? content.choices : [];
       const choiceList = choices
         .map(
@@ -342,6 +346,7 @@ function renderBlockForPdf(block: ExportBlockData): string {
         <p class="question-text">${escapeHtml(String(content.question || ''))}</p>
         <ol class="question-choices" type="A">${choiceList}</ol>
       </div>`;
+    }
 
     case 'fitb-question':
       return `<div class="block-question">

@@ -216,11 +216,10 @@ export function PersistentPlayerBar({
           </div>
 
           {/* Volume control */}
-          <div
-            className="relative flex items-center"
+          <fieldset
+            className="relative flex items-center border-0 p-0 m-0"
             onMouseEnter={handleVolumeMouseEnter}
             onMouseLeave={handleVolumeMouseLeave}
-            role="group"
             aria-label="Volume controls"
           >
             <button
@@ -258,7 +257,7 @@ export function PersistentPlayerBar({
                 aria-label="Volume"
               />
             </div>
-          </div>
+          </fieldset>
 
           {/* Expand/Close buttons */}
           <button

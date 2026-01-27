@@ -104,7 +104,7 @@ export function HotspotTool({
 
   return (
     <TooltipProvider>
-      <div className="space-y-4 p-4 bg-[#0d0d14] rounded-lg">
+      <div className="space-y-4 p-4 bg-(--studio-bg) rounded-lg">
         <div className="flex items-center gap-2 text-sm text-zinc-400">
           <MousePointer2 className="h-4 w-4" />
           <span>Interactive Hotspots</span>
@@ -222,7 +222,7 @@ export function HotspotTool({
                 value={selectedHotspot.label}
                 onChange={(e) => updateHotspot(selectedHotspot.id, { label: e.target.value })}
                 placeholder="Hotspot label"
-                className="bg-[#1a1a2e] border-white/10"
+                className="bg-(--studio-surface) border-white/10"
               />
             </div>
 
@@ -254,7 +254,7 @@ export function HotspotTool({
                 <textarea
                   value={selectedHotspot.content}
                   onChange={(e) => updateHotspot(selectedHotspot.id, { content: e.target.value })}
-                  className="w-full h-20 bg-[#1a1a2e] border border-white/10 rounded-md p-2 text-sm resize-none"
+                  className="w-full h-20 bg-(--studio-surface) border border-white/10 rounded-md p-2 text-sm resize-none"
                   placeholder="Enter tooltip content..."
                 />
               </div>
@@ -267,7 +267,7 @@ export function HotspotTool({
                   value={selectedHotspot.url || ''}
                   onChange={(e) => updateHotspot(selectedHotspot.id, { url: e.target.value })}
                   placeholder="https://..."
-                  className="bg-[#1a1a2e] border-white/10"
+                  className="bg-(--studio-surface) border-white/10"
                 />
               </div>
             )}
@@ -279,7 +279,7 @@ export function HotspotTool({
                   value={selectedHotspot.url || ''}
                   onChange={(e) => updateHotspot(selectedHotspot.id, { url: e.target.value })}
                   placeholder="Enter media URL..."
-                  className="bg-[#1a1a2e] border-white/10"
+                  className="bg-(--studio-surface) border-white/10"
                 />
               </div>
             )}
@@ -290,7 +290,7 @@ export function HotspotTool({
                 <textarea
                   value={selectedHotspot.content}
                   onChange={(e) => updateHotspot(selectedHotspot.id, { content: e.target.value })}
-                  className="w-full h-24 bg-[#1a1a2e] border border-white/10 rounded-md p-2 text-sm resize-none"
+                  className="w-full h-24 bg-(--studio-surface) border border-white/10 rounded-md p-2 text-sm resize-none"
                   placeholder="Enter popup content..."
                 />
               </div>

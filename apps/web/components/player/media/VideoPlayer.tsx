@@ -312,7 +312,7 @@ export function VideoPlayer({
   const sources = typeof src === 'string' ? [{ src, type: 'video/mp4' }] : src;
 
   return (
-    <div
+    <section
       ref={containerRef}
       className={cn(
         'relative aspect-video w-full overflow-hidden rounded-lg bg-black',
@@ -322,7 +322,6 @@ export function VideoPlayer({
       )}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      role="region"
       aria-label={title}
     >
       <video
@@ -444,7 +443,7 @@ export function VideoPlayer({
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }
 

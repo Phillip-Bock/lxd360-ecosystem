@@ -82,13 +82,12 @@ export function ModalitySwitcher({
   }
 
   return (
-    <div
+    <fieldset
       className={cn(
-        'relative inline-flex items-center rounded-lg bg-black/20 backdrop-blur-sm',
+        'relative inline-flex items-center rounded-lg bg-black/20 backdrop-blur-sm border-0 p-0 m-0',
         sizes.container,
         className,
       )}
-      role="group"
       aria-label="Playback mode"
     >
       {/* Animated background indicator */}
@@ -137,7 +136,7 @@ export function ModalitySwitcher({
         <Headphones className={sizes.icon} aria-hidden="true" />
         <span>Listen</span>
       </button>
-    </div>
+    </fieldset>
   );
 }
 

@@ -4,10 +4,10 @@ import { type AuthenticatedRequest, withAuth } from '@/lib/api/with-auth';
 import { synthesizeSpeech, type VoicePreset } from '@/lib/ignite/google-voice';
 import { logger } from '@/lib/logger';
 
-const log = logger.scope('CortexChat');
+const log = logger.scope('NeuronautChat');
 
 // ============================================================================
-// IGNITE COACH CHAT API - "CORTEX" WITH DIRECTOR MODE
+// NEURO-NAUT CHAT API - AI LEARNING COMPANION WITH DIRECTOR MODE
 // Combines Gemini AI for text generation + Google Cloud TTS for voice
 // Returns both "Script" (text) and "Stage Directions" (animation tags)
 // ============================================================================
@@ -18,7 +18,7 @@ const GEMINI_API_KEY = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.G
 // DIRECTOR MODE SYSTEM PROMPT
 // ============================================================================
 
-const SYSTEM_PROMPT = `You are Cortex, an expert corporate learning companion for LXD360.
+const SYSTEM_PROMPT = `You are Neuro-naut, an expert AI learning companion for LXD360's INSPIRE Ignite platform.
 
 PERSONALITY:
 - Helpful, encouraging, and concise (maximum 2 sentences per response)
@@ -154,14 +154,14 @@ function buildPrompt(request: ChatRequest): string {
   if (history && history.length > 0) {
     prompt += '--- CONVERSATION HISTORY ---\n';
     for (const msg of history.slice(-6)) {
-      const role = msg.role === 'user' ? 'Learner' : 'Cortex';
+      const role = msg.role === 'user' ? 'Learner' : 'Neuro-naut';
       prompt += `${role}: ${msg.content}\n`;
     }
     prompt += '---\n\n';
   }
 
   // Add current message
-  prompt += `Learner: ${message}\n\nCortex:`;
+  prompt += `Learner: ${message}\n\nNeuro-naut:`;
 
   return prompt;
 }
@@ -173,7 +173,7 @@ function buildPrompt(request: ChatRequest): string {
 /**
  * POST /api/ignite/chat
  *
- * Chat with Cortex AI and receive:
+ * Chat with Neuro-naut AI and receive:
  * - text: The response text (Director tag stripped)
  * - audio: Base64-encoded MP3 audio
  * - animation: Animation directive for the avatar
@@ -182,14 +182,14 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
   // Authentication verified by withAuth wrapper
   try {
     // ========== VERBOSE LOGGING FOR DEBUGGING ==========
-    log.debug('[CortexChat] === API REQUEST START ===');
-    log.debug('[CortexChat] Environment check', {
+    log.debug('[NeuronautChat] === API REQUEST START ===');
+    log.debug('[NeuronautChat] Environment check', {
       googleProjectIdExists: !!process.env.GOOGLE_PROJECT_ID,
       googleCloudProjectExists: !!process.env.GOOGLE_CLOUD_PROJECT,
       geminiApiKeyExists: !!GEMINI_API_KEY,
     });
     const privateKey = process.env.GOOGLE_PRIVATE_KEY || process.env.FIREBASE_PRIVATE_KEY || '';
-    log.debug('[CortexChat] Private key check', {
+    log.debug('[NeuronautChat] Private key check', {
       length: privateKey.length,
       hasEscapedNewline: privateKey.includes('\\n'),
       hasLiteralNewline: privateKey.includes('\n'),
@@ -199,19 +199,19 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
     const body = (await req.json()) as ChatRequest;
     const { message, voiceId, voice = 'male', includeAudio = true } = body;
 
-    log.debug('[CortexChat] Received message', { preview: message?.substring(0, 50) });
+    log.debug('[NeuronautChat] Received message', { preview: message?.substring(0, 50) });
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 });
     }
 
     if (!GEMINI_API_KEY) {
-      log.error('[CortexChat] GOOGLE_GENERATIVE_AI_API_KEY is not configured');
+      log.error('[NeuronautChat] GOOGLE_GENERATIVE_AI_API_KEY is not configured');
       return NextResponse.json({ error: 'AI service not configured' }, { status: 500 });
     }
 
     // 1. Generate text response with Gemini
-    log.debug('[CortexChat] Calling Gemini...');
+    log.debug('[NeuronautChat] Calling Gemini...');
     const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
@@ -219,7 +219,7 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
     const result = await model.generateContent(prompt);
     const response = result.response;
     const rawText = response.text().trim();
-    log.debug('[CortexChat] Gemini response received', { length: rawText.length });
+    log.debug('[NeuronautChat] Gemini response received', { length: rawText.length });
 
     if (!rawText) {
       return NextResponse.json({ error: 'Failed to generate response' }, { status: 500 });
@@ -234,13 +234,13 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
 
     if (includeAudio) {
       try {
-        log.debug('[CortexChat] Calling TTS', { voiceId, voice });
+        log.debug('[NeuronautChat] Calling TTS', { voiceId, voice });
         audio = await synthesizeSpeech(text, { voice, voiceId });
-        log.debug('[CortexChat] TTS response received', { audioLength: audio?.length || 0 });
+        log.debug('[NeuronautChat] TTS response received', { audioLength: audio?.length || 0 });
       } catch (ttsError) {
         // Log but don't fail the request - audio is optional
         log.error(
-          '[CortexChat] TTS error (continuing without audio)',
+          '[NeuronautChat] TTS error (continuing without audio)',
           ttsError instanceof Error ? ttsError : new Error(String(ttsError)),
         );
       }
@@ -261,12 +261,12 @@ async function handlePost(req: AuthenticatedRequest): Promise<NextResponse> {
       chatResponse.raw = rawText;
     }
 
-    log.debug('[CortexChat] === API REQUEST SUCCESS ===');
+    log.debug('[NeuronautChat] === API REQUEST SUCCESS ===');
     return NextResponse.json(chatResponse);
   } catch (error) {
     // ========== VERBOSE ERROR LOGGING ==========
     log.error(
-      '[CortexChat] === API REQUEST FAILED ===',
+      '[NeuronautChat] === API REQUEST FAILED ===',
       error instanceof Error ? error : new Error(String(error)),
       {
         stack: error instanceof Error ? error.stack : undefined,

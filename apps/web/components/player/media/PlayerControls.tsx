@@ -153,10 +153,9 @@ export function PlayerControls({
       {/* Right Controls */}
       <div className="flex items-center gap-1">
         {showVolumeControl && (
-          <div
-            className="relative flex items-center"
+          <fieldset
+            className="relative flex items-center border-0 p-0 m-0"
             onMouseLeave={handleVolumeContainerMouseLeave}
-            role="group"
             aria-label="Volume controls"
           >
             <div
@@ -198,7 +197,7 @@ export function PlayerControls({
                 <Volume2 className={iconSize} />
               )}
             </Button>
-          </div>
+          </fieldset>
         )}
 
         {showSpeedControl && (

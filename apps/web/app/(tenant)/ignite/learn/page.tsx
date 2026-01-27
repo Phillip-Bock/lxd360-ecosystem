@@ -2,55 +2,42 @@
 
 export const dynamic = 'force-dynamic';
 
-import { AlertCircle, BookOpen, ChevronRight, RefreshCw, Sparkles } from 'lucide-react';
+import { BookOpen, ChevronRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { WelcomeCard } from '@/components/ignite/learner';
-import type { ActivityItem, Badge } from '@/components/lms/learner';
 import {
   AchievementBadges,
   AssignedCourseCard,
-  AssignedCourseCardSkeleton,
   ContinueLearningCard,
-  ContinueLearningCardSkeleton,
   RecentActivity,
-  RecentActivitySkeleton,
   UpcomingDeadlines,
-  UpcomingDeadlinesSkeleton,
 } from '@/components/lms/learner';
-import { Button } from '@/components/ui/button';
+import type { Badge } from '@/components/lms/learner/AchievementBadges';
+import type { ActivityItem } from '@/components/lms/learner/RecentActivity';
 import { cn } from '@/lib/utils';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
 import type {
-  CompletedCourseRecord,
   LearnerBadge,
   LearnerCourse,
   LearnerProgressSummary,
-  RecommendedCourse,
 } from '@/types/lms/learner-dashboard';
 
-/** Get Firebase ID token for API authentication */
-async function getIdToken(): Promise<string> {
-  const { getAuth } = await import('firebase/auth');
-  const auth = getAuth();
-  const user = auth.currentUser;
-  if (!user) throw new Error('Not authenticated');
-  return user.getIdToken();
-}
-
-/** Dashboard API response shape */
-interface DashboardResponse {
+/**
+ * API response shape for learner dashboard
+ */
+interface LearnerDashboardResponse {
   progressSummary: LearnerProgressSummary;
   inProgressCourses: LearnerCourse[];
   assignedCourses: LearnerCourse[];
-  recommendedCourses: RecommendedCourse[];
-  completedCourses: CompletedCourseRecord[];
-  badges?: LearnerBadge[];
-  recentActivity?: ActivityItem[];
+  badges: LearnerBadge[];
+  activities: ActivityItem[];
 }
 
-/** Default empty progress summary */
-const defaultProgressSummary: LearnerProgressSummary = {
+/**
+ * Default empty progress summary for loading/empty states
+ */
+const emptyProgressSummary: LearnerProgressSummary = {
   totalAssigned: 0,
   inProgress: 0,
   completed: 0,
@@ -96,7 +83,7 @@ function adaptBadges(learnerBadges: LearnerBadge[]): Badge[] {
     iconType: iconToType[badge.icon] ?? 'star',
     tier: rarityToTier[badge.rarity] ?? 'bronze',
     earned: true,
-    earnedAt: badge.earnedAt,
+    earnedAt: new Date(badge.earnedAt),
     xpReward: badge.xpReward,
   }));
 }
@@ -110,86 +97,93 @@ function adaptBadges(learnerBadges: LearnerBadge[]): Badge[] {
  * - Upcoming deadlines widget
  * - Recent activity feed
  * - Achievement badges
+ *
+ * Connected to Firestore via /api/ignite/learner/dashboard
  */
 export default function LearnDashboardPage() {
   const { user } = useSafeAuth();
 
   // State for dashboard data
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [progressSummary, setProgressSummary] =
-    useState<LearnerProgressSummary>(defaultProgressSummary);
+    useState<LearnerProgressSummary>(emptyProgressSummary);
   const [inProgressCourses, setInProgressCourses] = useState<LearnerCourse[]>([]);
   const [assignedCourses, setAssignedCourses] = useState<LearnerCourse[]>([]);
-  const [completedCourses, setCompletedCourses] = useState<CompletedCourseRecord[]>([]);
   const [badges, setBadges] = useState<LearnerBadge[]>([]);
-  const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([]);
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
 
   // Get user's display name
   const userName = user?.displayName || user?.email?.split('@')[0] || 'Learner';
 
-  // Fetch dashboard data
-  const fetchDashboard = useCallback(async () => {
-    setIsLoading(true);
+  // Fetch dashboard data from API
+  const fetchDashboardData = useCallback(async () => {
+    if (!user) return;
+
+    setLoading(true);
     setError(null);
 
     try {
-      const token = await getIdToken();
+      const token = await user.getIdToken();
+      if (!token) {
+        setError('Authentication required');
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch('/api/ignite/learner/dashboard', {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Failed to fetch dashboard data');
+        throw new Error(errorData.error || `Failed to fetch dashboard: ${response.status}`);
       }
 
-      const data: DashboardResponse = await response.json();
+      const data: LearnerDashboardResponse = await response.json();
 
-      // Convert date strings back to Date objects
-      const parseCourseDates = <T extends LearnerCourse>(course: T): T => ({
+      // Convert date strings back to Date objects for courses
+      const parseCourseDates = (course: LearnerCourse): LearnerCourse => ({
         ...course,
-        dueDate: course.dueDate ? new Date(course.dueDate as unknown as string) : undefined,
-        lastAccessedAt: course.lastAccessedAt
-          ? new Date(course.lastAccessedAt as unknown as string)
-          : undefined,
-        completedAt:
-          'completedAt' in course && course.completedAt
-            ? new Date(course.completedAt as unknown as string)
-            : undefined,
+        dueDate: course.dueDate ? new Date(course.dueDate) : undefined,
+        completedAt: course.completedAt ? new Date(course.completedAt) : undefined,
+        lastAccessedAt: course.lastAccessedAt ? new Date(course.lastAccessedAt) : undefined,
       });
 
-      const parseBadgeDates = (badge: LearnerBadge): LearnerBadge => ({
-        ...badge,
-        earnedAt: new Date(badge.earnedAt as unknown as string),
-      });
-
+      // Convert date strings for activities
       const parseActivityDates = (activity: ActivityItem): ActivityItem => ({
         ...activity,
-        timestamp: new Date(activity.timestamp as unknown as string),
+        timestamp: new Date(activity.timestamp),
+      });
+
+      // Convert date strings for badges
+      const parseBadgeDates = (badge: LearnerBadge): LearnerBadge => ({
+        ...badge,
+        earnedAt: new Date(badge.earnedAt),
       });
 
       setProgressSummary(data.progressSummary);
       setInProgressCourses(data.inProgressCourses.map(parseCourseDates));
       setAssignedCourses(data.assignedCourses.map(parseCourseDates));
-      setCompletedCourses(data.completedCourses.map(parseCourseDates));
-      setBadges(data.badges ? data.badges.map(parseBadgeDates) : []);
-      setRecentActivity(data.recentActivity ? data.recentActivity.map(parseActivityDates) : []);
+      setBadges(data.badges.map(parseBadgeDates));
+      setActivities(data.activities.map(parseActivityDates));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const message = err instanceof Error ? err.message : 'Failed to load dashboard';
+      setError(message);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
-  }, []);
+  }, [user]);
 
-  // Fetch on mount
+  // Fetch data on mount and when user changes
   useEffect(() => {
     if (user) {
-      fetchDashboard();
+      fetchDashboardData();
     }
-  }, [user, fetchDashboard]);
+  }, [user, fetchDashboardData]);
 
   // Get most recently accessed course for continue learning
   const sortedInProgress = [...inProgressCourses].sort((a, b) => {
@@ -202,65 +196,23 @@ export default function LearnDashboardPage() {
   // Combine all courses with due dates for deadline widget
   const allCourses = [...inProgressCourses, ...assignedCourses];
 
-  // Loading state
-  if (isLoading) {
+  // Show error state
+  if (error && !loading) {
     return (
-      <div className="container mx-auto p-6 space-y-8">
-        {/* Welcome Section Skeleton */}
-        <div className="rounded-xl bg-lxd-dark-surface border border-lxd-dark-border p-6 animate-pulse">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-muted/30" />
-            <div className="space-y-2 flex-1">
-              <div className="h-6 w-48 bg-muted/30 rounded" />
-              <div className="h-4 w-64 bg-muted/30 rounded" />
-            </div>
+      <div className="container mx-auto p-6">
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-500/20 mb-4">
+            <BookOpen className="h-8 w-8 text-red-500" aria-hidden />
           </div>
-        </div>
-
-        {/* Continue Learning Skeleton */}
-        <section className="space-y-4">
-          <SectionHeader
-            title="Continue Learning"
-            icon={BookOpen}
-            href="/ignite/learn/my-learning"
-            linkText="View All Courses"
-          />
-          <ContinueLearningCardSkeleton />
-        </section>
-
-        {/* Two-column layout for widgets */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <UpcomingDeadlinesSkeleton maxItems={4} />
-          <RecentActivitySkeleton maxItems={5} />
-        </div>
-
-        {/* Assigned Courses Skeleton */}
-        <section className="space-y-4">
-          <SectionHeader title="Assigned Learning" icon={Sparkles} />
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <AssignedCourseCardSkeleton key={i} />
-            ))}
-          </div>
-        </section>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className="container mx-auto p-6 space-y-8">
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="w-16 h-16 rounded-full bg-[var(--color-lxd-error)]/10 flex items-center justify-center mb-4">
-            <AlertCircle className="w-8 h-8 text-[var(--color-lxd-error)]" aria-hidden="true" />
-          </div>
-          <h3 className="text-lg font-semibold text-foreground mb-2">Failed to load dashboard</h3>
-          <p className="text-muted-foreground max-w-sm mb-4">{error}</p>
-          <Button type="button" onClick={fetchDashboard} variant="outline">
-            <RefreshCw className="w-4 h-4 mr-2" aria-hidden="true" />
+          <h2 className="text-xl font-semibold text-foreground mb-2">Unable to Load Dashboard</h2>
+          <p className="text-sm text-muted-foreground mb-4 max-w-md">{error}</p>
+          <button
+            type="button"
+            onClick={fetchDashboardData}
+            className="px-4 py-2 bg-lxd-primary text-white rounded-md hover:bg-lxd-primary/90 transition-colors"
+          >
             Try Again
-          </Button>
+          </button>
         </div>
       </div>
     );
@@ -269,10 +221,10 @@ export default function LearnDashboardPage() {
   return (
     <div className="container mx-auto p-6 space-y-8">
       {/* Welcome Section */}
-      <WelcomeCard userName={userName} progressSummary={progressSummary} />
+      <WelcomeCard userName={userName} progressSummary={progressSummary} isLoading={loading} />
 
       {/* Continue Learning - Hero card */}
-      {lastAccessedCourse && (
+      {!loading && lastAccessedCourse && (
         <section className="space-y-4">
           <SectionHeader
             title="Continue Learning"
@@ -287,14 +239,14 @@ export default function LearnDashboardPage() {
       {/* Two-column layout for widgets */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Upcoming Deadlines */}
-        <UpcomingDeadlines courses={allCourses} maxItems={4} />
+        <UpcomingDeadlines courses={allCourses} maxItems={4} isLoading={loading} />
 
         {/* Recent Activity */}
-        <RecentActivity activities={recentActivity} maxItems={5} />
+        <RecentActivity activities={activities} maxItems={5} isLoading={loading} />
       </div>
 
       {/* Assigned Courses Grid */}
-      {assignedCourses.length > 0 && (
+      {!loading && assignedCourses.length > 0 && (
         <section className="space-y-4">
           <SectionHeader
             title="Assigned Learning"
@@ -311,37 +263,25 @@ export default function LearnDashboardPage() {
         </section>
       )}
 
-      {/* Achievement Badges */}
-      {badges.length > 0 && <AchievementBadges badges={adaptBadges(badges)} maxItems={8} />}
-
-      {/* Empty state when no data */}
-      {inProgressCourses.length === 0 &&
-        assignedCourses.length === 0 &&
-        completedCourses.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-lxd-primary/10 mb-4">
+      {/* Empty state when no courses assigned */}
+      {!loading && assignedCourses.length === 0 && inProgressCourses.length === 0 && (
+        <section className="space-y-4">
+          <SectionHeader title="Your Learning" icon={Sparkles} />
+          <div className="flex flex-col items-center justify-center py-12 text-center bg-lxd-dark-surface rounded-lg border border-lxd-dark-border">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-lxd-primary/20 mb-4">
               <BookOpen className="h-8 w-8 text-lxd-primary" aria-hidden />
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">
-              Welcome to Your Learning Hub
-            </h3>
-            <p className="text-muted-foreground max-w-sm mb-4">
-              You don't have any courses assigned yet. Browse the catalog to start your learning
-              journey!
+            <h3 className="text-lg font-semibold text-foreground mb-2">No Courses Assigned Yet</h3>
+            <p className="text-sm text-muted-foreground max-w-md">
+              You don't have any courses assigned. Check back soon or explore the course catalog to
+              find learning opportunities.
             </p>
-            <Link
-              href="/ignite/learn/catalog"
-              className={cn(
-                'inline-flex items-center gap-2 px-6 py-3 rounded-lg',
-                'bg-lxd-primary hover:bg-lxd-primary/90 text-white font-semibold',
-                'transition-all focus:outline-none focus:ring-2 focus:ring-lxd-primary focus:ring-offset-2',
-              )}
-            >
-              Browse Course Catalog
-              <ChevronRight className="w-4 h-4" aria-hidden />
-            </Link>
           </div>
-        )}
+        </section>
+      )}
+
+      {/* Achievement Badges */}
+      <AchievementBadges badges={adaptBadges(badges)} maxItems={8} isLoading={loading} />
     </div>
   );
 }

@@ -135,7 +135,7 @@ export function ExportDialog({ open, onOpenChange, lesson }: ExportDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] bg-[#1a1a2e] border-white/10 p-0 gap-0">
+      <DialogContent className="max-w-2xl max-h-[90vh] bg-(--studio-surface) border-white/10 p-0 gap-0">
         {/* Header */}
         <DialogHeader className="p-6 pb-4 border-b border-white/10">
           <div className="flex items-center justify-between">

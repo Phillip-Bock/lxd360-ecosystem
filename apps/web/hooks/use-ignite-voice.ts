@@ -24,14 +24,14 @@ export interface UseIgniteVoiceReturn {
 }
 
 /**
- * Hook for playing Ignite Coach voice audio
+ * Hook for playing Neuro-naut voice audio
  *
  * Converts Base64-encoded MP3 audio to a playable blob and manages playback state.
  * Tracks speaking state for avatar lip-sync animation.
  *
  * @example
  * ```tsx
- * function IgniteCoach() {
+ * function NeuronautCoach() {
  *   const { playAudio, isSpeaking } = useIgniteVoice();
  *
  *   const handleResponse = async (data) => {

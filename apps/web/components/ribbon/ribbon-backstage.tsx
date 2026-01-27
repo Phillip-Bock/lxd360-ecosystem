@@ -84,7 +84,7 @@ export function RibbonBackstage({
           </div>
 
           {/* Main content */}
-          <div className="flex-1 bg-[#0a0a1a] overflow-auto">
+          <div className="flex-1 bg-(--neural-bg) overflow-auto">
             <div className="p-8">{activeContent}</div>
           </div>
 

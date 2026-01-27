@@ -96,8 +96,7 @@ async function uploadPdf(
     },
   });
 
-  // Make file publicly accessible
-  await file.makePublic();
+  // Note: Public access is managed at bucket level via IAM (uniform bucket-level access)
   const storageUrl = `https://storage.googleapis.com/${bucket.name}/${pdfPath}`;
 
   return {
@@ -155,8 +154,7 @@ async function uploadZipContents(
         },
       });
 
-      // Make file publicly accessible
-      await bucketFile.makePublic();
+      // Note: Public access is managed at bucket level via IAM (uniform bucket-level access)
     })();
 
     uploadPromises.push(uploadPromise);
@@ -193,7 +191,7 @@ function findRootPrefix(fileNames: string[]): string {
   const firstParts = files[0].split('/');
   if (firstParts.length < 2) return '';
 
-  const potentialRoot = firstParts[0] + '/';
+  const potentialRoot = `${firstParts[0]}/`;
 
   // Check if all files start with this root
   const allMatch = files.every((f) => f.startsWith(potentialRoot));
@@ -243,7 +241,7 @@ export async function uploadSingleFile(
     },
   });
 
-  await file.makePublic();
+  // Note: Public access is managed at bucket level via IAM (uniform bucket-level access)
   const storageUrl = `https://storage.googleapis.com/${bucket.name}/${storagePath}`;
 
   return {

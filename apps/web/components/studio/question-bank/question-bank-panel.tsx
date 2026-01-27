@@ -449,7 +449,7 @@ export function QuestionBankPanel({
   }, [selectedBank]);
 
   return (
-    <div className="flex flex-col h-full bg-[#0a0a0f]">
+    <div className="flex flex-col h-full bg-(--neural-bg)">
       {/* Header */}
       <div className="h-12 border-b border-white/10 flex items-center justify-between px-4 shrink-0">
         <div className="flex items-center gap-2">

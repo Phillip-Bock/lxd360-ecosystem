@@ -270,7 +270,7 @@ export function OutlineSidebar() {
                 onChange={(e) => setAuthorName(e.target.value)}
                 placeholder="Author name..."
                 aria-label="Author name"
-                className="mt-2 w-full px-3 py-1.5 text-xs text-gray-900 bg-[#f5f5f5] border border-gray-300 rounded focus:outline-hidden focus:ring-1 focus:ring-(--neural-cyan) placeholder:text-gray-400"
+                className="mt-2 w-full px-3 py-1.5 text-xs text-gray-900 bg-(--studio-input) border border-gray-300 rounded focus:outline-hidden focus:ring-1 focus:ring-(--neural-cyan) placeholder:text-gray-400"
               />
             )}
           </fieldset>
@@ -342,7 +342,7 @@ export function OutlineSidebar() {
               value={outline.title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter course title..."
-              className="w-full px-3 py-2 text-lg font-bold text-gray-900 bg-[#f5f5f5] border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-(--neural-cyan) focus:border-transparent placeholder:text-gray-400"
+              className="w-full px-3 py-2 text-lg font-bold text-gray-900 bg-(--studio-input) border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-(--neural-cyan) focus:border-transparent placeholder:text-gray-400"
             />
           </div>
 
@@ -361,7 +361,7 @@ export function OutlineSidebar() {
               placeholder="Enter course description..."
               rows={3}
               maxLength={DESCRIPTION_MAX_LENGTH}
-              className="w-full px-3 py-2 text-sm text-gray-900 bg-[#f5f5f5] border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-(--neural-cyan) focus:border-transparent placeholder:text-gray-400 resize-none"
+              className="w-full px-3 py-2 text-sm text-gray-900 bg-(--studio-input) border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-(--neural-cyan) focus:border-transparent placeholder:text-gray-400 resize-none"
             />
             <div className="flex justify-end mt-1">
               <span
@@ -554,7 +554,7 @@ export function OutlineSidebar() {
                                 setEditingObjectiveText('');
                               }
                             }}
-                            className="flex-1 px-2 py-1 text-sm text-gray-900 bg-[#f5f5f5] border border-gray-300 rounded focus:outline-hidden focus:ring-2 focus:ring-(--neural-cyan)"
+                            className="flex-1 px-2 py-1 text-sm text-gray-900 bg-(--studio-input) border border-gray-300 rounded focus:outline-hidden focus:ring-2 focus:ring-(--neural-cyan)"
                           />
                           <button
                             type="button"
@@ -599,7 +599,7 @@ export function OutlineSidebar() {
                     if (e.key === 'Enter') handleAddObjective();
                   }}
                   placeholder="Add a new objective..."
-                  className="flex-1 px-3 py-2 text-sm text-gray-900 bg-[#f5f5f5] border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-(--neural-cyan) placeholder:text-gray-400"
+                  className="flex-1 px-3 py-2 text-sm text-gray-900 bg-(--studio-input) border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-(--neural-cyan) placeholder:text-gray-400"
                 />
                 <button
                   type="button"

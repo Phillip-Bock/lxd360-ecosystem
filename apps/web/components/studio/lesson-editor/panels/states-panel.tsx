@@ -126,7 +126,7 @@ function StateCard({
               <MoreHorizontal className="h-3 w-3" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-40 bg-[#1a1a2e] border-white/10">
+          <DropdownMenuContent align="end" className="w-40 bg-(--studio-surface) border-white/10">
             <DropdownMenuItem onClick={onPreview}>
               <Play className="h-3 w-3 mr-2" />
               Preview
@@ -250,7 +250,7 @@ export function StatesPanel({
 
   if (!objectId) {
     return (
-      <div className="flex flex-col h-full bg-[#0a0a0f] p-4">
+      <div className="flex flex-col h-full bg-(--neural-bg) p-4">
         <div className="flex-1 flex items-center justify-center text-center">
           <div className="space-y-2">
             <Settings2 className="h-12 w-12 text-zinc-700 mx-auto" />
@@ -266,7 +266,7 @@ export function StatesPanel({
 
   return (
     <TooltipProvider>
-      <div className="flex flex-col h-full bg-[#0a0a0f]">
+      <div className="flex flex-col h-full bg-(--neural-bg)">
         {/* Header */}
         <div className="h-12 border-b border-white/10 flex items-center justify-between px-4 shrink-0">
           <div className="flex items-center gap-2">

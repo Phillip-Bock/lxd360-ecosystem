@@ -149,7 +149,7 @@ export function ImageLibrary({ onSelectImage }: ImageLibraryProps) {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               placeholder="Search images..."
-              className="pl-9 bg-[#0d0d14] border-white/10"
+              className="pl-9 bg-(--studio-bg) border-white/10"
             />
           </div>
           <Button onClick={handleSearch} disabled={isSearching}>

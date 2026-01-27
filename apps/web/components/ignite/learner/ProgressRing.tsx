@@ -18,10 +18,10 @@ export interface ProgressRingProps {
 }
 
 const variantColors = {
-  primary: { stroke: 'var(--color-lxd-primary)', glow: 'rgba(0, 114, 245, 0.4)' },
-  success: { stroke: 'var(--color-lxd-success)', glow: 'rgba(35, 116, 6, 0.4)' },
-  warning: { stroke: 'var(--color-lxd-warning)', glow: 'rgba(167, 93, 32, 0.4)' },
-  danger: { stroke: 'var(--color-lxd-error)', glow: 'rgba(205, 10, 10, 0.4)' },
+  primary: { stroke: 'var(--color-lxd-primary)', glow: 'oklch(60% 0.15 240 / 0.4)' },
+  success: { stroke: 'var(--color-lxd-success)', glow: 'oklch(50% 0.2 140 / 0.4)' },
+  warning: { stroke: 'var(--color-lxd-warning)', glow: 'oklch(55% 0.15 50 / 0.4)' },
+  danger: { stroke: 'var(--color-lxd-error)', glow: 'oklch(50% 0.25 25 / 0.4)' },
 };
 
 /**

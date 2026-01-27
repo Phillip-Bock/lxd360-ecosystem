@@ -147,7 +147,7 @@ export function AudioLibrary({ onSelectAudio }: AudioLibraryProps) {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               placeholder="Search audio..."
-              className="pl-9 bg-[#0d0d14] border-white/10"
+              className="pl-9 bg-(--studio-bg) border-white/10"
             />
           </div>
           <Button onClick={handleSearch} disabled={isSearching}>
@@ -187,7 +187,7 @@ export function AudioLibrary({ onSelectAudio }: AudioLibraryProps) {
             return (
               <div
                 key={asset.id}
-                className="flex items-center gap-3 p-3 bg-[#0d0d14] rounded-md hover:bg-white/5 transition-colors"
+                className="flex items-center gap-3 p-3 bg-(--studio-bg) rounded-md hover:bg-white/5 transition-colors"
               >
                 {/* Category Icon */}
                 <div className="h-10 w-10 rounded-xs bg-primary/20 flex items-center justify-center shrink-0">

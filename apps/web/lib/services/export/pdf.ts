@@ -7,10 +7,12 @@
  * @module lib/services/export/pdf
  */
 
-import type { PageSize } from '@react-pdf/types';
 import { createElement } from 'react';
 import type { CourseExportData, ExportOptions, ExportResult, PDFExportSettings } from './types';
 import { getDefaultPDFSettings } from './types';
+
+// PageSize type - use string literal for PDF page sizes
+type PageSize = 'A4' | 'LETTER' | 'LEGAL' | 'TABLOID' | 'A3' | 'A5';
 
 // ============================================================================
 // MAIN EXPORT FUNCTION

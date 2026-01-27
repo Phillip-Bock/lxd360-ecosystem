@@ -57,8 +57,8 @@ interface ManifestData {
   title?: string;
 }
 
-/** LXD360 Primary Blue */
-const LXD_PRIMARY = '#2563EB';
+/** LXD360 Primary Blue - Uses CSS variable for consistency */
+const LXD_PRIMARY = 'var(--color-lxd-primary)';
 
 /**
  * ScormUploader - Smart SCORM Engine
@@ -378,12 +378,12 @@ export function ScormUploader({
           'relative rounded-lg border-2 border-dashed transition-all duration-200',
           uploadState === 'idle' &&
             !isDragging &&
-            'border-border bg-muted/20 hover:border-[#2563EB]/50',
-          isDragging && 'border-[#2563EB] bg-[#2563EB]/5',
+            'border-border bg-muted/20 hover:border-primary/50',
+          isDragging && 'border-primary bg-primary/5',
           uploadState === 'success' && 'border-emerald-500/50 bg-emerald-500/5',
           uploadState === 'error' && 'border-red-500/50 bg-red-500/5',
           (uploadState === 'processing' || uploadState === 'uploading') &&
-            'border-[#2563EB]/50 bg-[#2563EB]/5',
+            'border-primary/50 bg-primary/5',
           disabled && 'opacity-50 cursor-not-allowed',
         )}
       >
@@ -418,7 +418,7 @@ export function ScormUploader({
         {uploadState === 'processing' && (
           <div className="flex flex-col items-center justify-center gap-4 p-8">
             <div className="flex items-center gap-3">
-              <Package className="h-6 w-6 text-[#2563EB] animate-pulse" />
+              <Package className="h-6 w-6 text-primary animate-pulse" />
               <FolderOpen className="h-6 w-6 text-muted-foreground" />
             </div>
             <div className="w-full max-w-xs space-y-2">
@@ -427,8 +427,8 @@ export function ScormUploader({
                 <span className="text-muted-foreground text-xs">{formatFileSize(fileSize)}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin text-[#2563EB]" />
-                <span className="text-sm text-[#2563EB]">{processingStep}</span>
+                <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                <span className="text-sm text-primary">{processingStep}</span>
               </div>
             </div>
           </div>
@@ -437,7 +437,7 @@ export function ScormUploader({
         {uploadState === 'uploading' && (
           <div className="flex flex-col items-center justify-center gap-4 p-8">
             <div className="flex items-center gap-3">
-              <Loader2 className="h-6 w-6 animate-spin text-[#2563EB]" />
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
               <FileArchive className="h-6 w-6 text-muted-foreground" />
             </div>
             <div className="w-full max-w-xs space-y-2">

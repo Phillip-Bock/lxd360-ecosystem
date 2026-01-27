@@ -86,8 +86,7 @@ export function MediaUploader({
   return (
     <div className={cn('space-y-4', className)}>
       {/* Drop Zone */}
-      <div
-        role="region"
+      <section
         aria-label="File drop zone"
         className={cn(
           'border-2 border-dashed rounded-lg p-8 text-center transition-colors',
@@ -131,7 +130,7 @@ export function MediaUploader({
             Supports images, videos, audio, documents, and 3D models
           </p>
         </div>
-      </div>
+      </section>
 
       {/* Upload Progress */}
       {uploadingItems.length > 0 && (

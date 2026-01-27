@@ -245,7 +245,7 @@ export function AITextToolbar({
         ref={toolbarRef}
         className={cn(
           'fixed z-50 flex items-center gap-1 p-1.5 rounded-lg',
-          'bg-[#1a1a2e]/95 backdrop-blur-xl border border-white/10',
+          'bg-(--studio-surface)/95 backdrop-blur-xl border border-white/10',
           'shadow-xl shadow-black/50',
           'animate-in fade-in-0 zoom-in-95 duration-150',
         )}
@@ -316,7 +316,7 @@ export function AITextToolbar({
 
         {/* Result Preview (if showing) */}
         {showResult && result && (
-          <div className="absolute top-full left-0 right-0 mt-2 p-3 rounded-lg bg-[#1a1a2e]/95 backdrop-blur-xl border border-white/10 shadow-xl">
+          <div className="absolute top-full left-0 right-0 mt-2 p-3 rounded-lg bg-(--studio-surface)/95 backdrop-blur-xl border border-white/10 shadow-xl">
             <div className="text-[10px] uppercase text-zinc-500 mb-2">Result Preview</div>
             <p className="text-sm text-white mb-3 max-h-24 overflow-y-auto">{result}</p>
             <div className="flex items-center gap-2">

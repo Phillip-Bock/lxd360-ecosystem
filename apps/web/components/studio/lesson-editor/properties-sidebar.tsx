@@ -441,7 +441,7 @@ function BlockStyleProperties({
           <div className="space-y-2">
             <Label className="text-xs">Accent Color</Label>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xs border border-border bg-[#00d4ff]" />
+              <div className="w-8 h-8 rounded-xs border border-border bg-(--neural-cyan)" />
               <Input placeholder="#00d4ff" className="flex-1" />
             </div>
           </div>

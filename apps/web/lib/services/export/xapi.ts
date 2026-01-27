@@ -226,7 +226,7 @@ function generateXAPILibrary(settings: XAPIExportSettings, isCmi5 = false): stri
  * LXD360 xAPI Client Library
  * Version: 1.0.0
  * xAPI Version: ${XAPI_VERSION}
- * ${isCmi5 ? 'cmi5 Version: ' + CMI5_VERSION : ''}
+ * ${isCmi5 ? `cmi5 Version: ${CMI5_VERSION}` : ''}
  */
 var LXD360_XAPI = (function() {
   'use strict';

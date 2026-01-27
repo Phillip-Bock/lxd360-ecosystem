@@ -344,7 +344,7 @@ function TrackRow({
               <MoreHorizontal className="h-3 w-3" aria-hidden="true" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 bg-[#1a1a2e] border-white/10">
+          <DropdownMenuContent align="end" className="w-48 bg-(--studio-surface) border-white/10">
             <DropdownMenuItem disabled className="text-xs text-white/50">
               Add Property
             </DropdownMenuItem>
@@ -636,7 +636,7 @@ export function TimelinePanel({ slideId, onObjectUpdate, onClose, className }: T
 
   return (
     <TooltipProvider>
-      <div className={cn('flex flex-col h-full bg-[#0a0a0f]', className)}>
+      <div className={cn('flex flex-col h-full bg-(--neural-bg)', className)}>
         {/* Header */}
         <div className="h-12 border-b border-white/10 flex items-center justify-between px-4 shrink-0">
           <div className="flex items-center gap-2">
