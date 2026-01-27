@@ -58,6 +58,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@react-aria/i18n": "^3.12.14",
     "@react-email/components": "^1.0.6",
+    "@react-pdf/renderer": "^4.3.2",
     "@react-stately/color": "^3.9.3",
     "@react-three/drei": "9.0.0-beta.6",
     "@react-three/fiber": "9.0.0-beta.1",
