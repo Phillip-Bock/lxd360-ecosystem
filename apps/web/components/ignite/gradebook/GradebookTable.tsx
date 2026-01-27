@@ -63,6 +63,8 @@ export interface GradebookTableProps {
   searchQuery?: string;
   /** Loading state */
   isLoading?: boolean;
+  /** Callback when a row is clicked */
+  onRowClick?: (entry: GradebookEntry) => void;
   /** Additional CSS classes */
   className?: string;
 }
@@ -115,6 +117,7 @@ export function GradebookTable({
   statusFilter = 'all',
   searchQuery = '',
   isLoading = false,
+  onRowClick,
   className,
 }: GradebookTableProps): React.ReactElement {
   const [sortState, setSortState] = useState<SortState | null>(null);
@@ -349,7 +352,24 @@ export function GradebookTable({
 
       <TableBody>
         {sortedEntries.map((entry) => (
-          <TableRow key={entry.learnerId}>
+          <TableRow
+            key={entry.learnerId}
+            className={cn(onRowClick && 'cursor-pointer hover:bg-muted/50')}
+            onClick={onRowClick ? () => onRowClick(entry) : undefined}
+            tabIndex={onRowClick ? 0 : undefined}
+            onKeyDown={
+              onRowClick
+                ? (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onRowClick(entry);
+                    }
+                  }
+                : undefined
+            }
+            role={onRowClick ? 'button' : undefined}
+            aria-label={onRowClick ? `View details for ${entry.learnerName}` : undefined}
+          >
             {/* Learner info */}
             <TableCell>
               <div>
