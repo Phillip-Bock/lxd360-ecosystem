@@ -3,6 +3,7 @@
  * TODO(LXD-337): Replace with Firestore queries
  */
 
+import type { ActivityItem, Badge } from '@/components/lms/learner';
 import type {
   CompletedCourseRecord,
   LearnerCourse,
@@ -268,5 +269,164 @@ export const mockCompletedCourses: CompletedCourseRecord[] = [
     badgesEarned: ['productivity-pro'],
     xpEarned: 320,
     timeSpent: 85,
+  },
+];
+
+/**
+ * Mock recent activities
+ */
+export const mockActivities: ActivityItem[] = [
+  {
+    id: 'activity-1',
+    type: 'lesson_completed',
+    title: 'Chapter 8: Team Dynamics',
+    courseId: 'course-leadership-101',
+    courseTitle: 'Advanced Leadership Skills',
+    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+    metadata: {
+      xpEarned: 50,
+      progress: 65,
+    },
+  },
+  {
+    id: 'activity-2',
+    type: 'course_completed',
+    title: 'Time Management Mastery',
+    courseId: 'course-time-management',
+    courseTitle: 'Time Management Mastery',
+    timestamp: new Date('2026-01-05T14:30:00Z'),
+    metadata: {
+      score: 88,
+      xpEarned: 320,
+    },
+  },
+  {
+    id: 'activity-3',
+    type: 'badge_earned',
+    title: 'Productivity Pro',
+    timestamp: new Date('2026-01-05T14:30:00Z'),
+    metadata: {
+      badgeName: 'Productivity Pro',
+      xpEarned: 100,
+    },
+  },
+  {
+    id: 'activity-4',
+    type: 'skill_improved',
+    title: 'Leadership skill improved to 85%',
+    timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+    metadata: {
+      skillName: 'Leadership',
+      xpEarned: 25,
+    },
+  },
+  {
+    id: 'activity-5',
+    type: 'course_started',
+    title: 'Started Data Analytics Essentials',
+    courseId: 'course-data-analytics',
+    courseTitle: 'Data Analytics Essentials',
+    timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+    metadata: {
+      xpEarned: 10,
+    },
+  },
+  {
+    id: 'activity-6',
+    type: 'lesson_completed',
+    title: 'Introduction to Data Analysis',
+    courseId: 'course-data-analytics',
+    courseTitle: 'Data Analytics Essentials',
+    timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+    metadata: {
+      xpEarned: 45,
+      progress: 45,
+    },
+  },
+];
+
+/**
+ * Mock achievement badges
+ */
+export const mockBadges: Badge[] = [
+  {
+    id: 'badge-first-course',
+    name: 'First Steps',
+    description: 'Complete your first course',
+    iconType: 'trophy',
+    tier: 'bronze',
+    earned: true,
+    earnedAt: new Date('2025-11-15'),
+    xpReward: 100,
+  },
+  {
+    id: 'badge-perfect-score',
+    name: 'Perfect Score',
+    description: 'Achieve 100% on any course',
+    iconType: 'star',
+    tier: 'gold',
+    earned: true,
+    earnedAt: new Date('2025-11-15'),
+    xpReward: 200,
+  },
+  {
+    id: 'badge-compliance-champion',
+    name: 'Compliance Champion',
+    description: 'Complete all compliance courses',
+    iconType: 'award',
+    tier: 'silver',
+    earned: true,
+    earnedAt: new Date('2025-12-10'),
+    xpReward: 150,
+  },
+  {
+    id: 'badge-productivity-pro',
+    name: 'Productivity Pro',
+    description: 'Complete a professional skills course',
+    iconType: 'zap',
+    tier: 'bronze',
+    earned: true,
+    earnedAt: new Date('2026-01-05'),
+    xpReward: 100,
+  },
+  {
+    id: 'badge-streak-7',
+    name: '7-Day Streak',
+    description: 'Learn for 7 consecutive days',
+    iconType: 'zap',
+    tier: 'silver',
+    earned: true,
+    earnedAt: new Date('2026-01-20'),
+    xpReward: 150,
+  },
+  {
+    id: 'badge-leader',
+    name: 'Leader in Training',
+    description: 'Complete the Leadership course',
+    iconType: 'trophy',
+    tier: 'gold',
+    earned: false,
+    xpReward: 250,
+    progress: 65,
+  },
+  {
+    id: 'badge-data-wizard',
+    name: 'Data Wizard',
+    description: 'Complete all data analytics courses',
+    iconType: 'star',
+    tier: 'platinum',
+    earned: false,
+    xpReward: 500,
+    progress: 45,
+  },
+  {
+    id: 'badge-streak-30',
+    name: '30-Day Streak',
+    description: 'Learn for 30 consecutive days',
+    iconType: 'zap',
+    tier: 'gold',
+    earned: false,
+    xpReward: 300,
+    progress: 23,
   },
 ];
