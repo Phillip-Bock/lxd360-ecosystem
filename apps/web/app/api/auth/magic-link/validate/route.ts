@@ -103,6 +103,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     log.info('Magic link validated successfully', {
       email: result.email,
       uid: result.uid,
+      destination: result.destination,
+      tenantId: result.tenantId,
     });
 
     // Return custom token for client-side Firebase sign-in
@@ -110,6 +112,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       success: true,
       customToken: result.customToken,
       email: result.email,
+      destination: result.destination,
+      tenantId: result.tenantId,
     });
   } catch (error) {
     log.error('Magic link validation failed', error);

@@ -35,6 +35,10 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://lxd360.io';
 
 const requestSchema = z.object({
   email: z.string().email('Invalid email address'),
+  /** Optional destination path for deep linking (e.g., /ignite/courses/abc123) */
+  destination: z.string().optional(),
+  /** Optional tenant ID for multi-tenant context */
+  tenantId: z.string().optional(),
 });
 
 // =============================================================================
@@ -93,16 +97,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const { email } = validation.data;
+    const { email, destination, tenantId } = validation.data;
     const requestIp = getClientIp(req);
     const userAgent = getUserAgent(req);
 
-    log.info('Magic link requested', { email, ip: requestIp });
+    log.info('Magic link requested', { email, ip: requestIp, destination, tenantId });
 
     // Generate magic token
     const result = await generateMagicToken(email, {
       requestIp,
       userAgent,
+      destination,
+      tenantId,
     });
 
     if (!result.success || !result.token) {
@@ -127,6 +133,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         email,
         magicLinkUrl,
         expiresIn,
+        destination,
       }),
     );
 
