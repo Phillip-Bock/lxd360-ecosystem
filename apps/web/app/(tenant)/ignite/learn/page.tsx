@@ -6,6 +6,7 @@ import { AlertCircle, BookOpen, ChevronRight, RefreshCw, Sparkles } from 'lucide
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { WelcomeCard } from '@/components/ignite/learner';
+import type { ActivityItem, Badge } from '@/components/lms/learner';
 import {
   AchievementBadges,
   AssignedCourseCard,
@@ -17,7 +18,6 @@ import {
   UpcomingDeadlines,
   UpcomingDeadlinesSkeleton,
 } from '@/components/lms/learner';
-import type { ActivityItem, Badge } from '@/components/lms/learner';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';

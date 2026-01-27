@@ -269,12 +269,7 @@ export default function ProgressPage() {
           value={progressSummary.inProgress}
           subtext="active courses"
         />
-        <StatCard
-          icon={Clock}
-          label="Hours Learned"
-          value={hoursLearned}
-          subtext="total time"
-        />
+        <StatCard icon={Clock} label="Hours Learned" value={hoursLearned} subtext="total time" />
         <StatCard
           icon={Calendar}
           label="Learning Streak"
@@ -407,7 +402,9 @@ export default function ProgressPage() {
                     <CheckCircle2 className="w-5 h-5 text-green-500" aria-hidden />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-brand-primary truncate">{course.title}</p>
+                    <p className="text-sm font-medium text-brand-primary truncate">
+                      {course.title}
+                    </p>
                     <div className="flex items-center gap-2 mt-0.5">
                       {course.finalScore && (
                         <span className="text-xs text-muted-foreground">
