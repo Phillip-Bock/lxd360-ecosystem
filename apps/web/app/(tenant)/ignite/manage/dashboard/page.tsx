@@ -2,8 +2,17 @@
 
 export const dynamic = 'force-dynamic';
 
-import { BarChart3, FileText, Settings, UserPlus } from 'lucide-react';
+import {
+  AlertCircle,
+  BarChart3,
+  FileText,
+  Loader2,
+  RefreshCw,
+  Settings,
+  UserPlus,
+} from 'lucide-react';
 import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
 import {
   type ComplianceStatus,
   ComplianceWidget,
@@ -14,202 +23,39 @@ import {
   type TeamStats,
   TeamStatsCard,
 } from '@/components/ignite/manager';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-// =============================================================================
-// MOCK DATA — TODO(LXD-338): Replace with Firestore queries
-// =============================================================================
+/** Get Firebase ID token for API authentication */
+async function getIdToken(): Promise<string> {
+  const { getAuth } = await import('firebase/auth');
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (!user) throw new Error('Not authenticated');
+  return user.getIdToken();
+}
 
-const mockTeamStats: TeamStats = {
-  totalLearners: 47,
-  learnersChange: 5,
-  avgCompletionRate: 72,
-  completionChange: 4.2,
-  avgScore: 84,
-  scoreChange: 2.1,
-  overdueAssignments: 8,
-  overdueChange: -2,
-  complianceRate: 85,
-  complianceChange: 3.5,
+/** Dashboard API response shape */
+interface ManagerDashboardResponse {
+  teamStats: TeamStats;
+  teamMembers: TeamMember[];
+  complianceData: ComplianceStatus[];
+  dueDates: DueDateItem[];
+}
+
+/** Default empty team stats */
+const defaultTeamStats: TeamStats = {
+  totalLearners: 0,
+  learnersChange: 0,
+  avgCompletionRate: 0,
+  completionChange: 0,
+  avgScore: 0,
+  scoreChange: 0,
+  overdueAssignments: 0,
+  overdueChange: 0,
+  complianceRate: 0,
+  complianceChange: 0,
 };
-
-const mockTeamMembers: TeamMember[] = [
-  {
-    id: 'tm-001',
-    name: 'Sarah Chen',
-    email: 'sarah.chen@acme.com',
-    avatarUrl: undefined,
-    coursesAssigned: 5,
-    coursesCompleted: 4,
-    completionRate: 80,
-    lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-    overdueCount: 0,
-  },
-  {
-    id: 'tm-002',
-    name: 'Marcus Johnson',
-    email: 'marcus.j@acme.com',
-    avatarUrl: undefined,
-    coursesAssigned: 6,
-    coursesCompleted: 6,
-    completionRate: 100,
-    lastActive: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
-    overdueCount: 0,
-  },
-  {
-    id: 'tm-003',
-    name: 'Emily Rodriguez',
-    email: 'emily.r@acme.com',
-    avatarUrl: undefined,
-    coursesAssigned: 4,
-    coursesCompleted: 2,
-    completionRate: 50,
-    lastActive: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-    overdueCount: 2,
-  },
-  {
-    id: 'tm-004',
-    name: 'David Kim',
-    email: 'david.kim@acme.com',
-    avatarUrl: undefined,
-    coursesAssigned: 5,
-    coursesCompleted: 3,
-    completionRate: 60,
-    lastActive: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-    overdueCount: 1,
-  },
-  {
-    id: 'tm-005',
-    name: 'Lisa Thompson',
-    email: 'lisa.t@acme.com',
-    avatarUrl: undefined,
-    coursesAssigned: 3,
-    coursesCompleted: 3,
-    completionRate: 100,
-    lastActive: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-    overdueCount: 0,
-  },
-  {
-    id: 'tm-006',
-    name: 'James Wilson',
-    email: 'james.w@acme.com',
-    avatarUrl: undefined,
-    coursesAssigned: 7,
-    coursesCompleted: 2,
-    completionRate: 29,
-    lastActive: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
-    overdueCount: 3,
-  },
-  {
-    id: 'tm-007',
-    name: 'Amanda Foster',
-    email: 'amanda.f@acme.com',
-    avatarUrl: undefined,
-    coursesAssigned: 4,
-    coursesCompleted: 3,
-    completionRate: 75,
-    lastActive: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
-    overdueCount: 0,
-  },
-  {
-    id: 'tm-008',
-    name: 'Robert Martinez',
-    email: 'robert.m@acme.com',
-    avatarUrl: undefined,
-    coursesAssigned: 5,
-    coursesCompleted: 4,
-    completionRate: 80,
-    lastActive: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-    overdueCount: 2,
-  },
-];
-
-const mockComplianceData: ComplianceStatus[] = [
-  {
-    category: 'Safety Training',
-    required: 47,
-    completed: 45,
-    status: 'compliant',
-    dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-  },
-  {
-    category: 'Data Privacy',
-    required: 47,
-    completed: 38,
-    status: 'at_risk',
-    dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  },
-  {
-    category: 'Harassment Prevention',
-    required: 47,
-    completed: 47,
-    status: 'compliant',
-  },
-  {
-    category: 'Ethics & Compliance',
-    required: 47,
-    completed: 30,
-    status: 'non_compliant',
-    dueDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-  },
-];
-
-const mockDueDates: DueDateItem[] = [
-  {
-    id: 'dd-001',
-    title: 'Complete Ethics Module 3',
-    courseTitle: 'Ethics & Compliance',
-    learnerName: 'James Wilson',
-    learnerId: 'tm-006',
-    dueDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days overdue
-    isOverdue: true,
-  },
-  {
-    id: 'dd-002',
-    title: 'Final Assessment',
-    courseTitle: 'Data Privacy',
-    learnerName: 'Emily Rodriguez',
-    learnerId: 'tm-003',
-    dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day overdue
-    isOverdue: true,
-  },
-  {
-    id: 'dd-003',
-    title: 'Safety Certification Quiz',
-    courseTitle: 'Safety Training',
-    learnerName: 'David Kim',
-    learnerId: 'tm-004',
-    dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // Due tomorrow
-    isOverdue: false,
-  },
-  {
-    id: 'dd-004',
-    title: 'Privacy Policy Acknowledgment',
-    courseTitle: 'Data Privacy',
-    learnerName: 'Robert Martinez',
-    learnerId: 'tm-008',
-    dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // Due in 2 days
-    isOverdue: false,
-  },
-  {
-    id: 'dd-005',
-    title: 'Annual Compliance Review',
-    courseTitle: 'Ethics & Compliance',
-    learnerName: 'Amanda Foster',
-    learnerId: 'tm-007',
-    dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // Due in 5 days
-    isOverdue: false,
-  },
-  {
-    id: 'dd-006',
-    title: 'Safety Refresher Course',
-    courseTitle: 'Safety Training',
-    learnerName: 'Lisa Thompson',
-    learnerId: 'tm-005',
-    dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // Due in 14 days
-    isOverdue: false,
-  },
-];
 
 // =============================================================================
 // QUICK ACTIONS
@@ -240,6 +86,42 @@ function QuickAction({ href, icon: Icon, label, description }: QuickActionProps)
 }
 
 // =============================================================================
+// LOADING STATE
+// =============================================================================
+
+function LoadingState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-16">
+      <Loader2
+        className="w-8 h-8 animate-spin text-[var(--color-lxd-primary)]"
+        aria-hidden="true"
+      />
+      <p className="text-muted-foreground mt-4">Loading manager dashboard...</p>
+    </div>
+  );
+}
+
+// =============================================================================
+// ERROR STATE
+// =============================================================================
+
+function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 text-center">
+      <div className="w-16 h-16 rounded-full bg-[var(--color-lxd-error)]/10 flex items-center justify-center mb-4">
+        <AlertCircle className="w-8 h-8 text-[var(--color-lxd-error)]" aria-hidden="true" />
+      </div>
+      <h3 className="text-lg font-semibold text-foreground mb-2">Failed to load dashboard</h3>
+      <p className="text-muted-foreground max-w-sm mb-4">{message}</p>
+      <Button type="button" onClick={onRetry} variant="outline">
+        <RefreshCw className="w-4 h-4 mr-2" aria-hidden="true" />
+        Try Again
+      </Button>
+    </div>
+  );
+}
+
+// =============================================================================
 // PAGE COMPONENT
 // =============================================================================
 
@@ -254,30 +136,122 @@ function QuickAction({ href, icon: Icon, label, description }: QuickActionProps)
  * - Quick actions for common tasks
  */
 export default function ManagerDashboardPage() {
+  // State for dashboard data
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [teamStats, setTeamStats] = useState<TeamStats>(defaultTeamStats);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [complianceData, setComplianceData] = useState<ComplianceStatus[]>([]);
+  const [dueDates, setDueDates] = useState<DueDateItem[]>([]);
+
+  // Fetch dashboard data
+  const fetchDashboard = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const token = await getIdToken();
+      const response = await fetch('/api/ignite/manager/dashboard', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to fetch dashboard data');
+      }
+
+      const data: ManagerDashboardResponse = await response.json();
+
+      // Convert date strings back to Date objects
+      const parsedTeamMembers = data.teamMembers.map((member) => ({
+        ...member,
+        lastActive: new Date(member.lastActive),
+      }));
+
+      const parsedComplianceData = data.complianceData.map((item) => ({
+        ...item,
+        dueDate: item.dueDate ? new Date(item.dueDate) : undefined,
+      }));
+
+      const parsedDueDates = data.dueDates.map((item) => ({
+        ...item,
+        dueDate: new Date(item.dueDate),
+      }));
+
+      setTeamStats(data.teamStats);
+      setTeamMembers(parsedTeamMembers);
+      setComplianceData(parsedComplianceData);
+      setDueDates(parsedDueDates);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Fetch on mount
+  useEffect(() => {
+    fetchDashboard();
+  }, [fetchDashboard]);
+
   const handleExport = () => {
     // TODO(LXD-339): Implement CSV export functionality
     // Export feature placeholder - will trigger CSV download when implemented
   };
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Manager Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Team oversight and compliance tracking</p>
+        </div>
+        <LoadingState />
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Manager Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Team oversight and compliance tracking</p>
+        </div>
+        <ErrorState message={error} onRetry={fetchDashboard} />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Manager Dashboard</h1>
-        <p className="text-muted-foreground mt-1">Team oversight and compliance tracking</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Manager Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Team oversight and compliance tracking</p>
+        </div>
+        <Button type="button" variant="outline" size="sm" onClick={fetchDashboard}>
+          <RefreshCw className="w-4 h-4 mr-2" aria-hidden="true" />
+          Refresh
+        </Button>
       </div>
 
       {/* Team Stats Overview */}
-      <TeamStatsCard stats={mockTeamStats} />
+      <TeamStatsCard stats={teamStats} />
 
       {/* Compliance & Due Dates Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ComplianceWidget complianceData={mockComplianceData} />
-        <DueDatesList dueDates={mockDueDates} />
+        <ComplianceWidget complianceData={complianceData} />
+        <DueDatesList dueDates={dueDates} />
       </div>
 
       {/* Team Progress Table */}
-      <TeamProgressTable members={mockTeamMembers} onExport={handleExport} />
+      <TeamProgressTable members={teamMembers} onExport={handleExport} />
 
       {/* Quick Actions */}
       <Card className="bg-card/60 backdrop-blur-sm">
