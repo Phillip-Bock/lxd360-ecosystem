@@ -414,9 +414,11 @@ export const mockActivities: ActivityItem[] = [
     id: 'activity-2',
     type: 'badge_earned',
     title: 'Earned "Week Warrior" badge',
-    badgeId: 'badge-week-streak',
     timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-    xpEarned: 75,
+    metadata: {
+      badgeName: 'Week Warrior',
+      xpEarned: 75,
+    },
   },
   {
     id: 'activity-3',
@@ -430,9 +432,10 @@ export const mockActivities: ActivityItem[] = [
     id: 'activity-4',
     type: 'skill_improved',
     title: 'Leadership skill improved to Level 3',
-    skillName: 'Leadership',
-    skillLevel: 3,
     timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+    metadata: {
+      skillName: 'Leadership',
+    },
   },
   {
     id: 'activity-5',
@@ -441,6 +444,8 @@ export const mockActivities: ActivityItem[] = [
     courseId: 'course-time-management',
     courseTitle: 'Time Management Mastery',
     timestamp: new Date('2026-01-05'),
-    xpEarned: 320,
+    metadata: {
+      xpEarned: 320,
+    },
   },
 ];

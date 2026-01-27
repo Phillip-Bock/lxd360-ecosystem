@@ -3,12 +3,35 @@ import { adminAuth, adminDb } from '@/lib/firebase/admin';
 import { logger } from '@/lib/logger';
 import type {
   CompletedCourseRecord,
+  LearnerBadge,
   LearnerCourse,
   LearnerProgressSummary,
   RecommendedCourse,
 } from '@/types/lms/learner-dashboard';
 
 const log = logger.child({ module: 'api-learner-dashboard' });
+
+/** Activity item type for recent activity feed */
+interface ActivityItem {
+  id: string;
+  type:
+    | 'course_started'
+    | 'lesson_completed'
+    | 'course_completed'
+    | 'badge_earned'
+    | 'skill_improved';
+  title: string;
+  courseId?: string;
+  courseTitle?: string;
+  timestamp: Date;
+  metadata?: {
+    score?: number;
+    progress?: number;
+    xpEarned?: number;
+    skillName?: string;
+    badgeName?: string;
+  };
+}
 
 /** Response shape for learner dashboard */
 interface LearnerDashboardResponse {
@@ -17,6 +40,8 @@ interface LearnerDashboardResponse {
   assignedCourses: LearnerCourse[];
   recommendedCourses: RecommendedCourse[];
   completedCourses: CompletedCourseRecord[];
+  badges: LearnerBadge[];
+  recentActivity: ActivityItem[];
 }
 
 /** Firestore enrollment document shape */
@@ -45,11 +70,22 @@ interface CourseDoc {
   isRequired?: boolean;
 }
 
+/** Firestore badge document shape */
+interface BadgeDoc {
+  name: string;
+  description: string;
+  icon: string;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  earnedAt: { toDate: () => Date };
+  courseId?: string;
+  xpReward: number;
+}
+
 /**
  * GET /api/ignite/learner/dashboard
  *
  * Fetch dashboard data for the authenticated learner.
- * Returns enrollments, progress summary, and course data.
+ * Returns enrollments, progress summary, course data, badges, and recent activity.
  */
 export async function GET(
   req: Request,
@@ -117,10 +153,11 @@ export async function GET(
     const inProgressCourses: LearnerCourse[] = [];
     const assignedCourses: LearnerCourse[] = [];
     const completedCourses: CompletedCourseRecord[] = [];
+    const recentActivity: ActivityItem[] = [];
     let totalTimeSpent = 0;
     let totalXp = 0;
 
-    for (const { data } of enrollments) {
+    for (const { id: enrollmentId, data } of enrollments) {
       const course = courseMap.get(data.courseId);
       if (!course) continue;
 
@@ -143,11 +180,12 @@ export async function GET(
 
       // Categorize by status
       if (data.status === 'completed') {
+        const completedAt = data.completedAt?.toDate();
         const completed: CompletedCourseRecord = {
           ...baseCourse,
           status: 'completed',
           progress: 100,
-          completedAt: data.completedAt?.toDate(),
+          completedAt,
           finalScore: data.score,
           badgesEarned: [],
           xpEarned: course.xpReward || 100,
@@ -156,6 +194,22 @@ export async function GET(
         completedCourses.push(completed);
         totalXp += completed.xpEarned;
         totalTimeSpent += completed.timeSpent;
+
+        // Add to recent activity
+        if (completedAt) {
+          recentActivity.push({
+            id: `activity-completed-${enrollmentId}`,
+            type: 'course_completed',
+            title: `Completed "${course.title}"`,
+            courseId: data.courseId,
+            courseTitle: course.title,
+            timestamp: completedAt,
+            metadata: {
+              score: data.score,
+              xpEarned: course.xpReward || 100,
+            },
+          });
+        }
       } else if (data.status === 'in_progress' || data.progress > 0) {
         inProgressCourses.push({
           ...baseCourse,
@@ -165,6 +219,19 @@ export async function GET(
         totalTimeSpent += Math.round(
           ((data.progress || 0) / 100) * (course.estimatedMinutes || 60),
         );
+
+        // Add started activity if we have a startedAt date
+        const startedAt = data.startedAt?.toDate();
+        if (startedAt) {
+          recentActivity.push({
+            id: `activity-started-${enrollmentId}`,
+            type: 'course_started',
+            title: `Started "${course.title}"`,
+            courseId: data.courseId,
+            courseTitle: course.title,
+            timestamp: startedAt,
+          });
+        }
       } else if (
         data.status === 'enrolled' ||
         data.status === 'assigned' ||
@@ -199,7 +266,65 @@ export async function GET(
       return bTime - aTime;
     });
 
-    // 8. Calculate progress summary
+    // 8. Fetch learner's badges
+    const badges: LearnerBadge[] = [];
+    try {
+      const badgesSnapshot = await adminDb
+        .collection('tenants')
+        .doc(tenantId)
+        .collection('learner_badges')
+        .where('learnerId', '==', userId)
+        .orderBy('earnedAt', 'desc')
+        .limit(20)
+        .get();
+
+      for (const doc of badgesSnapshot.docs) {
+        const data = doc.data() as BadgeDoc;
+        const earnedAt = data.earnedAt?.toDate();
+        if (earnedAt) {
+          badges.push({
+            id: doc.id,
+            name: data.name,
+            description: data.description,
+            icon: data.icon,
+            rarity: data.rarity,
+            earnedAt,
+            courseId: data.courseId,
+            xpReward: data.xpReward || 50,
+          });
+
+          // Add badge to recent activity
+          recentActivity.push({
+            id: `activity-badge-${doc.id}`,
+            type: 'badge_earned',
+            title: `Earned "${data.name}" badge`,
+            timestamp: earnedAt,
+            metadata: {
+              badgeName: data.name,
+              xpEarned: data.xpReward || 50,
+            },
+          });
+
+          // Add badge XP to total
+          totalXp += data.xpReward || 50;
+        }
+      }
+    } catch (badgeError) {
+      // Badges collection might not exist yet, log and continue
+      log.warn('Failed to fetch badges, continuing without them', { error: badgeError });
+    }
+
+    // 9. Sort recent activity by timestamp (most recent first)
+    recentActivity.sort((a, b) => {
+      const aTime = a.timestamp.getTime();
+      const bTime = b.timestamp.getTime();
+      return bTime - aTime;
+    });
+
+    // Limit to most recent 10 activities
+    const limitedActivity = recentActivity.slice(0, 10);
+
+    // 10. Calculate progress summary
     const totalCourses =
       inProgressCourses.length + assignedCourses.length + completedCourses.length;
     const overallProgress =
@@ -216,7 +341,7 @@ export async function GET(
       level: Math.floor(totalXp / 1000) + 1,
     };
 
-    // 9. Generate recommendations (placeholder - in production would use ML)
+    // 11. Generate recommendations (placeholder - in production would use ML)
     const recommendedCourses: RecommendedCourse[] = [];
     // Recommendations would be fetched from a separate service/collection
 
@@ -226,6 +351,8 @@ export async function GET(
       inProgress: inProgressCourses.length,
       assigned: assignedCourses.length,
       completed: completedCourses.length,
+      badges: badges.length,
+      activities: limitedActivity.length,
     });
 
     return NextResponse.json({
@@ -234,6 +361,8 @@ export async function GET(
       assignedCourses,
       recommendedCourses,
       completedCourses,
+      badges,
+      recentActivity: limitedActivity,
     });
   } catch (error: unknown) {
     log.error('Failed to fetch learner dashboard', error);
