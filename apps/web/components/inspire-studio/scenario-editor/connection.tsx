@@ -80,14 +80,14 @@ export const Connection = memo(function Connection({
       <path
         d={path}
         fill="none"
-        stroke={isSelected ? '#3b82f6' : color}
+        stroke={isSelected ? 'var(--info)' : color}
         strokeWidth={isSelected ? 3 : 2}
         strokeLinecap="round"
         className={cn('transition-all', isSelected && 'filter drop-shadow-md')}
       />
 
       {/* Arrow marker at end */}
-      <circle cx={end.x} cy={end.y} r={4} fill={isSelected ? '#3b82f6' : color} />
+      <circle cx={end.x} cy={end.y} r={4} fill={isSelected ? 'var(--info)' : color} />
 
       {/* Label (if provided) */}
       {label && (
@@ -99,7 +99,7 @@ export const Connection = memo(function Connection({
             height={20}
             rx={4}
             fill="white"
-            stroke={isSelected ? '#3b82f6' : '#e5e7eb'}
+            stroke={isSelected ? 'var(--info)' : '#e5e7eb'}
             strokeWidth={1}
           />
           <text
@@ -107,7 +107,7 @@ export const Connection = memo(function Connection({
             y={5}
             textAnchor="middle"
             fontSize={10}
-            fill={isSelected ? '#3b82f6' : '#4b5563'}
+            fill={isSelected ? 'var(--info)' : '#4b5563'}
             className="select-none pointer-events-none"
           >
             {label.length > 10 ? `${label.slice(0, 10)}...` : label}
@@ -135,7 +135,7 @@ export const Connection = memo(function Connection({
           aria-label="Delete connection"
           style={{ cursor: 'pointer' }}
         >
-          <circle r={10} fill="#ef4444" className="hover:fill-red-600 transition-colors" />
+          <circle r={10} fill="var(--error)" className="hover:fill-red-600 transition-colors" />
           <line
             x1={-4}
             y1={-4}
@@ -173,7 +173,7 @@ export function TempConnection({ start, end }: TempConnectionProps): React.JSX.E
     <path
       d={path}
       fill="none"
-      stroke="#3b82f6"
+      stroke="var(--info)"
       strokeWidth={2}
       strokeDasharray="5,5"
       strokeLinecap="round"

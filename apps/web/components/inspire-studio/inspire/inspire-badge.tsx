@@ -7,12 +7,12 @@ import type { INSPIREStage } from '@/types/inspire-studio';
 // Stage icon mapping
 const STAGE_CONFIG = {
   ignite: { icon: Flame, color: '#f97316', letter: 'I', name: 'Ignite' },
-  navigate: { icon: Compass, color: '#3b82f6', letter: 'N', name: 'Navigate' },
+  navigate: { icon: Compass, color: 'var(--info)', letter: 'N', name: 'Navigate' },
   scaffold: { icon: Layers, color: '#a855f7', letter: 'S', name: 'Scaffold' },
-  practice: { icon: Target, color: '#22c55e', letter: 'P', name: 'Practice' },
+  practice: { icon: Target, color: 'var(--success)', letter: 'P', name: 'Practice' },
   integrate: { icon: Puzzle, color: '#06b6d4', letter: 'I', name: 'Integrate' },
   reflect: { icon: Eye, color: '#ec4899', letter: 'R', name: 'Reflect' },
-  extend: { icon: Rocket, color: '#f59e0b', letter: 'E', name: 'Extend' },
+  extend: { icon: Rocket, color: 'var(--warning)', letter: 'E', name: 'Extend' },
 };
 
 interface INSPIREBadgeProps {

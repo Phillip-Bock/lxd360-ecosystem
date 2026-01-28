@@ -126,12 +126,12 @@ function SortableBlock({
 
   const phaseColors: Record<string, string> = {
     ignite: '#f97316',
-    navigate: '#3b82f6',
+    navigate: 'var(--info)',
     scaffold: '#a855f7',
-    practice: '#22c55e',
+    practice: 'var(--success)',
     integrate: '#06b6d4',
     reflect: '#ec4899',
-    extend: '#f59e0b',
+    extend: 'var(--warning)',
   };
 
   const phaseColor = phaseColors[block.inspire.phase] || '#888';

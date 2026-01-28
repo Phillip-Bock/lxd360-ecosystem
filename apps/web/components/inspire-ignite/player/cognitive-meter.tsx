@@ -135,12 +135,12 @@ export function CognitiveMeter({
             width: `${animatedCLI}%`,
             backgroundColor:
               cognitiveLoadLevel === 'low'
-                ? '#3b82f6'
+                ? 'var(--info)'
                 : cognitiveLoadLevel === 'optimal'
-                  ? '#22c55e'
+                  ? 'var(--success)'
                   : cognitiveLoadLevel === 'high'
-                    ? '#f59e0b'
-                    : '#ef4444',
+                    ? 'var(--warning)'
+                    : 'var(--error)',
           }}
         />
       </div>

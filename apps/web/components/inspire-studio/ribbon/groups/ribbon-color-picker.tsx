@@ -25,7 +25,16 @@ interface RibbonColorPickerProps {
 
 const PRESET_COLORS = [
   // Row 1 - Theme colors
-  ['#ffffff', '#000000', '#0056B8', '#479DFF', '#BA23FB', '#22c55e', '#f59e0b', '#ef4444'],
+  [
+    '#ffffff',
+    '#000000',
+    '#0056B8',
+    '#479DFF',
+    '#BA23FB',
+    'var(--success)',
+    'var(--warning)',
+    'var(--error)',
+  ],
   // Row 2 - Light variants
   ['#f8fafc', '#374151', '#004494', '#7eb8ff', '#d580ff', '#4ade80', '#fbbf24', '#f87171'],
   // Row 3 - Dark variants

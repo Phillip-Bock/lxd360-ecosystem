@@ -128,7 +128,7 @@ const FrameworkCard = () => {
                 />
               </mask>
               <radialGradient id="framework-blue-grad" fx="1">
-                <stop offset="0%" stopColor={'#3b82f6'} />
+                <stop offset="0%" stopColor={'var(--info)'} />
                 <stop offset="100%" stopColor="transparent" />
               </radialGradient>
             </defs>

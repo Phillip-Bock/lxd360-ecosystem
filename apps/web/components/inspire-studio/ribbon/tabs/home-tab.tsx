@@ -549,7 +549,7 @@ export function HomeTab({
             <INSPIREStageButton
               stage="navigate"
               icon={Compass}
-              color="#3b82f6"
+              color="var(--info)"
               tooltip="Navigate - Set Direction"
               isActive={activeINSPIREStage === 'navigate'}
               onClick={() => {
@@ -571,7 +571,7 @@ export function HomeTab({
             <INSPIREStageButton
               stage="practice"
               icon={Target}
-              color="#22c55e"
+              color="var(--success)"
               tooltip="Practice - Apply Learning"
               isActive={activeINSPIREStage === 'practice'}
               onClick={() => {
@@ -604,7 +604,7 @@ export function HomeTab({
             <INSPIREStageButton
               stage="extend"
               icon={Rocket}
-              color="#f59e0b"
+              color="var(--warning)"
               tooltip="Extend - Transfer Learning"
               isActive={activeINSPIREStage === 'extend'}
               onClick={() => {

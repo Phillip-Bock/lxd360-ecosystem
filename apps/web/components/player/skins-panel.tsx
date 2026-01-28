@@ -215,8 +215,8 @@ export function SkinsPanel({
         <div className="grid grid-cols-2 gap-3 p-4">
           {skins.map((skin) => {
             const isSelected = selectedSkin === skin.id;
-            const bgColor = skin.css_variables['--hud-bg'] || '#030508';
-            const accentColor = skin.css_variables['--hud-accent'] || '#00d4ff';
+            const bgColor = skin.css_variables['--hud-bg'] || 'var(--foreground)';
+            const accentColor = skin.css_variables['--hud-accent'] || 'var(--color-neural-cyan)';
 
             return (
               <button

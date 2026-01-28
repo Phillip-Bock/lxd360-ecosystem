@@ -79,12 +79,12 @@ export function CognitiveLoadMeter({
             width: `${(value / 10) * 100}%`,
             background:
               value <= 3
-                ? 'linear-gradient(90deg, #22c55e, #86efac)'
+                ? 'linear-gradient(90deg, var(--success), #86efac)'
                 : value <= 5
                   ? 'linear-gradient(90deg, #eab308, #fde047)'
                   : value <= 7
                     ? 'linear-gradient(90deg, #f97316, #fdba74)'
-                    : 'linear-gradient(90deg, #ef4444, #fca5a5)',
+                    : 'linear-gradient(90deg, var(--error), #fca5a5)',
           }}
         />
       </div>

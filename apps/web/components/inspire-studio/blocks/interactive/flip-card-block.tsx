@@ -21,9 +21,9 @@ const FLIP_TRIGGERS = [
 const PRESET_COLORS = [
   { front: 'var(--color-studio-accent)', back: 'var(--color-studio-accent-hover)' },
   { front: '#BA23FB', back: 'var(--accent-purple-dark)' },
-  { front: '#22c55e', back: 'var(--success-dark)' },
-  { front: '#f59e0b', back: 'var(--warning-dark)' },
-  { front: '#ef4444', back: 'var(--error-dark)' },
+  { front: 'var(--success)', back: 'var(--success-dark)' },
+  { front: 'var(--warning)', back: 'var(--warning-dark)' },
+  { front: 'var(--error)', back: 'var(--error-dark)' },
   { front: 'var(--color-studio-bg)', back: 'var(--color-studio-surface)' },
 ];
 

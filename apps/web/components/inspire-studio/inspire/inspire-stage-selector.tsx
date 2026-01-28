@@ -39,7 +39,7 @@ const INSPIRE_STAGES = [
     letter: 'N',
     description: 'Provide roadmap, set expectations',
     icon: Compass,
-    color: '#3b82f6',
+    color: 'var(--info)',
     tips: [
       'Clearly state learning objectives',
       'Show the course structure overview',
@@ -67,7 +67,7 @@ const INSPIRE_STAGES = [
     letter: 'P',
     description: 'Active learning, hands-on application',
     icon: Target,
-    color: '#22c55e',
+    color: 'var(--success)',
     tips: [
       'Provide immediate feedback',
       'Include varied practice activities',
@@ -109,7 +109,7 @@ const INSPIRE_STAGES = [
     letter: 'E',
     description: 'Transfer, apply beyond course',
     icon: Rocket,
-    color: '#f59e0b',
+    color: 'var(--warning)',
     tips: [
       'Provide action planning tools',
       'Suggest further resources',

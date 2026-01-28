@@ -224,8 +224,8 @@ const AnimatedBorder = (): React.JSX.Element => (
           transparent 0deg,
           transparent 30deg,
           #06b6d4 90deg,
-          #8b5cf6 180deg,
-          #3b82f6 270deg,
+          var(--color-neural-purple) 180deg,
+          var(--info) 270deg,
           transparent 330deg,
           transparent 360deg
         )`,
@@ -244,7 +244,7 @@ const AnimatedBorder = (): React.JSX.Element => (
           transparent 60deg,
           #a855f7 120deg,
           #06b6d4 180deg,
-          #8b5cf6 240deg,
+          var(--color-neural-purple) 240deg,
           transparent 300deg,
           transparent 360deg
         )`,
@@ -263,7 +263,7 @@ const AnimatedBorder = (): React.JSX.Element => (
           transparent 45deg,
           #06b6d4 135deg,
           #a855f7 180deg,
-          #3b82f6 225deg,
+          var(--info) 225deg,
           transparent 315deg,
           transparent 360deg
         )`,
@@ -296,7 +296,7 @@ const Stat = ({ value, label, delay }: StatProps): React.JSX.Element => (
     <div
       className="text-3xl md:text-4xl font-bold"
       style={{
-        background: 'linear-gradient(135deg, #06b6d4 0%, #a855f7 50%, #3b82f6 100%)',
+        background: 'linear-gradient(135deg, #06b6d4 0%, #a855f7 50%, var(--info) 100%)',
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
         backgroundClip: 'text',
@@ -430,7 +430,7 @@ export const AboutCTASection = ({
               <span
                 className="relative"
                 style={{
-                  background: 'linear-gradient(135deg, #06b6d4 0%, #a855f7 50%, #3b82f6 100%)',
+                  background: 'linear-gradient(135deg, #06b6d4 0%, #a855f7 50%, var(--info) 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',

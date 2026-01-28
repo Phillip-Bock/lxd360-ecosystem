@@ -161,7 +161,8 @@ function Cards({ testimonials, selected }: CardsProps): React.JSX.Element {
       <div
         className="absolute -inset-1 rounded-[10px] opacity-75 blur-sm"
         style={{
-          background: 'linear-gradient(135deg, #8b5cf6, #a855f7, #ec4899, #8b5cf6)',
+          background:
+            'linear-gradient(135deg, var(--color-neural-purple), #a855f7, #ec4899, var(--color-neural-purple))',
           backgroundSize: '300% 300%',
           animation: 'shimmer 4s ease-in-out infinite',
         }}
@@ -190,7 +191,7 @@ function Cards({ testimonials, selected }: CardsProps): React.JSX.Element {
                 style={{
                   background: isBlue
                     ? 'linear-gradient(90deg, #a855f7, #ec4899, #a855f7)'
-                    : 'linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6)',
+                    : 'linear-gradient(90deg, var(--info), var(--color-neural-purple), var(--info))',
                   backgroundSize: '200% 100%',
                   animation: 'shimmer 3s ease-in-out infinite',
                 }}

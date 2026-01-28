@@ -37,31 +37,31 @@ interface ColorPaletteManagerProps {
 // =============================================================================
 
 export const DEFAULT_DARK_PALETTE: ColorPalette = {
-  primary: '#00d4ff',
-  secondary: '#8b5cf6',
-  accent: '#f59e0b',
+  primary: 'var(--color-neural-cyan)',
+  secondary: 'var(--color-neural-purple)',
+  accent: 'var(--warning)',
   background: '#0a0a0f',
   surface: '#1a1a24',
   text: '#ffffff',
   textSecondary: 'rgba(255, 255, 255, 0.6)',
   border: 'rgba(255, 255, 255, 0.1)',
-  success: '#22c55e',
-  warning: '#f59e0b',
-  error: '#ef4444',
+  success: 'var(--success)',
+  warning: 'var(--warning)',
+  error: 'var(--error)',
 };
 
 export const DEFAULT_LIGHT_PALETTE: ColorPalette = {
-  primary: '#0072f5',
+  primary: 'var(--color-lxd-primary)',
   secondary: '#7c3aed',
-  accent: '#f59e0b',
+  accent: 'var(--warning)',
   background: '#ffffff',
   surface: '#f5f5f5',
   text: '#1a1a1a',
   textSecondary: 'rgba(0, 0, 0, 0.6)',
   border: 'rgba(0, 0, 0, 0.1)',
-  success: '#22c55e',
-  warning: '#f59e0b',
-  error: '#ef4444',
+  success: 'var(--success)',
+  warning: 'var(--warning)',
+  error: 'var(--error)',
 };
 
 // =============================================================================

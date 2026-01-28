@@ -32,10 +32,10 @@ const NODE_CONFIG: Record<
     maxInputs: number;
   }
 > = {
-  start: { icon: Play, color: '#22c55e', minOutputs: 1, maxInputs: 0 },
-  end: { icon: Circle, color: '#ef4444', minOutputs: 0, maxInputs: Infinity },
-  content: { icon: Square, color: '#3b82f6', minOutputs: 1, maxInputs: Infinity },
-  decision: { icon: Diamond, color: '#f59e0b', minOutputs: 2, maxInputs: Infinity },
+  start: { icon: Play, color: 'var(--success)', minOutputs: 1, maxInputs: 0 },
+  end: { icon: Circle, color: 'var(--error)', minOutputs: 0, maxInputs: Infinity },
+  content: { icon: Square, color: 'var(--info)', minOutputs: 1, maxInputs: Infinity },
+  decision: { icon: Diamond, color: 'var(--warning)', minOutputs: 2, maxInputs: Infinity },
   dialogue: {
     icon: MessageCircle,
     color: 'var(--color-block-scenario)',

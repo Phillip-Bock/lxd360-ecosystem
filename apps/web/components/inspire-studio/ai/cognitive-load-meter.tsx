@@ -28,7 +28,7 @@ const LOAD_LEVELS = {
   low: {
     range: [0, 40],
     label: 'Low',
-    color: '#22c55e',
+    color: 'var(--success)',
     icon: CheckCircle,
     description: 'Good cognitive headroom - consider adding depth',
     tips: [
@@ -41,7 +41,7 @@ const LOAD_LEVELS = {
   optimal: {
     range: [41, 60],
     label: 'Optimal',
-    color: '#3b82f6',
+    color: 'var(--info)',
     icon: Brain,
     description: 'Perfect balance for effective learning',
     tips: [
@@ -54,7 +54,7 @@ const LOAD_LEVELS = {
   moderate: {
     range: [61, 75],
     label: 'Moderate',
-    color: '#f59e0b',
+    color: 'var(--warning)',
     icon: Info,
     description: 'Approaching cognitive limits - monitor carefully',
     tips: [
@@ -80,7 +80,7 @@ const LOAD_LEVELS = {
   overload: {
     range: [91, 100],
     label: 'Overload',
-    color: '#ef4444',
+    color: 'var(--error)',
     icon: AlertTriangle,
     description: 'Likely to overwhelm - significant changes needed',
     tips: [

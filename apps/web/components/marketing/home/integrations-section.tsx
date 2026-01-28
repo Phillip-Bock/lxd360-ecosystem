@@ -269,7 +269,7 @@ function FloatingOrb({ orb, isZapping }: FloatingOrbProps): React.JSX.Element {
         <div
           className="absolute -inset-1 rounded-full opacity-60 blur-sm"
           style={{
-            background: 'linear-gradient(135deg, #8b5cf6, #a855f7, #3b82f6)',
+            background: 'linear-gradient(135deg, var(--color-neural-purple), #a855f7, var(--info))',
             backgroundSize: '200% 200%',
             animation: 'shimmer 3s ease-in-out infinite',
           }}
@@ -370,7 +370,7 @@ export function IntegrationsSection({
             <defs>
               <linearGradient id="electricGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#a855f7" />
-                <stop offset="50%" stopColor="#8b5cf6" />
+                <stop offset="50%" stopColor="var(--color-neural-purple)" />
                 <stop offset="100%" stopColor="#6366f1" />
               </linearGradient>
               <linearGradient id="electricGlow" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -414,7 +414,8 @@ export function IntegrationsSection({
             <div
               className="absolute -inset-8 rounded-full opacity-40 blur-2xl"
               style={{
-                background: 'radial-gradient(circle, #8b5cf6 0%, #3b82f6 50%, transparent 70%)',
+                background:
+                  'radial-gradient(circle, var(--color-neural-purple) 0%, var(--info) 50%, transparent 70%)',
               }}
             />
 
@@ -432,7 +433,8 @@ export function IntegrationsSection({
               <div
                 className="absolute -inset-2 rounded-full opacity-70 blur-sm"
                 style={{
-                  background: 'linear-gradient(135deg, #8b5cf6, #3b82f6, #8b5cf6)',
+                  background:
+                    'linear-gradient(135deg, var(--color-neural-purple), var(--info), var(--color-neural-purple))',
                   backgroundSize: '200% 200%',
                   animation: 'shimmer 4s ease-in-out infinite',
                 }}

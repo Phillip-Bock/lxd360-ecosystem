@@ -1169,7 +1169,7 @@ export const shellStyles = `
     --inspire-spacing-xl: 2rem;
     
     /* Phase colors (set by data-phase attribute) */
-    --inspire-phase-color: #3B82F6; /* Default blue */
+    --inspire-phase-color: var(--info); /* Default blue */
     
     /* Transition for phase color changes */
     transition: background-color 0.3s ease;

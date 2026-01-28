@@ -52,8 +52,8 @@ const PRESET_THEMES: ThemeConfig[] = [
     name: 'Mission Control',
     palette: {
       ...DEFAULT_DARK_PALETTE,
-      primary: '#00d4ff',
-      secondary: '#8b5cf6',
+      primary: 'var(--color-neural-cyan)',
+      secondary: 'var(--color-neural-purple)',
       background: '#0a0a0f',
       surface: '#1a1a24',
     },
@@ -74,7 +74,7 @@ const PRESET_THEMES: ThemeConfig[] = [
     name: 'Corporate Clean',
     palette: {
       ...DEFAULT_LIGHT_PALETTE,
-      primary: '#0072f5',
+      primary: 'var(--color-lxd-primary)',
       secondary: '#7c3aed',
       background: '#ffffff',
       surface: '#f8fafc',

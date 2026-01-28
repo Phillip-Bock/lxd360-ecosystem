@@ -65,7 +65,7 @@ const VIEW_CONFIG: Record<
   learner: {
     title: 'Mission Control',
     subtitle: 'Your personalized learning command center',
-    color: '#00F0FF',
+    color: 'var(--neural-cyan)',
     icon: '🎓',
     accentClass: 'bg-cyan-500',
   },
@@ -86,7 +86,7 @@ const VIEW_CONFIG: Record<
   admin: {
     title: 'System Control',
     subtitle: 'Platform administration and monitoring',
-    color: '#F59E0B',
+    color: 'var(--warning)',
     icon: '⚡',
     accentClass: 'bg-amber-500',
   },

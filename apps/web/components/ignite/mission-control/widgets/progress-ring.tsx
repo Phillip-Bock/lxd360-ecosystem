@@ -20,11 +20,14 @@ export interface ProgressRingProps {
 }
 
 const colorClasses = {
-  cyan: { stroke: '#00F0FF', glow: 'drop-shadow(0 0 6px #00F0FF)' },
-  purple: { stroke: '#A855F7', glow: 'drop-shadow(0 0 6px #A855F7)' },
-  success: { stroke: '#10B981', glow: 'drop-shadow(0 0 6px #10B981)' },
-  warning: { stroke: '#F59E0B', glow: 'drop-shadow(0 0 6px #F59E0B)' },
-  danger: { stroke: '#EF4444', glow: 'drop-shadow(0 0 6px #EF4444)' },
+  cyan: { stroke: 'var(--neural-cyan)', glow: 'drop-shadow(0 0 6px var(--neural-cyan))' },
+  purple: {
+    stroke: 'var(--color-neural-purple)',
+    glow: 'drop-shadow(0 0 6px var(--color-neural-purple))',
+  },
+  success: { stroke: 'var(--success)', glow: 'drop-shadow(0 0 6px var(--success))' },
+  warning: { stroke: 'var(--warning)', glow: 'drop-shadow(0 0 6px var(--warning))' },
+  danger: { stroke: 'var(--error)', glow: 'drop-shadow(0 0 6px var(--error))' },
 };
 
 /**

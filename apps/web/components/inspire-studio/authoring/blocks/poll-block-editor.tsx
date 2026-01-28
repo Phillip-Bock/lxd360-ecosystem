@@ -51,11 +51,11 @@ export const PollBlockEditor = ({ block, onChange }: PollBlockEditorProps): Reac
 
   const getRandomColor = (): string => {
     const colors = [
-      '#3B82F6',
+      'var(--info)',
       '#10B981',
-      '#F59E0B',
-      '#EF4444',
-      '#8B5CF6',
+      'var(--warning)',
+      'var(--error)',
+      'var(--color-neural-purple)',
       '#EC4899',
       '#06B6D4',
       '#84CC16',
@@ -91,7 +91,7 @@ export const PollBlockEditor = ({ block, onChange }: PollBlockEditorProps): Reac
                     className="h-full rounded-full transition-all"
                     style={{
                       width: `${percentage}%`,
-                      backgroundColor: opt.color || '#3B82F6',
+                      backgroundColor: opt.color || 'var(--info)',
                     }}
                   />
                 </div>
@@ -124,7 +124,7 @@ export const PollBlockEditor = ({ block, onChange }: PollBlockEditorProps): Reac
                       <path
                         key={opt.id}
                         d={`M 50 50 L ${x1} ${y1} A 40 40 0 ${largeArcFlag} 1 ${x2} ${y2} Z`}
-                        fill={opt.color || '#3B82F6'}
+                        fill={opt.color || 'var(--info)'}
                         className="hover:opacity-80 transition-opacity"
                       />,
                     );
@@ -142,7 +142,7 @@ export const PollBlockEditor = ({ block, onChange }: PollBlockEditorProps): Reac
                 <div key={opt.id} className="flex items-center gap-2 text-sm">
                   <div
                     className="w-4 h-4 rounded"
-                    style={{ backgroundColor: opt.color || '#3B82F6' }}
+                    style={{ backgroundColor: opt.color || 'var(--info)' }}
                   />
                   <span>
                     {opt.text || '(Empty)'}: {percentage.toFixed(1)}%
@@ -271,7 +271,7 @@ export const PollBlockEditor = ({ block, onChange }: PollBlockEditorProps): Reac
                       <input
                         id={`option-color-${option.id}`}
                         type="color"
-                        value={option.color || '#3B82F6'}
+                        value={option.color || 'var(--info)'}
                         onChange={(e) => updateOption(option.id, 'color', e.target.value)}
                         className="w-full h-10 border border-brand-strong rounded-lg cursor-pointer"
                       />

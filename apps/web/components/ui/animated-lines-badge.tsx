@@ -22,7 +22,7 @@ function ShimmerText({ children }: { children: React.ReactNode }) {
           #fff 30%,
           #e9d5ff 40%,
           #c084fc 47%,
-          #3b82f6 53%,
+          var(--info) 53%,
           #1e40af 60%,
           #fff 70%,
           #fff 100%
@@ -49,7 +49,7 @@ export function AnimatedLinesBadge({ children, className }: AnimatedLinesBadgePr
   const lineColors = [
     '#0ea5e9', // sky-500
     '#06b6d4', // cyan-500
-    '#3b82f6', // blue-500
+    'var(--info)', // blue-500
     '#0284c7', // sky-600
     '#22d3ee', // cyan-400
   ];

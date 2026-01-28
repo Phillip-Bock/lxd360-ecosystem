@@ -87,10 +87,25 @@ const MAIN_TABS: RibbonTabItem[] = [
 
 // Contextual tabs that appear based on selection
 const CONTEXTUAL_TABS: Record<string, RibbonTabItem> = {
-  image: { id: 'image-tools', label: 'Image Tools', isContextual: true, contextColor: '#22c55e' },
-  video: { id: 'video-tools', label: 'Video Tools', isContextual: true, contextColor: '#3b82f6' },
+  image: {
+    id: 'image-tools',
+    label: 'Image Tools',
+    isContextual: true,
+    contextColor: 'var(--success)',
+  },
+  video: {
+    id: 'video-tools',
+    label: 'Video Tools',
+    isContextual: true,
+    contextColor: 'var(--info)',
+  },
   audio: { id: 'audio-tools', label: 'Audio Tools', isContextual: true, contextColor: '#a855f7' },
-  table: { id: 'table-tools', label: 'Table Tools', isContextual: true, contextColor: '#f59e0b' },
+  table: {
+    id: 'table-tools',
+    label: 'Table Tools',
+    isContextual: true,
+    contextColor: 'var(--warning)',
+  },
   shape: { id: 'shape-tools', label: 'Shape Tools', isContextual: true, contextColor: '#ec4899' },
   quiz: { id: 'quiz-tools', label: 'Quiz Tools', isContextual: true, contextColor: '#06b6d4' },
 };

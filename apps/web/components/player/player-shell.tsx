@@ -359,9 +359,9 @@ export function PlayerShell({
   // ==========================================================================
   const playerStyles = {
     // Layer 1: Designer Theme (base)
-    '--designer-primary': designerTheme?.primaryColor ?? '#0056B8',
-    '--designer-secondary': designerTheme?.secondaryColor ?? '#019EF3',
-    '--designer-accent': designerTheme?.accentColor ?? '#00d4ff',
+    '--designer-primary': designerTheme?.primaryColor ?? 'var(--color-lxd-primary)',
+    '--designer-secondary': designerTheme?.secondaryColor ?? 'var(--color-lxd-secondary)',
+    '--designer-accent': designerTheme?.accentColor ?? 'var(--color-neural-cyan)',
     // Layer 2: Learner Preferences (overlay)
     '--font-scale': accessibilitySettings.fontSizeMultiplier,
     '--color-filter':

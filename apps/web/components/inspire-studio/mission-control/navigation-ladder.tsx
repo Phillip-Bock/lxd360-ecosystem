@@ -50,7 +50,7 @@ const PHASE_CONFIG: Record<
   encoding: {
     name: 'Encoding',
     icon: 'search',
-    colorTheme: { primary: '#1E40AF', secondary: '#3B82F6', accent: '#93C5FD' },
+    colorTheme: { primary: '#1E40AF', secondary: 'var(--info)', accent: '#93C5FD' },
   },
   synthesization: {
     name: 'Synthesization',

@@ -17,7 +17,7 @@ export function ComicText({ children, className, style, fontSize = 5 }: ComicTex
     throw new Error('children must be a string');
   }
 
-  const dotColor = '#EF4444';
+  const dotColor = 'var(--error)';
   const backgroundColor = '#FACC15';
 
   return (

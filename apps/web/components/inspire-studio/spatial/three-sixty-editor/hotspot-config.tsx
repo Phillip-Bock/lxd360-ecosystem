@@ -237,7 +237,7 @@ export function HotspotConfig({
           <Input
             id="hotspot-color"
             type="color"
-            value={hotspot.iconColor ?? '#00CED1'}
+            value={hotspot.iconColor ?? 'var(--lxd-cyan)'}
             onChange={(e) => handleChange('iconColor', e.target.value)}
             className="h-8 w-12 p-1 cursor-pointer"
           />

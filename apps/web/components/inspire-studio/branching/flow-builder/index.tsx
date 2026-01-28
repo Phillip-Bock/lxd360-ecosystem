@@ -92,7 +92,7 @@ export function FlowBuilder({ className, readOnly = false }: FlowBuilderProps) {
     animated: edge.type === 'true_path' || edge.type === 'false_path',
     style: getEdgeStyle(edge.type),
     labelStyle: { fill: '#fff', fontWeight: 500 },
-    labelBgStyle: { fill: '#1a1a2e', fillOpacity: 0.9 },
+    labelBgStyle: { fill: 'var(--studio-surface)', fillOpacity: 0.9 },
     labelBgPadding: [8, 4] as [number, number],
     labelBgBorderRadius: 4,
   }));
@@ -251,11 +251,11 @@ export function FlowBuilder({ className, readOnly = false }: FlowBuilderProps) {
 function getEdgeStyle(type?: string): React.CSSProperties {
   switch (type) {
     case 'true_path':
-      return { stroke: '#22c55e', strokeWidth: 2 };
+      return { stroke: 'var(--success)', strokeWidth: 2 };
     case 'false_path':
-      return { stroke: '#ef4444', strokeWidth: 2 };
+      return { stroke: 'var(--error)', strokeWidth: 2 };
     case 'choice':
-      return { stroke: '#00ced1', strokeWidth: 2 };
+      return { stroke: 'var(--lxd-cyan)', strokeWidth: 2 };
     default:
       return { stroke: '#666', strokeWidth: 1.5 };
   }
@@ -264,15 +264,15 @@ function getEdgeStyle(type?: string): React.CSSProperties {
 function getNodeColor(type: ScenarioNodeType): string {
   switch (type) {
     case 'start':
-      return '#22c55e';
+      return 'var(--success)';
     case 'dialogue':
-      return '#3b82f6';
+      return 'var(--info)';
     case 'action':
       return '#f97316';
     case 'logic_gate':
-      return '#8b5cf6';
+      return 'var(--color-neural-purple)';
     case 'end_state':
-      return '#ef4444';
+      return 'var(--error)';
     default:
       return '#666';
   }

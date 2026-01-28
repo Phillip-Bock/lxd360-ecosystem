@@ -48,9 +48,9 @@ const PRESET_BACKGROUNDS = [
   { label: 'Light Dark', value: 'var(--color-studio-surface)' },
   { label: 'Primary', value: 'var(--color-studio-accent)' },
   { label: 'Accent', value: '#BA23FB' },
-  { label: 'Success', value: '#22c55e' },
-  { label: 'Warning', value: '#f59e0b' },
-  { label: 'Danger', value: '#ef4444' },
+  { label: 'Success', value: 'var(--success)' },
+  { label: 'Warning', value: 'var(--warning)' },
+  { label: 'Danger', value: 'var(--error)' },
   {
     label: 'Gradient 1',
     value: 'linear-gradient(135deg, #BA23FB 0%, var(--color-studio-accent) 100%)',
@@ -59,7 +59,7 @@ const PRESET_BACKGROUNDS = [
     label: 'Gradient 2',
     value: 'linear-gradient(135deg, var(--color-studio-bg) 0%, var(--color-studio-surface) 100%)',
   },
-  { label: 'Gradient 3', value: 'linear-gradient(135deg, #22c55e 0%, #06b6d4 100%)' },
+  { label: 'Gradient 3', value: 'linear-gradient(135deg, var(--success) 0%, #06b6d4 100%)' },
 ];
 
 /**
