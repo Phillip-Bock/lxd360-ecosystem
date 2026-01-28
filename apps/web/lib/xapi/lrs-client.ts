@@ -13,6 +13,8 @@
  */
 
 import { v4 as generateUUID } from 'uuid';
+
+import { consentStorage } from '@/lib/utils/consent-storage';
 import type {
   BatchSendResult,
   ExternalTrackingConfig,
@@ -589,29 +591,27 @@ export class ExternalLRSClient implements ILRSClient {
   }
 
   private saveOfflineQueue(): void {
-    if (!this.queueConfig.offlineStorage || typeof localStorage === 'undefined') {
+    if (!this.queueConfig.offlineStorage || typeof window === 'undefined') {
       return;
     }
 
-    try {
-      localStorage.setItem('xapi_queue', JSON.stringify(this.queue));
-    } catch {
-      // localStorage full or unavailable
-    }
+    // GDPR: Only persist if user has granted storage consent
+    consentStorage.setItem('xapi_queue', JSON.stringify(this.queue));
   }
 
   private loadOfflineQueue(): void {
-    if (!this.queueConfig.offlineStorage || typeof localStorage === 'undefined') {
+    if (!this.queueConfig.offlineStorage || typeof window === 'undefined') {
       return;
     }
 
-    try {
-      const saved = localStorage.getItem('xapi_queue');
-      if (saved) {
+    // GDPR: Only load if user has granted storage consent
+    const saved = consentStorage.getItem('xapi_queue');
+    if (saved) {
+      try {
         this.queue = JSON.parse(saved);
+      } catch {
+        this.queue = [];
       }
-    } catch {
-      this.queue = [];
     }
   }
 
@@ -884,23 +884,23 @@ export function queueStatement(
 }
 
 // Helper for local queue when no client exists
+// GDPR: Uses consent-gated storage
 function getLocalQueue(): QueuedStatement[] {
-  if (typeof localStorage === 'undefined') return [];
+  if (typeof window === 'undefined') return [];
+
+  const saved = consentStorage.getItem('xapi_queue');
+  if (!saved) return [];
 
   try {
-    const saved = localStorage.getItem('xapi_queue');
-    return saved ? JSON.parse(saved) : [];
+    return JSON.parse(saved);
   } catch {
     return [];
   }
 }
 
 function saveLocalQueue(queue: QueuedStatement[]): void {
-  if (typeof localStorage === 'undefined') return;
+  if (typeof window === 'undefined') return;
 
-  try {
-    localStorage.setItem('xapi_queue', JSON.stringify(queue));
-  } catch {
-    // Silently fail
-  }
+  // GDPR: Only persist if user has granted storage consent
+  consentStorage.setItem('xapi_queue', JSON.stringify(queue));
 }
