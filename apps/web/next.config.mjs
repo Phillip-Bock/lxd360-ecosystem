@@ -47,7 +47,9 @@ const baseConfig = {
     },
   },
 
-  output: 'standalone',
+  // Only enable standalone output for Cloud Run builds (Linux)
+  // Windows has symlink permission issues with standalone mode
+  output: process.env.NEXT_PUBLIC_CLOUD_RUN === 'true' ? 'standalone' : undefined,
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
