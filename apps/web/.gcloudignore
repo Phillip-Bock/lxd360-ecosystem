@@ -1,0 +1,59 @@
+# =============================================================================
+# Cloud Run Deployment - Ignore File
+# =============================================================================
+# Files and directories to exclude from Cloud Build upload
+# =============================================================================
+
+# Git
+.git
+.gitignore
+
+# Dependencies (rebuilt in container)
+node_modules
+**/node_modules
+
+# Build outputs (rebuilt in container)
+.next
+**/.next
+.turbo
+**/.turbo
+out
+dist
+
+# Development files
+.env.local
+.env.development
+.env.test
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+__tests__
+coverage
+.nyc_output
+
+# Documentation
+docs
+*.md
+!README.md
+
+# Scripts (not needed in production)
+scripts
+
+# Misc
+.dockerignore
+Thumbs.db
+*.pem
