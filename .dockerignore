@@ -1,0 +1,76 @@
+# Dependencies
+node_modules
+**/node_modules
+
+# Build outputs (we build fresh)
+.next
+**/.next
+out
+**/out
+dist
+**/dist
+build
+**/build
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test
+coverage
+.nyc_output
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+tests
+__tests__
+
+# Documentation
+docs
+*.md
+!README.md
+
+# Development
+.env.local
+.env.development
+.env.test
+local-test-creds.json
+
+# Terraform/Infra
+terraform
+infrastructure
+.terraform
+
+# CI/CD config (not needed in image)
+.github
+.husky
+.trunk
+
+# Misc
+*.tsbuildinfo
+.turbo
+.claude
+.context
+scripts
+sql
+playwright.config.ts
+vitest.config.mts
+biome.json
