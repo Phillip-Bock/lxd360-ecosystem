@@ -1,2 +1,2 @@
-export { FAQAccordion } from './FAQAccordion';
-export { InteractiveImage } from './InteractiveImage';
+export { FAQAccordion } from './faq-accordion';
+export { InteractiveImage } from './interactive-image';

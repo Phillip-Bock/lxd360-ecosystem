@@ -4,4 +4,4 @@
  * =============================================================================
  */
 
-export { RealtimeChart } from './RealtimeChart';
+export { RealtimeChart } from './realtime-chart';

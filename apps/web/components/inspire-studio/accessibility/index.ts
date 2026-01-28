@@ -2,10 +2,10 @@
 export {
   AccessibilityChecker,
   default as AccessibilityCheckerDefault,
-} from './AccessibilityChecker';
-export { AccessibilityMarkers } from './AccessibilityMarkers';
+} from './accessibility-checker';
+export { AccessibilityMarkers } from './accessibility-markers';
 // Sub-components
-export { AccessibilityPanel } from './AccessibilityPanel';
+export { AccessibilityPanel } from './accessibility-panel';
 // Utilities
 export {
   downloadEARLReport,

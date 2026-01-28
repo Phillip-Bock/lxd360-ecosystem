@@ -1,11 +1,11 @@
-// ScenarioEditor Module Exports
+// scenario-editor Module Exports
 
-export { Connection, TempConnection } from './Connection';
-export { NodeEditModal } from './NodeEditModal';
-export { ScenarioCanvas } from './ScenarioCanvas';
-export { ScenarioEditor } from './ScenarioEditor';
-export { ScenarioNode } from './ScenarioNode';
-export { ScenarioPreview } from './ScenarioPreview';
+export { Connection, TempConnection } from './connection';
+export { NodeEditModal } from './node-edit-modal';
+export { ScenarioCanvas } from './scenario-canvas';
+export { ScenarioEditor } from './scenario-editor';
+export { ScenarioNode } from './scenario-node';
+export { ScenarioPreview } from './scenario-preview';
 
 export type {
   CanvasState,

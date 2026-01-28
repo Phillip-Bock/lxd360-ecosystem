@@ -1,10 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
-import type { BlockStyleConfig } from '@/components/inspire-studio/design/BlockStylePresets';
-import type { ColorPalette } from '@/components/inspire-studio/design/ColorPaletteManager';
-import type { ThemeConfig } from '@/components/inspire-studio/design/ThemePreviewCard';
-import type { TypographyConfig } from '@/components/inspire-studio/design/TypographyManager';
+import type { BlockStyleConfig } from '@/components/inspire-studio/design/block-style-presets';
+import type { ColorPalette } from '@/components/inspire-studio/design/color-palette-manager';
+import type { ThemeConfig } from '@/components/inspire-studio/design/theme-preview-card';
+import type { TypographyConfig } from '@/components/inspire-studio/design/typography-manager';
 
 // =============================================================================
 // Types

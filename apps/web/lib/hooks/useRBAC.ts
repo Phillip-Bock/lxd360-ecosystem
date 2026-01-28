@@ -130,7 +130,7 @@ export function useRBAC(): RBACContext {
   }, [user]);
 
   return useMemo(() => {
-    const loading = authLoading || claimsLoading;
+    const isLoading = authLoading || claimsLoading;
 
     // Get persona from claims (defaults to 'learner' for safety)
     const persona: Persona = claims ? getPersonaFromClaims(claims) : 'learner';
@@ -170,7 +170,7 @@ export function useRBAC(): RBACContext {
     return {
       persona,
       level,
-      loading,
+      loading: isLoading,
       hasLevel,
       getRouteAccess,
       currentRouteAccess,

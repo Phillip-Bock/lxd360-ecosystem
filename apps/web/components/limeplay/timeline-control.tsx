@@ -27,7 +27,7 @@ export const Root = React.forwardRef<
   const currentValue = duration ? (currentTime / duration) * 100 : 0;
   const readyState = useMediaStore((s) => s.readyState);
 
-  const disabled = props.disabled || readyState < MediaReadyState.HAVE_METADATA;
+  const isDisabled = props.disabled || readyState < MediaReadyState.HAVE_METADATA;
 
   useImperativeHandle(ref, () => internalRef.current);
   const { getTimeFromEvent, seek, setHoveringTime, setIsHovering } = useTimeline();
@@ -84,7 +84,7 @@ export const Root = React.forwardRef<
       value={[currentValue]}
       {...trackEvents}
       {...etc}
-      disabled={disabled}
+      disabled={isDisabled}
     />
   );
 });

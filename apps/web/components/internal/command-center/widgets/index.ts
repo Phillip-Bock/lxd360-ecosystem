@@ -4,7 +4,7 @@
  * =============================================================================
  */
 
-export { type AIInsight, AIInsightsWidget } from './AIInsightsWidget';
-export { type Alert, AlertsWidget } from './AlertsWidget';
-export { SystemHealthWidget } from './SystemHealthWidget';
-export { type CourseData, TopCoursesWidget } from './TopCoursesWidget';
+export { type AIInsight, AIInsightsWidget } from './ai-insights-widget';
+export { type Alert, AlertsWidget } from './alerts-widget';
+export { SystemHealthWidget } from './system-health-widget';
+export { type CourseData, TopCoursesWidget } from './top-courses-widget';

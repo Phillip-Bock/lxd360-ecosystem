@@ -76,28 +76,28 @@ export {
 // Flow Builder Components
 // =============================================================================
 
-export { default as FlowBuilderComponent, FlowBuilder } from './FlowBuilder';
-export { NodeToolbox } from './FlowBuilder/NodeToolbox';
+export { default as FlowBuilderComponent, FlowBuilder } from './flow-builder';
+export { NodeToolbox } from './flow-builder/node-toolbox';
 
 // =============================================================================
 // Node Components
 // =============================================================================
 
-export { ActionNode } from './nodes/ActionNode';
-export { BaseScenarioNode, HandleDot, NodeTypeBadge } from './nodes/BaseScenarioNode';
-export { DialogueNode } from './nodes/DialogueNode';
-export { EndStateNode } from './nodes/EndStateNode';
-export { LogicGateNode } from './nodes/LogicGateNode';
-export { StartNode } from './nodes/StartNode';
+export { ActionNode } from './nodes/action-node';
+export { BaseScenarioNode, HandleDot, NodeTypeBadge } from './nodes/base-scenario-node';
+export { DialogueNode } from './nodes/dialogue-node';
+export { EndStateNode } from './nodes/end-state-node';
+export { LogicGateNode } from './nodes/logic-gate-node';
+export { StartNode } from './nodes/start-node';
 
 // =============================================================================
 // Variable Manager Components
 // =============================================================================
 
-export { VariableManager } from './VariableManager';
-export { ConditionBuilder } from './VariableManager/ConditionBuilder';
-export { VariableDebugger } from './VariableManager/VariableDebugger';
-export { VariableEditor } from './VariableManager/VariableEditor';
+export { VariableManager } from './variable-manager';
+export { ConditionBuilder } from './variable-manager/condition-builder';
+export { VariableDebugger } from './variable-manager/variable-debugger';
+export { VariableEditor } from './variable-manager/variable-editor';
 
 // =============================================================================
 // Dead End Validator Components
@@ -107,17 +107,17 @@ export {
   analyzeScenarioPaths,
   DeadEndValidator,
   TrapDetector,
-} from './DeadEndValidator';
-export { getScenarioOutcomes, isDeadEnd } from './DeadEndValidator/PathAnalyzer';
+} from './dead-end-validator';
+export { getScenarioOutcomes, isDeadEnd } from './dead-end-validator/path-analyzer';
 
 // =============================================================================
 // Scenario Player Components
 // =============================================================================
 
-export { ScenarioPlayer } from './ScenarioPlayer';
-export { ChoicePresenter } from './ScenarioPlayer/ChoicePresenter';
-export { OutcomeTracker } from './ScenarioPlayer/OutcomeTracker';
-export { StateEngine } from './ScenarioPlayer/StateEngine';
+export { ScenarioPlayer } from './scenario-player';
+export { ChoicePresenter } from './scenario-player/choice-presenter';
+export { OutcomeTracker } from './scenario-player/outcome-tracker';
+export { StateEngine } from './scenario-player/state-engine';
 
 // =============================================================================
 // Hooks

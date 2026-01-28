@@ -1,3 +1,3 @@
-export { ReferencesBlock } from './ReferencesBlock';
-export { StatisticsDisplay } from './StatisticsDisplay';
-export { TestimonialBlock } from './TestimonialBlock';
+export { ReferencesBlock } from './references-block';
+export { StatisticsDisplay } from './statistics-display';
+export { TestimonialBlock } from './testimonial-block';

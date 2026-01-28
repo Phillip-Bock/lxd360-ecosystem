@@ -1,2 +1,2 @@
-export { ComparisonTable } from './ComparisonTable';
-export { SortableTable } from './SortableTable';
+export { ComparisonTable } from './comparison-table';
+export { SortableTable } from './sortable-table';

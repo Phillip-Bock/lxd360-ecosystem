@@ -10,11 +10,11 @@
  * @updated 2026-01-26
  */
 
-export { AudioPlayer, type AudioPlayerProps } from './AudioPlayer';
-export { PlayerControls, type PlayerControlsProps } from './PlayerControls';
-export { type ChapterMarker, ProgressBar, type ProgressBarProps } from './ProgressBar';
-export { SpeedControl, type SpeedControlProps } from './SpeedControl';
-export { TranscriptPanel, type TranscriptPanelProps } from './TranscriptPanel';
+export { AudioPlayer, type AudioPlayerProps } from './audio-player';
+export { PlayerControls, type PlayerControlsProps } from './player-controls';
+export { type ChapterMarker, ProgressBar, type ProgressBarProps } from './progress-bar';
+export { SpeedControl, type SpeedControlProps } from './speed-control';
+export { TranscriptPanel, type TranscriptPanelProps } from './transcript-panel';
 export {
   type AudioSource,
   type CaptionTrack,
@@ -27,4 +27,4 @@ export {
   type TranscriptCue,
   type VideoSource,
 } from './types';
-export { VideoPlayer, type VideoPlayerProps } from './VideoPlayer';
+export { VideoPlayer, type VideoPlayerProps } from './video-player';

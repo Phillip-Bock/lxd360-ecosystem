@@ -1,1 +1,1 @@
-export { CortexHUD, type CortexHUDProps, type LearningState } from './CortexHUD';
+export { CortexHUD, type CortexHUDProps, type LearningState } from './cortex-hud';

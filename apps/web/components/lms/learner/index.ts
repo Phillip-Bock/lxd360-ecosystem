@@ -4,26 +4,26 @@
  * Components for the learner-facing my-learning dashboard.
  */
 
-export type { AchievementBadgesProps } from './AchievementBadges';
-export { AchievementBadges, AchievementBadgesSkeleton, type Badge } from './AchievementBadges';
-export type { AssignedCourseCardProps } from './AssignedCourseCard';
+export type { AchievementBadgesProps } from './achievement-badges';
+export { AchievementBadges, AchievementBadgesSkeleton, type Badge } from './achievement-badges';
+export type { AssignedCourseCardProps } from './assigned-course-card';
 export {
   AssignedCourseCard,
   AssignedCourseCardSkeleton,
-} from './AssignedCourseCard';
-export type { ContinueLearningCardProps } from './ContinueLearningCard';
+} from './assigned-course-card';
+export type { ContinueLearningCardProps } from './continue-learning-card';
 export {
   ContinueLearningCard,
   ContinueLearningCardSkeleton,
-} from './ContinueLearningCard';
-export type { RecentActivityProps } from './RecentActivity';
+} from './continue-learning-card';
+export type { RecentActivityProps } from './recent-activity';
 export {
   type ActivityItem,
   RecentActivity,
   RecentActivitySkeleton,
-} from './RecentActivity';
-export type { UpcomingDeadlinesProps } from './UpcomingDeadlines';
+} from './recent-activity';
+export type { UpcomingDeadlinesProps } from './upcoming-deadlines';
 export {
   UpcomingDeadlines,
   UpcomingDeadlinesSkeleton,
-} from './UpcomingDeadlines';
+} from './upcoming-deadlines';

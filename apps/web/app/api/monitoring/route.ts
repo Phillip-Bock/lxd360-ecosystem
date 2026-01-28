@@ -1,3 +1,7 @@
+// TODO(LXD-SEC): Add authentication - this endpoint exposes infrastructure status
+// and monitoring data. Should require Owner persona or admin access to prevent
+// information disclosure about system health/architecture.
+
 /**
  * Main Monitoring API Route
  * Aggregates data from GCP monitoring services (Cloud Run, Firestore)

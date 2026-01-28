@@ -7,10 +7,10 @@
  * @module components/inspire-studio/mission-control
  */
 
-export { ContinuityVault } from './ContinuityVault';
-export { CoPilotSidebar } from './CoPilotSidebar';
-export { MissionControlProvider, useMissionControl } from './MissionControlProvider';
-export { NavigationLadder } from './NavigationLadder';
-export { PhaseHeader } from './PhaseHeader';
-export { StepNavigation } from './StepNavigation';
-export { WizardToggle } from './WizardToggle';
+export { CoPilotSidebar } from './co-pilot-sidebar';
+export { ContinuityVault } from './continuity-vault';
+export { MissionControlProvider, useMissionControl } from './mission-control-provider';
+export { NavigationLadder } from './navigation-ladder';
+export { PhaseHeader } from './phase-header';
+export { StepNavigation } from './step-navigation';
+export { WizardToggle } from './wizard-toggle';

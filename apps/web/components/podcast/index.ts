@@ -1,5 +1,5 @@
-export { AIInsightsPanel } from './AIInsightsPanel';
-export { PodcastMainContent } from './PodcastMainContent';
-export { PodcastPlayerControls } from './PodcastPlayerControls';
-export { PodcastSidebar } from './PodcastSidebar';
-export { PodcastSwitcher } from './PodcastSwitcher';
+export { AIInsightsPanel } from './ai-insights-panel';
+export { PodcastMainContent } from './podcast-main-content';
+export { PodcastPlayerControls } from './podcast-player-controls';
+export { PodcastSidebar } from './podcast-sidebar';
+export { PodcastSwitcher } from './podcast-switcher';

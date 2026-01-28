@@ -26,13 +26,13 @@ export {
   type SceneHotspot,
   type VideoHotspot,
   type WarningHotspot,
-} from './HotspotTypes';
+} from './hotspot-types';
 
 // 360° Panorama Components
-export { PanoramaBlock } from './PanoramaBlock';
-export { PanoramaEditor } from './PanoramaEditor';
-export { PanoramaTour } from './PanoramaTour';
-export { PanoramaUploader } from './PanoramaUploader';
+export { PanoramaBlock } from './panorama-block';
+export { PanoramaEditor } from './panorama-editor';
+export { PanoramaTour } from './panorama-tour';
+export { PanoramaUploader } from './panorama-uploader';
 
 // VR/3D Components
-export { preloadModel, VRSceneBlock } from './VRSceneBlock';
+export { preloadModel, VRSceneBlock } from './vr-scene-block';

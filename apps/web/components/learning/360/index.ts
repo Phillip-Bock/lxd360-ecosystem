@@ -1,3 +1,3 @@
-export { PanoramaViewer } from './PanoramaViewer';
-export { ScenarioPanorama } from './ScenarioPanorama';
+export { PanoramaViewer } from './panorama-viewer';
+export { ScenarioPanorama } from './scenario-panorama';
 export * from './types';

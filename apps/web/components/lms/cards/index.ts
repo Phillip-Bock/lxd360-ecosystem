@@ -1,4 +1,4 @@
-export { BadgeCard } from './BadgeCard';
-export { CourseCard } from './CourseCard';
-export { LearningPathCard } from './LearningPathCard';
-export { StatCard } from './StatCard';
+export { BadgeCard } from './badge-card';
+export { CourseCard } from './course-card';
+export { LearningPathCard } from './learning-path-card';
+export { StatCard } from './stat-card';

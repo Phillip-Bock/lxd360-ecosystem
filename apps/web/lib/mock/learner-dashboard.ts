@@ -3,7 +3,7 @@
  * TODO(LXD-337): Replace with Firestore queries
  */
 
-import type { ActivityItem } from '@/components/lms/learner/RecentActivity';
+import type { ActivityItem } from '@/components/lms/learner/recent-activity';
 import type {
   CompletedCourseRecord,
   LearnerBadge,

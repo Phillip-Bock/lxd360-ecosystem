@@ -6,7 +6,7 @@
 // Click position calculation for hotspot placement on a 360° sphere.
 // =============================================================================
 
-import type { Vector3 } from '../ThreeSixtyEditor/types';
+import type { Vector3 } from '../three-sixty-editor/types';
 
 /**
  * Convert screen coordinates to spherical position on the panorama sphere

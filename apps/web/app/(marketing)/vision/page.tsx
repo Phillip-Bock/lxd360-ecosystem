@@ -18,16 +18,16 @@
  */
 
 import type { Metadata } from 'next';
-import { AboutCTASection } from '@/components/marketing/about/AboutCTASection';
-import { AboutFAQSection } from '@/components/marketing/about/AboutFAQSection';
-import { AboutFeaturesSection } from '@/components/marketing/about/AboutFeaturesSection';
-import { AboutHero } from '@/components/marketing/about/AboutHero';
-import { AboutIntegrationSection } from '@/components/marketing/about/AboutIntegrationSection';
-import { AboutResultsSection } from '@/components/marketing/about/AboutResultsSection';
-import { AboutServicesSection } from '@/components/marketing/about/AboutServicesSection';
-import { CompanyValuesSection } from '@/components/marketing/about/CompanyValuesSection';
-import { FounderSection } from '@/components/marketing/about/FounderSection';
-import { GlobalReachSectionWrapper } from '@/components/marketing/about/GlobalReachSectionWrapper';
+import { AboutCTASection } from '@/components/marketing/about/about-cta-section';
+import { AboutFAQSection } from '@/components/marketing/about/about-faq-section';
+import { AboutFeaturesSection } from '@/components/marketing/about/about-features-section';
+import { AboutHero } from '@/components/marketing/about/about-hero';
+import { AboutIntegrationSection } from '@/components/marketing/about/about-integration-section';
+import { AboutResultsSection } from '@/components/marketing/about/about-results-section';
+import { AboutServicesSection } from '@/components/marketing/about/about-services-section';
+import { CompanyValuesSection } from '@/components/marketing/about/company-values-section';
+import { FounderSection } from '@/components/marketing/about/founder-section';
+import { GlobalReachSectionWrapper } from '@/components/marketing/about/global-reach-section-wrapper';
 import { getAboutPage } from '@/lib/content';
 
 export const metadata: Metadata = {

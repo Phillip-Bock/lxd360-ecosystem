@@ -15,26 +15,26 @@ export {
   BlockStylePresets,
   DEFAULT_BLOCK_STYLES,
   default as BlockStylePresetsComponent,
-} from './BlockStylePresets';
+} from './block-style-presets';
 export {
   ColorPaletteManager,
   DEFAULT_DARK_PALETTE,
   DEFAULT_LIGHT_PALETTE,
   default as ColorPaletteManagerComponent,
-} from './ColorPaletteManager';
-export { default as ThemeEditorComponent, ThemeEditor } from './ThemeEditor';
-export { default as ThemePreviewCardComponent, ThemePreviewCard } from './ThemePreviewCard';
+} from './color-palette-manager';
+export { default as ThemeEditorComponent, ThemeEditor } from './theme-editor';
+export { default as ThemePreviewCardComponent, ThemePreviewCard } from './theme-preview-card';
 export {
   DEFAULT_TYPOGRAPHY,
   default as TypographyManagerComponent,
   TypographyManager,
-} from './TypographyManager';
+} from './typography-manager';
 
 // =============================================================================
 // Types
 // =============================================================================
 
-export type { BlockStyleConfig } from './BlockStylePresets';
-export type { ColorPalette } from './ColorPaletteManager';
-export type { ThemeConfig } from './ThemePreviewCard';
-export type { TypographyConfig } from './TypographyManager';
+export type { BlockStyleConfig } from './block-style-presets';
+export type { ColorPalette } from './color-palette-manager';
+export type { ThemeConfig } from './theme-preview-card';
+export type { TypographyConfig } from './typography-manager';

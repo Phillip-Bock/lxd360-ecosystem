@@ -1,3 +1,7 @@
+// TODO(LXD-SEC): Add authentication - this endpoint exposes available demo scenarios.
+// Should require at least Editor persona to prevent information disclosure about
+// internal demo capabilities.
+
 export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server';

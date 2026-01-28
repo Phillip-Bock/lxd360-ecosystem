@@ -6,7 +6,7 @@
 // =============================================================================
 
 // Components
-export { AuditDashboard } from './AuditDashboard';
+export { AuditDashboard } from './audit-dashboard';
 // Types
 export type {
   AccessibilityReport,

@@ -1,4 +1,4 @@
-export { ProcessHorizontal } from './ProcessHorizontal';
-export { StepByStepVertical } from './StepByStepVertical';
-export { TimelineHorizontal } from './TimelineHorizontal';
-export { TimelineVertical } from './TimelineVertical';
+export { ProcessHorizontal } from './process-horizontal';
+export { StepByStepVertical } from './step-by-step-vertical';
+export { TimelineHorizontal } from './timeline-horizontal';
+export { TimelineVertical } from './timeline-vertical';

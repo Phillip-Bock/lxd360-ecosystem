@@ -6,12 +6,12 @@
  * Exports all ribbon tab components.
  */
 
-export { AIStudioTab } from './AIStudioTab';
-export { AssessmentTab } from './AssessmentTab';
-export { DesignTab } from './DesignTab';
-export { HomeTab } from './HomeTab';
-export { InsertTab } from './InsertTab';
-export { InteractionsTab } from './InteractionsTab';
-export { LearningBlocksTab } from './LearningBlocksTab';
-export { ReviewTab } from './ReviewTab';
-export { ViewTab } from './ViewTab';
+export { AIStudioTab } from './ai-studio-tab';
+export { AssessmentTab } from './assessment-tab';
+export { DesignTab } from './design-tab';
+export { HomeTab } from './home-tab';
+export { InsertTab } from './insert-tab';
+export { InteractionsTab } from './interactions-tab';
+export { LearningBlocksTab } from './learning-blocks-tab';
+export { ReviewTab } from './review-tab';
+export { ViewTab } from './view-tab';

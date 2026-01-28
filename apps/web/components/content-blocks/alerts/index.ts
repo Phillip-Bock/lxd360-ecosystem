@@ -1,6 +1,6 @@
-export { AlertBlock } from './AlertBlock';
-export { CautionBlock } from './CautionBlock';
-export { DangerBlock } from './DangerBlock';
-export { NoteBlock } from './NoteBlock';
-export { SuccessBlock } from './SuccessBlock';
-export { WarningBlock } from './WarningBlock';
+export { AlertBlock } from './alert-block';
+export { CautionBlock } from './caution-block';
+export { DangerBlock } from './danger-block';
+export { NoteBlock } from './note-block';
+export { SuccessBlock } from './success-block';
+export { WarningBlock } from './warning-block';

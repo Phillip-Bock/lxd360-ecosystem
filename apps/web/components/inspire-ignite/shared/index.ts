@@ -3,8 +3,8 @@
  * Profile and settings components
  */
 
-export { AccountSettingsTab } from './AccountSettingsTab';
-export { LearningPreferencesTab } from './LearningPreferencesTab';
-export { NotificationsTab } from './NotificationsTab';
-export { PersonalInformationTab } from './PersonalInformationTab';
-export { SecurityPrivacyTab } from './SecurityPrivacyTab';
+export { AccountSettingsTab } from './account-settings-tab';
+export { LearningPreferencesTab } from './learning-preferences-tab';
+export { NotificationsTab } from './notifications-tab';
+export { PersonalInformationTab } from './personal-information-tab';
+export { SecurityPrivacyTab } from './security-privacy-tab';

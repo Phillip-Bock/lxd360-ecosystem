@@ -1,3 +1,3 @@
-export { CharacterBlock } from './CharacterBlock';
-export { ConversationBlock } from './ConversationBlock';
-export { DialogueBlock } from './DialogueBlock';
+export { CharacterBlock } from './character-block';
+export { ConversationBlock } from './conversation-block';
+export { DialogueBlock } from './dialogue-block';

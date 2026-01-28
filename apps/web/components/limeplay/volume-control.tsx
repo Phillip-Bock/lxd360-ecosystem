@@ -27,7 +27,7 @@ export const Root = React.forwardRef<
   const readyState = useMediaStore((state) => state.readyState);
   const [currentValue, setCurrentValue] = useState(volume);
 
-  const disabled = props.disabled || readyState < MediaReadyState.HAVE_METADATA;
+  const isDisabled = props.disabled || readyState < MediaReadyState.HAVE_METADATA;
 
   useImperativeHandle(ref, () => internalRef.current);
   const { setVolume } = useVolume();
@@ -47,13 +47,13 @@ export const Root = React.forwardRef<
 
   const trackEvents = useTrackEvents({
     onPointerDown: (_progress, event) => {
-      if (disabled) return;
+      if (isDisabled) return;
       const newVolume = getVolumeFromEvent(event);
       setCurrentValue(newVolume);
       setVolume(newVolume);
     },
     onPointerMove: (_progress, isPointerDown, event) => {
-      if (disabled) return;
+      if (isDisabled) return;
       if (isPointerDown) {
         const newVolume = getVolumeFromEvent(event);
         setCurrentValue(newVolume);
@@ -80,7 +80,7 @@ export const Root = React.forwardRef<
       value={[currentVolumeValue]}
       {...trackEvents}
       {...etc}
-      disabled={disabled}
+      disabled={isDisabled}
     />
   );
 });

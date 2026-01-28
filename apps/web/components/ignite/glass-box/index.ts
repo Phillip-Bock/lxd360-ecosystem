@@ -1,1 +1,1 @@
-export { GlassBoxExplanation, type GlassBoxExplanationProps } from './GlassBoxExplanation';
+export { GlassBoxExplanation, type GlassBoxExplanationProps } from './glass-box-explanation';

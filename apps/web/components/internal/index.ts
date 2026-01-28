@@ -2,4 +2,4 @@
  * Internal Components Barrel Export
  */
 
-export { InternalSidebar } from './InternalSidebar';
+export { InternalSidebar } from './internal-sidebar';

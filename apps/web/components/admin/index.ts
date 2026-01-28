@@ -1,2 +1,2 @@
-export { CharacterManager } from './CharacterManager';
-export { RoleAssignment } from './RoleAssignment';
+export { CharacterManager } from './character-manager';
+export { RoleAssignment } from './role-assignment';

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { ErrorBoundary } from '@/components/error/ErrorBoundary';
+import { ErrorBoundary } from '@/components/error/error-boundary';
 import { ConfirmProvider } from '@/components/ui/confirm-dialog';
 import type { ToastPosition } from '@/components/ui/toast-provider';
 import { setToastRef, ToastProvider, useToast } from '@/components/ui/toast-provider';
@@ -65,7 +65,7 @@ export function Providers({
 // Re-exports for convenience
 // =============================================================================
 
-export { ErrorBoundary } from '@/components/error/ErrorBoundary';
+export { ErrorBoundary } from '@/components/error/error-boundary';
 export { ConfirmProvider, useConfirm } from '@/components/ui/confirm-dialog';
 export { ToastProvider, toast, useToast } from '@/components/ui/toast-provider';
 

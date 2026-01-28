@@ -10,21 +10,21 @@
  */
 
 // Coming Soon Placeholder
-export { ComingSoon } from './ComingSoon';
+export { ComingSoon } from './coming-soon';
 // Section Components
 export {
   SectionBadge,
   SectionHeader,
   SectionWrapper,
-} from './SectionBadge';
+} from './section-badge';
 // Shimmer Border Cards
 export {
   ShimmerBorderCard,
   ShimmerBorderCardGrid,
   ShimmerBorderCardWithIcon,
-} from './ShimmerBorderCard';
+} from './shimmer-border-card';
 // CTA Buttons
 export {
   SingleCTAButton,
   StandardCTAButtons,
-} from './StandardCTAButtons';
+} from './standard-cta-buttons';

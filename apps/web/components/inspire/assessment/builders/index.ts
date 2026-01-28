@@ -1,3 +1,3 @@
-export { RubricBuilder } from './RubricBuilder';
-export { ScenarioBuilder } from './ScenarioBuilder';
-export { StandardQuestionBuilder } from './StandardQuestionBuilder';
+export { RubricBuilder } from './rubric-builder';
+export { ScenarioBuilder } from './scenario-builder';
+export { StandardQuestionBuilder } from './standard-question-builder';

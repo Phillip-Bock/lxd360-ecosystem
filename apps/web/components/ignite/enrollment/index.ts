@@ -1,6 +1,6 @@
-export { BulkEnrollDialog } from './BulkEnrollDialog';
-export { EnrollmentStats } from './EnrollmentStats';
-export type { Enrollment, EnrollmentStatus } from './EnrollmentTable';
-export { EnrollmentTable } from './EnrollmentTable';
-export type { Invitation } from './InvitationsList';
-export { InvitationsList } from './InvitationsList';
+export { BulkEnrollDialog } from './bulk-enroll-dialog';
+export { EnrollmentStats } from './enrollment-stats';
+export type { Enrollment, EnrollmentStatus } from './enrollment-table';
+export { EnrollmentTable } from './enrollment-table';
+export type { Invitation } from './invitations-list';
+export { InvitationsList } from './invitations-list';

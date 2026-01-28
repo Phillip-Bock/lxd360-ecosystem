@@ -1,3 +1,3 @@
-export type { Question, QuestionType } from './QuestionRenderer';
-export { QuestionRenderer } from './QuestionRenderer';
-export { QuizPlayer } from './QuizPlayer';
+export type { Question, QuestionType } from './question-renderer';
+export { QuestionRenderer } from './question-renderer';
+export { QuizPlayer } from './quiz-player';

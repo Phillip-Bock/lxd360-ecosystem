@@ -5,23 +5,23 @@
  * Role-based widgets with Phase 8 feature integration.
  */
 
-export type { MissionControlDashboardProps } from './MissionControlDashboard';
+export type { MissionControlDashboardProps } from './mission-control-dashboard';
 // Core dashboard
-export { MissionControlDashboard } from './MissionControlDashboard';
-export type { NeuronautCompanionProps } from './NeuronautCompanion';
+export { MissionControlDashboard } from './mission-control-dashboard';
+export type { NeuronautCompanionProps } from './neuro-naut-companion';
 // AI Companion
-export { NeuronautCompanion } from './NeuronautCompanion';
+export { NeuronautCompanion } from './neuro-naut-companion';
 // Types
 export * from './types';
-export { AIRecommendationsWidget } from './widgets/AIRecommendationsWidget';
-export { ComplianceGapWidget } from './widgets/ComplianceGapWidget';
-export { JITAIAlertsWidget } from './widgets/JITAIAlertsWidget';
-export { ProgressRing, type ProgressRingProps } from './widgets/ProgressRing';
-export { SkillBar, type SkillBarProps } from './widgets/SkillBar';
-export { SkillHeatmapWidget } from './widgets/SkillHeatmapWidget';
+export { AIRecommendationsWidget } from './widgets/ai-recommendations-widget';
+export { ComplianceGapWidget } from './widgets/compliance-gap-widget';
+export { JITAIAlertsWidget } from './widgets/jit-ai-alerts-widget';
+export { ProgressRing, type ProgressRingProps } from './widgets/progress-ring';
+export { SkillBar, type SkillBarProps } from './widgets/skill-bar';
+export { SkillHeatmapWidget } from './widgets/skill-heatmap-widget';
 // Feature widgets
-export { SkillMasteryWidget } from './widgets/SkillMasteryWidget';
-export { StatCard, type StatCardProps } from './widgets/StatCard';
-export { SystemHealthWidget } from './widgets/SystemHealthWidget';
+export { SkillMasteryWidget } from './widgets/skill-mastery-widget';
+export { StatCard, type StatCardProps } from './widgets/stat-card';
+export { SystemHealthWidget } from './widgets/system-health-widget';
 // Widget system
-export { WidgetCard, type WidgetCardProps } from './widgets/WidgetCard';
+export { WidgetCard, type WidgetCardProps } from './widgets/widget-card';

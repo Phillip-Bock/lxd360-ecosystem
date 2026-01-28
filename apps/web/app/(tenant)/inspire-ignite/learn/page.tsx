@@ -13,8 +13,8 @@ import {
   RecentActivity,
   UpcomingDeadlines,
 } from '@/components/lms/learner';
-import type { Badge } from '@/components/lms/learner/AchievementBadges';
-import type { ActivityItem } from '@/components/lms/learner/RecentActivity';
+import type { Badge } from '@/components/lms/learner/achievement-badges';
+import type { ActivityItem } from '@/components/lms/learner/recent-activity';
 import { cn } from '@/lib/utils';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
 import type {

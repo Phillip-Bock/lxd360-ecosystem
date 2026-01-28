@@ -10,4 +10,4 @@
  */
 
 // Course Canvas - Main visual editor
-export { CourseCanvas } from './CourseCanvas';
+export { CourseCanvas } from './course-canvas';

@@ -1,4 +1,4 @@
-export { CardBlock } from './CardBlock';
-export { ColumnsBlock } from './ColumnsBlock';
-export { ContainerBlock } from './ContainerBlock';
-export { SpacerBlock } from './SpacerBlock';
+export { CardBlock } from './card-block';
+export { ColumnsBlock } from './columns-block';
+export { ContainerBlock } from './container-block';
+export { SpacerBlock } from './spacer-block';

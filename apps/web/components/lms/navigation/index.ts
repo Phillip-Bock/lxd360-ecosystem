@@ -1,1 +1,1 @@
-export { LMSSidebar } from './LMSSidebar';
+export { LMSSidebar } from './lms-sidebar';

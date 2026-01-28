@@ -626,13 +626,13 @@ export interface UseDialogReturn {
 export function useDialog(initialOpen = false): UseDialogReturn {
   const [isOpen, setIsOpen] = React.useState(initialOpen);
 
-  const open = React.useCallback(() => setIsOpen(true), []);
+  const openDialog = React.useCallback(() => setIsOpen(true), []);
   const close = React.useCallback(() => setIsOpen(false), []);
   const toggle = React.useCallback(() => setIsOpen((prev) => !prev), []);
 
   return {
     isOpen,
-    open,
+    open: openDialog,
     close,
     toggle,
     setOpen: setIsOpen,

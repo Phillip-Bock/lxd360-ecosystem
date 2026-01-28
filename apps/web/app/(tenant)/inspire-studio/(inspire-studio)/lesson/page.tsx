@@ -26,7 +26,7 @@ import { useCallback, useMemo, useState } from 'react';
 import {
   CognitiveLoadMeter,
   calculateCognitiveLoad,
-} from '@/components/inspire-studio/ai/CognitiveLoadMeter';
+} from '@/components/inspire-studio/ai/cognitive-load-meter';
 import { BlockPalette, type CanvasBlock, LessonCanvas } from '@/components/inspire-studio/blocks';
 // INSPIRE Components
 import { EditorRibbon } from '@/components/inspire-studio/ribbon';

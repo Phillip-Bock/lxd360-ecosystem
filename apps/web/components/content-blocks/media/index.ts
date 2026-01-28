@@ -1,3 +1,3 @@
-export { AudioPlayer } from './AudioPlayer';
-export { ImageGallery } from './ImageGallery';
-export { VideoPlayer } from './VideoPlayer';
+export { AudioPlayer } from './audio-player';
+export { ImageGallery } from './image-gallery';
+export { VideoPlayer } from './video-player';

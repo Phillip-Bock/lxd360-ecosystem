@@ -2,12 +2,12 @@
 
 export const dynamic = 'force-dynamic';
 
-import { BulkEnrollDialog } from '@/components/ignite/enrollment/BulkEnrollDialog';
-import { EnrollmentStats } from '@/components/ignite/enrollment/EnrollmentStats';
-import type { Enrollment } from '@/components/ignite/enrollment/EnrollmentTable';
-import { EnrollmentTable } from '@/components/ignite/enrollment/EnrollmentTable';
-import type { Invitation } from '@/components/ignite/enrollment/InvitationsList';
-import { InvitationsList } from '@/components/ignite/enrollment/InvitationsList';
+import { BulkEnrollDialog } from '@/components/ignite/enrollment/bulk-enroll-dialog';
+import { EnrollmentStats } from '@/components/ignite/enrollment/enrollment-stats';
+import type { Enrollment } from '@/components/ignite/enrollment/enrollment-table';
+import { EnrollmentTable } from '@/components/ignite/enrollment/enrollment-table';
+import type { Invitation } from '@/components/ignite/enrollment/invitations-list';
+import { InvitationsList } from '@/components/ignite/enrollment/invitations-list';
 
 // ============================================================================
 // MOCK DATA - TODO(LXD-341): Replace with Firestore queries

@@ -1,2 +1,2 @@
-export { KnowledgeCheckBlock } from './KnowledgeCheckBlock';
-export { QuizBlock } from './QuizBlock';
+export { KnowledgeCheckBlock } from './knowledge-check-block';
+export { QuizBlock } from './quiz-block';

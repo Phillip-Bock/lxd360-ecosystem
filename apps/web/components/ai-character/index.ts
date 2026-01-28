@@ -6,9 +6,9 @@ export {
   getAllPersonaIds,
   getPersonaForRoute,
 } from '@/lib/ai-personas/persona-config';
-export { AiCharacterChat } from './AiCharacterChat';
+export { AiCharacterChat } from './ai-character-chat';
 // Note: Character3D is NOT exported here to avoid SSR issues with Three.js
 // It's dynamically imported by CharacterDisplay with ssr: false
-export { CharacterDisplay } from './CharacterDisplay';
-export { CharacterFallback } from './CharacterFallback';
-export { PersonaSelector } from './PersonaSelector';
+export { CharacterDisplay } from './character-display';
+export { CharacterFallback } from './character-fallback';
+export { PersonaSelector } from './persona-selector';

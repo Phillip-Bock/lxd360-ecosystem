@@ -1,7 +1,11 @@
-export type { Course, CourseSelectorProps } from './CourseSelector';
-export { CourseSelector } from './CourseSelector';
-export type { ExportButtonProps } from './ExportButton';
-export { ExportButton } from './ExportButton';
+export type { Course, CourseSelectorProps } from './course-selector';
+export { CourseSelector } from './course-selector';
+export type { ExportButtonProps } from './export-button';
+export { ExportButton } from './export-button';
+export type { GradeCellProps } from './grade-cell';
+export { GradeCell } from './grade-cell';
+export type { GradeSummaryProps } from './grade-summary';
+export { GradeSummary } from './grade-summary';
 export type {
   Assignment,
   AssignmentGrade,
@@ -10,11 +14,7 @@ export type {
   LearnerStatus,
   SortDirection,
   SortState,
-} from './GradebookTable';
-export { GradebookTable } from './GradebookTable';
-export type { GradeCellProps } from './GradeCell';
-export { GradeCell } from './GradeCell';
-export type { GradeSummaryProps } from './GradeSummary';
-export { GradeSummary } from './GradeSummary';
-export type { StudentDrilldownModalProps } from './StudentDrilldownModal';
-export { StudentDrilldownModal } from './StudentDrilldownModal';
+} from './gradebook-table';
+export { GradebookTable } from './gradebook-table';
+export type { StudentDrilldownModalProps } from './student-drilldown-modal';
+export { StudentDrilldownModal } from './student-drilldown-modal';

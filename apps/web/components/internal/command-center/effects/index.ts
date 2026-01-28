@@ -4,7 +4,7 @@
  * =============================================================================
  */
 
-export { GlowingBorder } from './GlowingBorder';
-export { GridBackground } from './GridBackground';
-export { PulsingDot } from './PulsingDot';
-export { ScanlineOverlay } from './ScanlineOverlay';
+export { GlowingBorder } from './glowing-border';
+export { GridBackground } from './grid-background';
+export { PulsingDot } from './pulsing-dot';
+export { ScanlineOverlay } from './scanline-overlay';

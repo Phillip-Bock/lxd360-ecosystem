@@ -4,14 +4,14 @@
  */
 
 // UI Components
-export { BreakSuggestionModal } from './BreakSuggestionModal';
-export { CognitiveMeter } from './CognitiveMeter';
-export { ContentRenderer } from './ContentRenderer';
+export { BreakSuggestionModal } from './break-suggestion-modal';
+export { CognitiveMeter } from './cognitive-meter';
+export { ContentRenderer } from './content-renderer';
 // Player Utilities
 export * from './hooks';
-export { LearningPlayer } from './LearningPlayer';
+export { LearningPlayer } from './learning-player';
 export * from './monitor';
-export { PlayerControls } from './PlayerControls';
-export { SpacedRepetitionCard } from './SpacedRepetitionCard';
+export { PlayerControls } from './player-controls';
+export { SpacedRepetitionCard } from './spaced-repetition-card';
 export * from './store';
 export * from './tracker';

@@ -1,7 +1,7 @@
-export { AssessmentArchitect } from './AssessmentArchitect';
+export { AssessmentArchitect } from './assessment-architect';
 export { ASSESSMENT_TYPES } from './assessment-data';
 export * from './builders';
-export { NeuronautHelper } from './NeuronautHelper';
-export { StudentSimulator } from './StudentSimulator';
+export { NeuronautHelper } from './neuronaut-helper';
+export { StudentSimulator } from './student-simulator';
 export * from './types';
-export { WizardOverlay } from './WizardOverlay';
+export { WizardOverlay } from './wizard-overlay';

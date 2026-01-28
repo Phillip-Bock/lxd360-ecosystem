@@ -411,7 +411,7 @@ export function useNotificationTypePreference(notificationType: NotificationType
   const { preferences, loading, update } = useNotificationPreferences();
 
   const typePrefs = preferences?.typePreferences[notificationType];
-  const enabled = typePrefs?.enabled ?? true;
+  const isEnabled = typePrefs?.enabled ?? true;
   const channels = useMemo(() => typePrefs?.channels ?? [], [typePrefs?.channels]);
 
   const toggle = useCallback(async () => {
@@ -419,12 +419,12 @@ export function useNotificationTypePreference(notificationType: NotificationType
       typePreferences: {
         ...preferences?.typePreferences,
         [notificationType]: {
-          enabled: !enabled,
+          enabled: !isEnabled,
           channels,
         },
       },
     });
-  }, [preferences, notificationType, enabled, channels, update]);
+  }, [preferences, notificationType, isEnabled, channels, update]);
 
   const setChannels = useCallback(
     async (newChannels: NotificationChannel[]) => {
@@ -432,17 +432,17 @@ export function useNotificationTypePreference(notificationType: NotificationType
         typePreferences: {
           ...preferences?.typePreferences,
           [notificationType]: {
-            enabled,
+            enabled: isEnabled,
             channels: newChannels,
           },
         },
       });
     },
-    [preferences, notificationType, enabled, update],
+    [preferences, notificationType, isEnabled, update],
   );
 
   return {
-    enabled,
+    enabled: isEnabled,
     channels,
     loading,
     toggle,

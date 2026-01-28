@@ -2,7 +2,7 @@ export type {
   INSPIREBadgeGroupProps,
   INSPIREBadgeProps,
   INSPIRETimelineProps,
-} from './INSPIREBadge';
-export { INSPIREBadge, INSPIREBadgeGroup, INSPIRETimeline, STAGE_CONFIG } from './INSPIREBadge';
-export type { INSPIREStageSelectorProps } from './INSPIREStageSelector';
-export { INSPIRE_STAGES, INSPIREStageSelector } from './INSPIREStageSelector';
+} from './inspire-badge';
+export { INSPIREBadge, INSPIREBadgeGroup, INSPIRETimeline, STAGE_CONFIG } from './inspire-badge';
+export type { INSPIREStageSelectorProps } from './inspire-stage-selector';
+export { INSPIRE_STAGES, INSPIREStageSelector } from './inspire-stage-selector';

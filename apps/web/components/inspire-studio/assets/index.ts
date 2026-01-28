@@ -11,11 +11,11 @@
 // Components
 // =============================================================================
 
-export { AIAutoTagger, default as AIAutoTaggerComponent, useAIAutoTagger } from './AIAutoTagger';
-export { AssetGrid, default as AssetGridComponent } from './AssetGrid';
-export { AssetLibraryModal, default as AssetLibraryModalComponent } from './AssetLibraryModal';
-export { AssetMetadataPanel, default as AssetMetadataPanelComponent } from './AssetMetadataPanel';
-export { AssetUploader, default as AssetUploaderComponent } from './AssetUploader';
+export { AIAutoTagger, default as AIAutoTaggerComponent, useAIAutoTagger } from './ai-auto-tagger';
+export { AssetGrid, default as AssetGridComponent } from './asset-grid';
+export { AssetLibraryModal, default as AssetLibraryModalComponent } from './asset-library-modal';
+export { AssetMetadataPanel, default as AssetMetadataPanelComponent } from './asset-metadata-panel';
+export { AssetUploader, default as AssetUploaderComponent } from './asset-uploader';
 
 // =============================================================================
 // Re-export Types from lib/assets

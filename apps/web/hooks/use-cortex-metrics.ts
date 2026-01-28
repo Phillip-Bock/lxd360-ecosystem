@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { LearningState } from '@/components/ignite/player/cortex-hud/CortexHUD';
+import type { LearningState } from '@/components/ignite/player/cortex-hud/cortex-hud';
 
 // ============================================================================
 // TYPES

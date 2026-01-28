@@ -1,4 +1,4 @@
-export { BulletedList } from './BulletedList';
-export { CheckboxList } from './CheckboxList';
-export { DefinitionList } from './DefinitionList';
-export { NumberedList } from './NumberedList';
+export { BulletedList } from './bulleted-list';
+export { CheckboxList } from './checkbox-list';
+export { DefinitionList } from './definition-list';
+export { NumberedList } from './numbered-list';

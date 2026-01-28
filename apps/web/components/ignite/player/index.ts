@@ -1,4 +1,4 @@
-export { AdaptivePanel, type AdaptivePanelProps, useAdaptivePanel } from './AdaptivePanel';
+export { AdaptivePanel, type AdaptivePanelProps, useAdaptivePanel } from './adaptive-panel';
 export {
   type AnimationState,
   AvatarModel,
@@ -8,5 +8,5 @@ export {
   type AvatarStageProps,
   preloadModel,
 } from './avatar';
-export { CoursePlayer, type CoursePlayerProps } from './CoursePlayer';
-export { NeuronautCoach, type NeuronautCoachProps } from './NeuronautCoach';
+export { CoursePlayer, type CoursePlayerProps } from './course-player';
+export { NeuronautCoach, type NeuronautCoachProps } from './neuro-naut-coach';

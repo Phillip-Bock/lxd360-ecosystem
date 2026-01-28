@@ -1,3 +1,7 @@
+// TODO(LXD-SEC): Add authentication - this endpoint can run demo scenarios that
+// generate xAPI statements and access orchestrator functionality. Should require
+// at least Editor persona to prevent abuse.
+
 export const dynamic = 'force-dynamic';
 
 import { type NextRequest, NextResponse } from 'next/server';

@@ -1,1 +1,1 @@
-export { MultiColumnLayout } from './MultiColumnLayout';
+export { MultiColumnLayout } from './multi-column-layout';

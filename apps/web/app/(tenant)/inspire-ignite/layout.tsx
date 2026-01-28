@@ -3,8 +3,8 @@
 import { usePathname, useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { AppSidebar } from '@/components/ignite/dashboard/AppSidebar';
-import { BreadcrumbsHeader } from '@/components/ignite/dashboard/BreadcrumbsHeader';
+import { AppSidebar } from '@/components/ignite/dashboard/app-sidebar';
+import { BreadcrumbsHeader } from '@/components/ignite/dashboard/breadcrumbs-header';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { logger } from '@/lib/logger';
 import { canAccess, getPersonaFromClaims, type Persona } from '@/lib/rbac/personas';

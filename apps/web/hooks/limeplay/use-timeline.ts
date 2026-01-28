@@ -36,7 +36,7 @@ export const createTimelineStore: StateCreator<
   progress: 0,
 });
 
-export interface useTimelineStatesProps {
+export interface UseTimelineStatesProps {
   /**
    * Interval in milliseconds to update the states
    * @default 500
@@ -177,7 +177,7 @@ export function useTimeline() {
   };
 }
 
-export function useTimelineStates({ updateDuration = 500 }: useTimelineStatesProps = {}) {
+export function useTimelineStates({ updateDuration = 500 }: UseTimelineStatesProps = {}) {
   const store = useGetStore();
   const player = useMediaStore((s) => s.player);
   const mediaRef = useMediaStore((state) => state.mediaRef);

@@ -16,9 +16,9 @@
 // NEW: 4-Persona System Components
 // ============================================================================
 
-export { FeatureGate } from './FeatureGate';
-export { NavItem, NavItemGroup } from './NavItem';
-export { RouteGuard } from './RouteGuard';
+export { FeatureGate } from './feature-gate';
+export { NavItem, NavItemGroup } from './nav-item';
+export { RouteGuard } from './route-guard';
 
 // ============================================================================
 // LEGACY: 11-Role System Components (Deprecated)
@@ -32,4 +32,4 @@ export {
   PermissionGate,
   RoleGate,
   SuperAdminGate,
-} from './RoleGate';
+} from './role-gate';

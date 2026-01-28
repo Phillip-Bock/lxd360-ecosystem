@@ -1,23 +1,23 @@
 import type { ComponentType } from 'react';
 // Import learning components
 import { AssessmentArchitect } from '@/components/inspire/assessment';
-import { AlertBlock } from './alerts/AlertBlock';
-import { CautionBlock } from './alerts/CautionBlock';
-import { NoteBlock } from './alerts/NoteBlock';
-import { BlockquoteCard } from './blockquotes/BlockquoteCard';
-import { FAQAccordion } from './interactive/FAQAccordion';
-import { InteractiveImage } from './interactive/InteractiveImage';
-import { MultiColumnLayout } from './layouts/MultiColumnLayout';
-import { AudioPlayer } from './media/AudioPlayer';
-import { ImageGallery } from './media/ImageGallery';
+import { AlertBlock } from './alerts/alert-block';
+import { CautionBlock } from './alerts/caution-block';
+import { NoteBlock } from './alerts/note-block';
+import { BlockquoteCard } from './blockquotes/blockquote-card';
+import { FAQAccordion } from './interactive/faq-accordion';
+import { InteractiveImage } from './interactive/interactive-image';
+import { MultiColumnLayout } from './layouts/multi-column-layout';
+import { AudioPlayer } from './media/audio-player';
+import { ImageGallery } from './media/image-gallery';
 // Import content block components
-import { VideoPlayer } from './media/VideoPlayer';
-import { ReferencesBlock } from './special/ReferencesBlock';
-import { StatisticsDisplay } from './special/StatisticsDisplay';
-import { TestimonialBlock } from './special/TestimonialBlock';
-import { ComparisonTable } from './tables/ComparisonTable';
-import { TitleWithParagraph } from './text/TitleWithParagraph';
-import { TimelineVertical } from './timelines/TimelineVertical';
+import { VideoPlayer } from './media/video-player';
+import { ReferencesBlock } from './special/references-block';
+import { StatisticsDisplay } from './special/statistics-display';
+import { TestimonialBlock } from './special/testimonial-block';
+import { ComparisonTable } from './tables/comparison-table';
+import { TitleWithParagraph } from './text/title-with-paragraph';
+import { TimelineVertical } from './timelines/timeline-vertical';
 
 // Content block type mapping
 export type ContentBlockType =

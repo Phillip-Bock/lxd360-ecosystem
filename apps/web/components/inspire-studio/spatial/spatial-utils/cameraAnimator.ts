@@ -6,7 +6,7 @@
 // Camera animation utilities for guided tours and smooth transitions.
 // =============================================================================
 
-import type { CameraAnimation, Vector3 } from '../ThreeSixtyEditor/types';
+import type { CameraAnimation, Vector3 } from '../three-sixty-editor/types';
 
 // =============================================================================
 // Easing Functions

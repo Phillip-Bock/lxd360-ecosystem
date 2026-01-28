@@ -1,9 +1,9 @@
-// QuizBlock Module Exports
+// quiz-block Module Exports
 
-export { FillBlankQuestion } from './FillBlankQuestion';
-export { MultipleChoiceQuestion } from './MultipleChoiceQuestion';
-export { QuizBlock } from './QuizBlock';
-export { TrueFalseQuestion } from './TrueFalseQuestion';
+export { FillBlankQuestion } from './fill-blank-question';
+export { MultipleChoiceQuestion } from './multiple-choice-question';
+export { QuizBlock } from './quiz-block';
+export { TrueFalseQuestion } from './true-false-question';
 
 export type {
   BaseQuestion,

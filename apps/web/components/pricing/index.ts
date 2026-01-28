@@ -4,21 +4,21 @@
  */
 
 // Add-on components
-export { AddOnCard, default as AddOnCardDefault } from './AddOnCard';
-export { AddOnGrid, default as AddOnGridDefault } from './AddOnGrid';
-export { AddOnSelector, default as AddOnSelectorDefault } from './AddOnSelector';
+export { AddOnCard, default as AddOnCardDefault } from './add-on-card';
+export { AddOnGrid, default as AddOnGridDefault } from './add-on-grid';
+export { AddOnSelector, default as AddOnSelectorDefault } from './add-on-selector';
 // Badge components
-export { DiscountBadge, default as DiscountBadgeDefault } from './DiscountBadge';
+export { DiscountBadge, default as DiscountBadgeDefault } from './discount-badge';
 // Specialty components
-export { default as EnterpriseCardDefault, EnterpriseCard } from './EnterpriseCard';
-export { default as GuaranteeBadgeDefault, GuaranteeBadge } from './GuaranteeBadge';
-export { default as PopularBadgeDefault, PopularBadge } from './PopularBadge';
-export { default as PriceDisplayDefault, PriceDisplay } from './PriceDisplay';
+export { default as EnterpriseCardDefault, EnterpriseCard } from './enterprise-card';
+export { default as GuaranteeBadgeDefault, GuaranteeBadge } from './guarantee-badge';
+export { default as PopularBadgeDefault, PopularBadge } from './popular-badge';
+export { default as PriceDisplayDefault, PriceDisplay } from './price-display';
 // Core pricing components
-export { default as PricingCardDefault, PricingCard } from './PricingCard';
-export { default as PricingFAQDefault, PricingFAQ } from './PricingFAQ';
-export { default as PricingGridDefault, PricingGrid } from './PricingGrid';
-export { default as PricingTableDefault, PricingTable } from './PricingTable';
-export { default as PricingToggleDefault, PricingToggle } from './PricingToggle';
-export { default as ROICalculatorDefault, ROICalculator } from './ROICalculator';
-export { default as TrustBadgesDefault, TrustBadges } from './TrustBadges';
+export { default as PricingCardDefault, PricingCard } from './pricing-card';
+export { default as PricingFAQDefault, PricingFAQ } from './pricing-faq';
+export { default as PricingGridDefault, PricingGrid } from './pricing-grid';
+export { default as PricingTableDefault, PricingTable } from './pricing-table';
+export { default as PricingToggleDefault, PricingToggle } from './pricing-toggle';
+export { default as ROICalculatorDefault, ROICalculator } from './roi-calculator';
+export { default as TrustBadgesDefault, TrustBadges } from './trust-badges';

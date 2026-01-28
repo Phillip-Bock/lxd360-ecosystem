@@ -1,43 +1,39 @@
-export { KnowledgeCheckBlock } from './assessment/KnowledgeCheckBlock';
+export { KnowledgeCheckBlock } from './assessment/knowledge-check-block';
 // Assessment blocks
-export { QuizBlock } from './assessment/QuizBlock';
+export { QuizBlock } from './assessment/quiz-block';
 // Lesson Builder components
-export { BlockPalette, type BlockPaletteProps } from './BlockPalette';
-export type { BlockComponentProps } from './BlockRenderer';
+export { BlockPalette, type BlockPaletteProps } from './block-palette';
+export type { BlockComponentProps } from './block-renderer';
 // Core components
-export { BlockList, BlockRenderer } from './BlockRenderer';
-export { BlockToolbar } from './BlockToolbar';
-export { BlockWrapper } from './BlockWrapper';
-export { ContextualAudioBlock } from './ContextualAudio';
+export { BlockList, BlockRenderer } from './block-renderer';
+export { BlockToolbar } from './block-toolbar';
+export { BlockWrapper } from './block-wrapper';
 // Character blocks
 export {
   CharacterBlock,
   ConversationBlock,
   DialogueBlock,
 } from './character';
-export { DynamicVideoBlock } from './DynamicVideo';
+export { ContextualAudioBlock } from './contextual-audio';
+export { DynamicVideoBlock } from './dynamic-video';
 // Interactive blocks
-export { AccordionBlock } from './interactive/AccordionBlock';
-export { FlipCardBlock } from './interactive/FlipCardBlock';
-export { HotspotBlock } from './interactive/HotspotBlock';
-export { TabsBlock } from './interactive/TabsBlock';
-export { TimelineBlock } from './interactive/TimelineBlock';
-export { type CanvasBlock, LessonCanvas, type LessonCanvasProps } from './LessonCanvas';
-export { LogicQuizBlock } from './LogicQuiz';
-export { CardBlock } from './layout/CardBlock';
+export { AccordionBlock } from './interactive/accordion-block';
+export { FlipCardBlock } from './interactive/flip-card-block';
+export { HotspotBlock } from './interactive/hotspot-block';
+export { TabsBlock } from './interactive/tabs-block';
+export { TimelineBlock } from './interactive/timeline-block';
+export { CardBlock } from './layout/card-block';
 // Layout blocks
-export { ColumnsBlock } from './layout/ColumnsBlock';
-export { ContainerBlock } from './layout/ContainerBlock';
-export { SpacerBlock } from './layout/SpacerBlock';
-export { AudioBlock } from './media/AudioBlock';
-export { EmbedBlock } from './media/EmbedBlock';
+export { ColumnsBlock } from './layout/columns-block';
+export { ContainerBlock } from './layout/container-block';
+export { SpacerBlock } from './layout/spacer-block';
+export { type CanvasBlock, LessonCanvas, type LessonCanvasProps } from './lesson-canvas';
+export { LogicQuizBlock } from './logic-quiz';
+export { AudioBlock } from './media/audio-block';
+export { EmbedBlock } from './media/embed-block';
 // Media blocks
-export { ImageBlock } from './media/ImageBlock';
-export { VideoBlock } from './media/VideoBlock';
-// Smart Block Suites (INSPIRE Assimilation)
-export { SmartTextBlock } from './SmartText';
-export { SocialHubBlock } from './SocialHub';
-export { SpatialContainerBlock } from './SpatialContainer';
+export { ImageBlock } from './media/image-block';
+export { VideoBlock } from './media/video-block';
 export type { ScenarioAnalyticsData } from './scenario';
 // Scenario blocks
 export {
@@ -47,12 +43,16 @@ export {
   ScenarioNodeComponent,
   ScenarioPreview,
 } from './scenario';
-export { CalloutBlock } from './text/CalloutBlock';
-export { CodeBlock } from './text/CodeBlock';
-export { DividerBlock } from './text/DividerBlock';
-export { HeadingBlock } from './text/HeadingBlock';
-export { ListBlock } from './text/ListBlock';
-export { QuoteBlock } from './text/QuoteBlock';
+// Smart Block Suites (INSPIRE Assimilation)
+export { SmartTextBlock } from './smart-text';
+export { SocialHubBlock } from './social-hub';
+export { SpatialContainerBlock } from './spatial-container';
+export { CalloutBlock } from './text/callout-block';
+export { CodeBlock } from './text/code-block';
+export { DividerBlock } from './text/divider-block';
+export { HeadingBlock } from './text/heading-block';
+export { ListBlock } from './text/list-block';
+export { QuoteBlock } from './text/quote-block';
 // Text blocks
-export { TextBlock } from './text/TextBlock';
-export { UnifiedMediaBlock } from './UnifiedMedia';
+export { TextBlock } from './text/text-block';
+export { UnifiedMediaBlock } from './unified-media';

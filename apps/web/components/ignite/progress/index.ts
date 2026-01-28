@@ -17,9 +17,9 @@
  * ```
  */
 
-export { CompletionBadge, type CompletionBadgeProps } from './CompletionBadge';
-export { LearningStreak, type LearningStreakProps } from './LearningStreak';
-export { ProgressBar, type ProgressBarProps } from './ProgressBar';
-export { ProgressRing, type ProgressRingProps } from './ProgressRing';
-export { ProgressSummary, type ProgressSummaryProps } from './ProgressSummary';
-export { SkillMasteryCard, type SkillMasteryCardProps } from './SkillMasteryCard';
+export { CompletionBadge, type CompletionBadgeProps } from './completion-badge';
+export { LearningStreak, type LearningStreakProps } from './learning-streak';
+export { ProgressBar, type ProgressBarProps } from './progress-bar';
+export { ProgressRing, type ProgressRingProps } from './progress-ring';
+export { ProgressSummary, type ProgressSummaryProps } from './progress-summary';
+export { SkillMasteryCard, type SkillMasteryCardProps } from './skill-mastery-card';

@@ -4,5 +4,5 @@
  * =============================================================================
  */
 
-export { ChartPanel } from './ChartPanel';
-export { MetricCard } from './MetricCard';
+export { ChartPanel } from './chart-panel';
+export { MetricCard } from './metric-card';

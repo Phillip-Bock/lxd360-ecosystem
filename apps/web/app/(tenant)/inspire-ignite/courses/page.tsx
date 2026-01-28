@@ -9,9 +9,9 @@ import {
   type CourseStatus,
   CoursesTable,
   type InstructorCourse,
-} from '@/components/ignite/dashboard/CoursesTable';
-import { StatsCards } from '@/components/ignite/dashboard/StatsCards';
-import CreateCourseModal from '@/components/ignite/teach/CreateCourseModal';
+} from '@/components/ignite/dashboard/courses-table';
+import { StatsCards } from '@/components/ignite/dashboard/stats-cards';
+import CreateCourseModal from '@/components/ignite/teach/create-course-modal';
 import { Button } from '@/components/ui/button';
 import { logger } from '@/lib/logger';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';

@@ -8,8 +8,8 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import type { Statement } from '@/lib/xapi/types';
-import type { Hotspot, ThreeSixtyScene, Vector3 } from '../ThreeSixtyEditor/types';
-import { SPATIAL_EXTENSIONS, SPATIAL_VERBS } from '../ThreeSixtyEditor/types';
+import type { Hotspot, ThreeSixtyScene, Vector3 } from '../three-sixty-editor/types';
+import { SPATIAL_EXTENSIONS, SPATIAL_VERBS } from '../three-sixty-editor/types';
 
 // =============================================================================
 // Actor Helper

@@ -198,10 +198,10 @@ export function getPendingInterventions(learnerId: string): Intervention[] {
   const now = new Date();
 
   // Filter expired and return valid
-  const valid = queue.filter((q) => q.expiresAt > now);
-  interventionQueues.set(learnerId, valid);
+  const validQueue = queue.filter((q) => q.expiresAt > now);
+  interventionQueues.set(learnerId, validQueue);
 
-  return valid.map((q) => q.intervention);
+  return validQueue.map((q) => q.intervention);
 }
 
 /**

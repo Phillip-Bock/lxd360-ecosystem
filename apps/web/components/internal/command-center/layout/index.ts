@@ -4,6 +4,6 @@
  * =============================================================================
  */
 
-export { type AlertItem, AlertTicker } from './AlertTicker';
-export { MissionClock } from './MissionClock';
-export { SystemStatusBar } from './SystemStatusBar';
+export { type AlertItem, AlertTicker } from './alert-ticker';
+export { MissionClock } from './mission-clock';
+export { SystemStatusBar } from './system-status-bar';

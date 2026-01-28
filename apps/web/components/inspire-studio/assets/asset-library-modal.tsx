@@ -35,10 +35,10 @@ import { cn } from '@/lib/utils';
 
 const log = logger.scope('AssetLibraryModal');
 
-import { AIAutoTagger } from './AIAutoTagger';
-import { AssetGrid } from './AssetGrid';
-import { AssetMetadataPanel } from './AssetMetadataPanel';
-import { AssetUploader } from './AssetUploader';
+import { AIAutoTagger } from './ai-auto-tagger';
+import { AssetGrid } from './asset-grid';
+import { AssetMetadataPanel } from './asset-metadata-panel';
+import { AssetUploader } from './asset-uploader';
 
 // =============================================================================
 // Types

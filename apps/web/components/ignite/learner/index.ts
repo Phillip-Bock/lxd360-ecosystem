@@ -8,18 +8,18 @@ export {
   AchievementBadges,
   type AchievementBadgesProps,
   AchievementBadgesSkeleton,
-} from './AchievementBadges';
+} from './achievement-badges';
 export {
   ContinueLearningWidget,
   type ContinueLearningWidgetProps,
   ContinueLearningWidgetSkeleton,
-} from './ContinueLearningWidget';
-export { CourseCard, type CourseCardProps, CourseCardSkeleton } from './CourseCard';
+} from './continue-learning-widget';
+export { CourseCard, type CourseCardProps, CourseCardSkeleton } from './course-card';
 export {
   DeadlinesWidget,
   type DeadlinesWidgetProps,
   DeadlinesWidgetSkeleton,
-} from './DeadlinesWidget';
-export { LearningSection, type LearningSectionProps } from './LearningSection';
-export { ProgressRing, type ProgressRingProps } from './ProgressRing';
-export { WelcomeCard, type WelcomeCardProps } from './WelcomeCard';
+} from './deadlines-widget';
+export { LearningSection, type LearningSectionProps } from './learning-section';
+export { ProgressRing, type ProgressRingProps } from './progress-ring';
+export { WelcomeCard, type WelcomeCardProps } from './welcome-card';

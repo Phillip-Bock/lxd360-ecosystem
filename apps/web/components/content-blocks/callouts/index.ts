@@ -1,2 +1,2 @@
-export { CustomCalloutBlock } from './CustomCalloutBlock';
-export { ExpertInsightBlock } from './ExpertInsightBlock';
+export { CustomCalloutBlock } from './custom-callout-block';
+export { ExpertInsightBlock } from './expert-insight-block';

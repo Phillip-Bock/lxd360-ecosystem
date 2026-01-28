@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { IgniteHeader } from '@/components/ignite/navigation/header';
-import { LMSSidebar } from '@/components/lms/navigation/LMSSidebar';
+import { LMSSidebar } from '@/components/lms/navigation/lms-sidebar';
 import { cn } from '@/lib/utils';
 import { useSafeAuth } from '@/providers/SafeAuthProvider';
 

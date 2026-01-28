@@ -1,6 +1,6 @@
-export { CommandPalette } from './CommandPalette';
+export { CommandPalette } from './command-palette';
 // Main Components
-export { EditorRibbon, type EditorRibbonProps } from './EditorRibbon';
+export { EditorRibbon, type EditorRibbonProps } from './editor-ribbon';
 // Group Components
 export {
   type GalleryItem,
@@ -26,8 +26,8 @@ export {
   useKeyboardShortcuts,
   useRibbonState,
 } from './hooks';
-export { QuickAccessToolbar } from './QuickAccessToolbar';
-export { type RibbonTabItem, RibbonTabs } from './RibbonTabs';
+export { QuickAccessToolbar } from './quick-access-toolbar';
+export { type RibbonTabItem, RibbonTabs } from './ribbon-tabs';
 // Tab Components
 export {
   AIStudioTab,

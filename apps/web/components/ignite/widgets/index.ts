@@ -2,16 +2,16 @@ export {
   ContinueLearningWidget,
   type ContinueLearningWidgetProps,
   type LastSessionData,
-} from './ContinueLearningWidget';
+} from './continue-learning-widget';
 
 export {
   type CourseProgress,
   ProgressOverviewWidget,
   type ProgressOverviewWidgetProps,
   type ProgressStats,
-} from './ProgressOverviewWidget';
+} from './progress-overview-widget';
 
 export {
   RecommendationsWidget,
   type RecommendationsWidgetProps,
-} from './RecommendationsWidget';
+} from './recommendations-widget';

@@ -4,8 +4,8 @@
  * =============================================================================
  */
 
-export { BigNumber } from './BigNumber';
-export { ProgressRing } from './ProgressRing';
-export { SparklineMetric } from './SparklineMetric';
-export { StatusDot } from './StatusDot';
-export { TrendIndicator } from './TrendIndicator';
+export { BigNumber } from './big-number';
+export { ProgressRing } from './progress-ring';
+export { SparklineMetric } from './sparkline-metric';
+export { StatusDot } from './status-dot';
+export { TrendIndicator } from './trend-indicator';

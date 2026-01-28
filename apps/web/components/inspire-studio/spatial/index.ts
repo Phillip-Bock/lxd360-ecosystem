@@ -12,17 +12,17 @@ export type {
   ThreeSixtyEditorProps,
   ThreeSixtyScene,
   Vector3,
-} from './ThreeSixtyEditor';
+} from './three-sixty-editor';
 // Editor
-export { ThreeSixtyEditor } from './ThreeSixtyEditor';
+export { ThreeSixtyEditor } from './three-sixty-editor';
 
 // Editor Components
-export { GuidedTourEngine } from './ThreeSixtyEditor/GuidedTourEngine';
-export { HotspotConfig } from './ThreeSixtyEditor/HotspotConfig';
-export { HotspotManager, TourSequenceManager } from './ThreeSixtyEditor/HotspotManager';
-export { HotspotListItem, HotspotMarker } from './ThreeSixtyEditor/HotspotMarker';
-export { OrbitController } from './ThreeSixtyEditor/OrbitController';
-export { PanoramaSphere } from './ThreeSixtyEditor/PanoramaSphere';
+export { GuidedTourEngine } from './three-sixty-editor/guided-tour-engine';
+export { HotspotConfig } from './three-sixty-editor/hotspot-config';
+export { HotspotManager, TourSequenceManager } from './three-sixty-editor/hotspot-manager';
+export { HotspotListItem, HotspotMarker } from './three-sixty-editor/hotspot-marker';
+export { OrbitController } from './three-sixty-editor/orbit-controller';
+export { PanoramaSphere } from './three-sixty-editor/panorama-sphere';
 
 // Types
 export type {
@@ -33,7 +33,7 @@ export type {
   InteractionTrigger,
   ThreeSixtyPlayerProps,
   TourState,
-} from './ThreeSixtyEditor/types';
+} from './three-sixty-editor/types';
 export {
   defaultEditorState,
   defaultTourState,
@@ -44,6 +44,6 @@ export {
   SPATIAL_VERBS,
   ThreeSixtySceneSchema,
   Vector3Schema,
-} from './ThreeSixtyEditor/types';
+} from './three-sixty-editor/types';
 // Player
-export { ThreeSixtyPlayer } from './ThreeSixtyPlayer';
+export { ThreeSixtyPlayer } from './three-sixty-player';

@@ -1,3 +1,3 @@
-export { CognitiveMeter } from './CognitiveMeter';
-export { LessonSidebar } from './LessonSidebar';
-export { VideoPlayer } from './VideoPlayer';
+export { CognitiveMeter } from './cognitive-meter';
+export { LessonSidebar } from './lesson-sidebar';
+export { VideoPlayer } from './video-player';
