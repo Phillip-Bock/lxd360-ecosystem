@@ -1,6 +1,5 @@
 'use client';
 
-import { cn } from '@lxd360/ui';
 import { AlertCircle, CheckCircle2, Loader2, Upload, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -11,6 +10,7 @@ import {
   type MediaAssetType,
   type UploadProgress,
 } from '@/lib/media/types';
+import { cn } from '@/lib/utils';
 
 // =============================================================================
 // Types

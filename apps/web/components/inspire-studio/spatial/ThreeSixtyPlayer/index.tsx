@@ -1,7 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('ThreeSixtyPlayer');
+
 import {
   buildHotspotFocusedStatement,
   buildHotspotInteractedStatement,
@@ -124,7 +128,7 @@ export function ThreeSixtyPlayer({
         case 'audio_spatial':
           if (hotspot.audioSrc) {
             const audio = new Audio(hotspot.audioSrc);
-            audio.play().catch(console.error);
+            audio.play().catch((error) => log.error('Spatial audio play failed', error));
           }
           break;
 

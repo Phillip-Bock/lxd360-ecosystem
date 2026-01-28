@@ -133,7 +133,7 @@ export const xapiHandler: ExportHandler = {
 
       return createSuccessResult({
         blob,
-        filename: generateFilename(courseData.title + '-xapi', XAPI_EXTENSION),
+        filename: generateFilename(`${courseData.title}-xapi`, XAPI_EXTENSION),
         mimeType: XAPI_MIME_TYPE,
         stats: {
           totalItems,

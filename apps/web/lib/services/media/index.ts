@@ -23,6 +23,7 @@ import {
   sort,
   updateDocumentById,
 } from '@/lib/firebase/firestore-client';
+import { logger } from '@/lib/logger';
 import {
   getAssetTypeFromMimeType,
   type MediaAsset,
@@ -286,7 +287,7 @@ export async function createMedia(input: CreateMediaInput): Promise<FirestoreRes
  * ```typescript
  * const { data: media, error } = await getMedia('tenant-123', 'media-456');
  * if (media) {
- *   console.log(media.filename);
+ *   // media.filename is now available
  * }
  * ```
  */
@@ -513,7 +514,7 @@ export async function incrementMediaUsage(
  * ```typescript
  * const { data, error } = await softDeleteMedia('tenant-123', 'media-456');
  * if (!error) {
- *   console.log('Media archived');
+ *   // Media successfully archived
  * }
  * ```
  */
@@ -546,7 +547,7 @@ export async function restoreMedia(
  * ```typescript
  * const { error } = await hardDeleteMedia('tenant-123', 'media-456');
  * if (!error) {
- *   console.log('Media permanently deleted');
+ *   // Media permanently deleted
  * }
  * ```
  */
@@ -564,7 +565,7 @@ export async function hardDeleteMedia(
   const { error: storageError } = await deleteFromStorage(media.storage_path);
   if (storageError) {
     // Log but continue with Firestore deletion
-    console.error('Failed to delete from storage:', storageError);
+    logger.error('Failed to delete from storage', storageError);
   }
 
   // Delete thumbnail if exists

@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';

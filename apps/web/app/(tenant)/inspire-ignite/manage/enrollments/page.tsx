@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { BulkEnrollDialog } from '@/components/ignite/enrollment/BulkEnrollDialog';
 import { EnrollmentStats } from '@/components/ignite/enrollment/EnrollmentStats';
 import type { Enrollment } from '@/components/ignite/enrollment/EnrollmentTable';

@@ -157,14 +157,13 @@ export function CaptionPanel({
   }
 
   return (
-    <div
+    <section
       className={cn(
         'absolute left-1/2 -translate-x-1/2 z-50 transition-all duration-300',
         positionClasses[localPosition],
         isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none',
         className,
       )}
-      role="region"
       aria-label="Live captions"
     >
       {/* Caption container */}
@@ -268,7 +267,7 @@ export function CaptionPanel({
           </p>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

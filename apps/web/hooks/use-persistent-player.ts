@@ -3,11 +3,14 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
+import { logger } from '@/lib/logger';
 import {
   type BackgroundAudioState,
   backgroundAudio,
   type MediaMetadataInfo,
 } from '@/lib/player/background-audio';
+
+const log = logger.scope('PersistentPlayer');
 
 /**
  * Playback modality - Watch (video) or Listen (audio only)
@@ -69,7 +72,7 @@ function emitModalitySwitchEvent(event: ModalitySwitchEvent): void {
     try {
       listener(event);
     } catch (error) {
-      console.error('[PersistentPlayer] Modality switch listener error:', error);
+      log.error('Modality switch listener error', error);
     }
   }
 }
@@ -223,7 +226,7 @@ export const usePersistentPlayerStore = create<PersistentPlayerState>()(
         backgroundAudio.seek(currentTime);
 
         if (wasPlaying) {
-          backgroundAudio.play().catch(console.error);
+          backgroundAudio.play().catch((error) => log.error('Background audio play failed', error));
         }
       }
 

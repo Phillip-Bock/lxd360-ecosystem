@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { AlertCircle, BookOpen, CheckCircle2, ClipboardList, RefreshCw, Users } from 'lucide-react';
 import { useCallback, useState, useTransition } from 'react';
 import { AssignmentMatrix } from '@/components/ignite/assignments/assignment-matrix';

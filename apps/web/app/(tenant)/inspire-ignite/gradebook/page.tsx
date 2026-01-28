@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { Filter, Search } from 'lucide-react';
 import { useState } from 'react';
 import type { Assignment, GradebookEntry, LearnerStatus } from '@/components/ignite/gradebook';

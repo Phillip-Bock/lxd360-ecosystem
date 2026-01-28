@@ -9,6 +9,10 @@
  * - Event dispatching for UI synchronization
  */
 
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('BackgroundAudio');
+
 export interface MediaMetadataInfo {
   title: string;
   artist?: string;
@@ -136,7 +140,7 @@ class BackgroundAudioService {
       await audio.play();
       this.updateMediaSession();
     } catch (error) {
-      console.error('[BackgroundAudio] Play failed:', error);
+      log.error('Play failed', error);
       throw error;
     }
   }
@@ -224,7 +228,7 @@ class BackgroundAudioService {
 
     // Set action handlers
     navigator.mediaSession.setActionHandler('play', () => {
-      this.play().catch(console.error);
+      this.play().catch((error) => log.error('Media session play failed', error));
     });
 
     navigator.mediaSession.setActionHandler('pause', () => {
@@ -310,7 +314,7 @@ class BackgroundAudioService {
         try {
           callback(state);
         } catch (error) {
-          console.error(`[BackgroundAudio] Event callback error for ${event}:`, error);
+          log.error(`Event callback error for ${event}`, error);
         }
       });
     }

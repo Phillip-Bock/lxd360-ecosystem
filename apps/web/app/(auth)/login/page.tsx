@@ -1,8 +1,10 @@
 'use client';
 
-import dynamic from 'next/dynamic';
+export const dynamic = 'force-dynamic';
 
-const LoginForm = dynamic(() => import('./LoginForm'), {
+import dynamicImport from 'next/dynamic';
+
+const LoginForm = dynamicImport(() => import('./LoginForm'), {
   ssr: false,
   loading: () => <div className="text-white">Loading Secure Login...</div>,
 });

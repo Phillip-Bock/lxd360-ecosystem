@@ -108,7 +108,7 @@ export const ImageBlockEditor = ({ block, onChange }: ImageBlockEditorProps): Re
           <Upload className="w-12 h-12 mx-auto text-brand-muted mb-3" />
           <p className="text-sm text-brand-secondary mb-1">Click to upload or drag and drop</p>
           <p className="text-xs text-brand-muted">PNG, JPG, GIF, WebP up to 10MB</p>
-          <input type="file" accept="image/*" className="hidden" />
+          <input type="file" accept="image/*" className="hidden" aria-label="Upload image" />
         </div>
       )}
 

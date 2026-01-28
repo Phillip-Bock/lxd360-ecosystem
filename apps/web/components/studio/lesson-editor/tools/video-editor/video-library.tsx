@@ -303,7 +303,13 @@ export function VideoUpload({ onUpload }: { onUpload: (file: File) => void }) {
       <Video className="h-8 w-8 mx-auto mb-2 text-zinc-500" />
       <p className="text-sm text-zinc-400 mb-2">Drag and drop a video or</p>
       <label>
-        <input type="file" accept="video/*" className="hidden" onChange={handleFileSelect} />
+        <input
+          type="file"
+          accept="video/*"
+          className="hidden"
+          onChange={handleFileSelect}
+          aria-label="Upload video file"
+        />
         <Button variant="outline" size="sm" className="border-white/10" asChild>
           <span className="cursor-pointer">Browse Files</span>
         </Button>

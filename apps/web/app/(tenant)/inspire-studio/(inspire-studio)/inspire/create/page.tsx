@@ -150,7 +150,6 @@ function NewMissionForm({ onCreateMission }: NewMissionFormProps) {
                 name="title"
                 placeholder="e.g., Advanced Safety Procedures Training"
                 required
-                autoFocus
               />
             </div>
 

@@ -11,6 +11,7 @@ import {
   useState,
 } from 'react';
 import { v4 as generateUUID } from 'uuid';
+import { logger } from '@/lib/logger';
 import {
   getLRSClient,
   hasLRSClient,
@@ -18,6 +19,9 @@ import {
   initializeTrackingClient,
   queueStatement,
 } from '@/lib/xapi/lrs-client';
+
+const log = logger.scope('xAPIProvider');
+
 import type { ActorOptions } from '@/lib/xapi/statement-builder';
 import {
   type StatementBuilder as BaseStatementBuilder,
@@ -486,7 +490,7 @@ export function XAPIProvider({
       onStatementSent?.(statement);
 
       if (config?.debug) {
-        console.warn('[xAPI Statement]', statement);
+        log.debug('xAPI Statement sent', { statement });
       }
     },
     [onStatementSent, config?.debug],

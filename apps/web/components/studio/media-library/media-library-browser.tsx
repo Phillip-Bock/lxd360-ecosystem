@@ -1,6 +1,5 @@
 'use client';
 
-import { cn } from '@lxd360/ui';
 import { Plus, Trash2, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -16,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useMediaUpload } from '@/lib/hooks/use-media-upload';
+import { logger } from '@/lib/logger';
 import type { MediaAsset, MediaFilters, MediaSortOptions } from '@/lib/media/types';
 import {
   batchSoftDeleteMedia,
@@ -23,6 +23,7 @@ import {
   softDeleteMedia,
   updateMedia,
 } from '@/lib/services/media';
+import { cn } from '@/lib/utils';
 import { MediaDetailsPanel, type MediaUpdateInput } from './media-details-panel';
 import { MediaFiltersBar } from './media-filters-bar';
 import { MediaGrid } from './media-grid';
@@ -85,7 +86,7 @@ export function MediaLibraryBrowser({
     try {
       const { data, error } = await listMedia(tenantId, { filters, sort: sortOptions });
       if (error) {
-        console.error('Failed to load media:', error);
+        logger.error('Failed to load media', error);
       } else {
         setMedia(data);
       }
@@ -152,7 +153,7 @@ export function MediaLibraryBrowser({
     try {
       const { error } = await softDeleteMedia(tenantId, deleteTarget.id);
       if (error) {
-        console.error('Failed to delete media:', error);
+        logger.error('Failed to delete media', error);
       } else {
         setMedia((prev) => prev.filter((item) => item.id !== deleteTarget.id));
         setSelectedIds((prev) => {
@@ -194,7 +195,7 @@ export function MediaLibraryBrowser({
     });
 
     if (error) {
-      console.error('Failed to update media:', error);
+      logger.error('Failed to update media', error);
     } else {
       setMedia((prev) =>
         prev.map((item) =>

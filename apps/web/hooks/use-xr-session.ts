@@ -356,7 +356,7 @@ export function useXRSession(options: UseXRSessionOptions = {}): UseXRSessionRet
       .then((space) => {
         setReferenceSpace(space);
       })
-      .catch(console.error);
+      .catch((error) => log.error('Failed to request reference space', error));
   }, [session, referenceSpace, config.comfortSettings?.seatedMode, config.referenceSpaceType]);
 
   // Auto-detect VR support on mount
@@ -370,7 +370,7 @@ export function useXRSession(options: UseXRSessionOptions = {}): UseXRSessionRet
   useEffect(() => {
     return () => {
       if (session) {
-        session.end().catch(console.error);
+        session.end().catch((error) => log.error('Failed to end XR session', error));
       }
     };
   }, [session]);

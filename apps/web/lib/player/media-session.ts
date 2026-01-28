@@ -11,7 +11,10 @@
  * @updated 2026-01-27
  */
 
+import { logger } from '@/lib/logger';
 import type { ContentAtom } from '@/types/content/atom';
+
+const log = logger.scope('MediaSession');
 
 /**
  * Media controls interface for action handlers
@@ -107,7 +110,7 @@ export function setupMediaSession(
   navigator.mediaSession.setActionHandler('play', () => {
     const result = controls.play();
     if (result instanceof Promise) {
-      result.catch(console.error);
+      result.catch((error) => log.error('Media session play failed', error));
     }
   });
 

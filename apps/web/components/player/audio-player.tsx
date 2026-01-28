@@ -17,7 +17,10 @@ import { AlertCircle, Headphones, Music2, Pause, Play, RotateCcw } from 'lucide-
 import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { logger } from '@/lib/logger';
 import { cn } from '@/lib/utils';
+
+const log = logger.scope('AudioPlayer');
 
 /**
  * AudioPlayer component props
@@ -114,7 +117,7 @@ export function AudioPlayer({
 
     if (isPlaying) {
       audio.play().catch((err) => {
-        console.error('Audio playback failed:', err);
+        log.error('Audio playback failed', err);
       });
     } else {
       audio.pause();
@@ -160,7 +163,7 @@ export function AudioPlayer({
         analyzerRef.current = analyzer;
       } catch (err) {
         // Visualization failed, continue without it
-        console.warn('Audio visualization not available:', err);
+        log.warn('Audio visualization not available', { error: err });
       }
     };
 
@@ -301,7 +304,7 @@ export function AudioPlayer({
     if (!audio) return;
 
     if (audio.paused) {
-      audio.play().catch(console.error);
+      audio.play().catch((error) => log.error('Play failed', error));
     } else {
       audio.pause();
     }

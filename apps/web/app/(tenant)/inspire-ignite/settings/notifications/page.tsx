@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Mail, Users } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';

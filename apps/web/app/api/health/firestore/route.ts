@@ -1,6 +1,8 @@
-import { getFirestore } from 'firebase-admin/firestore';
 import { NextResponse } from 'next/server';
-import { initializeFirebaseAdmin } from '@/lib/firebase/admin';
+import { adminDb } from '@/lib/firebase/admin';
+import { logger } from '@/lib/logger';
+
+const log = logger.scope('HealthCheck');
 
 /**
  * Firestore health check endpoint
@@ -12,10 +14,8 @@ export async function GET() {
   const startTime = Date.now();
 
   try {
-    // Initialize Firebase Admin if not already done
-    initializeFirebaseAdmin();
-
-    const db = getFirestore();
+    // adminDb is already initialized via singleton pattern
+    const db = adminDb;
 
     // Perform a simple read operation to verify connectivity
     // Read from a known collection or use a health check document
@@ -52,7 +52,7 @@ export async function GET() {
     const latency = Date.now() - startTime;
 
     // Log the error for debugging
-    console.error('[Health Check] Firestore error:', error);
+    log.error('Firestore health check failed', error);
 
     return NextResponse.json(
       {

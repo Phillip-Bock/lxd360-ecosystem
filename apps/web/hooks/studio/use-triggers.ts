@@ -105,7 +105,7 @@ function playAudio(src: string, options?: AudioActionConfig): void {
   audio.volume = options?.volume ?? 1;
   audio.loop = options?.loop ?? false;
   audio.currentTime = 0;
-  audio.play().catch(console.error);
+  audio.play().catch((error) => log.error('Audio play failed', error));
   currentAudio = audio;
 }
 
@@ -296,14 +296,14 @@ export function useTriggers(options: UseTriggersOptions): UseTriggersReturn {
       playMedia: (objectId: string) => {
         const element = mediaElementsRef.current.get(objectId);
         if (element) {
-          element.play().catch(console.error);
+          element.play().catch((error) => log.error('Media play failed', error));
         } else {
           const mediaEl = document.querySelector(
             `[data-object-id="${objectId}"] video, [data-object-id="${objectId}"] audio`,
           ) as HTMLMediaElement;
           if (mediaEl) {
             mediaElementsRef.current.set(objectId, mediaEl);
-            mediaEl.play().catch(console.error);
+            mediaEl.play().catch((error) => log.error('Media play failed', error));
           }
         }
       },

@@ -306,7 +306,13 @@ export function ImageUpload({ onUpload }: { onUpload: (file: File) => void }) {
       <Upload className="h-8 w-8 mx-auto mb-2 text-zinc-500" />
       <p className="text-sm text-zinc-400 mb-2">Drag and drop an image or</p>
       <label>
-        <input type="file" accept="image/*" className="hidden" onChange={handleFileSelect} />
+        <input
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleFileSelect}
+          aria-label="Upload image file"
+        />
         <Button variant="outline" size="sm" className="border-white/10" asChild>
           <span className="cursor-pointer">Browse Files</span>
         </Button>

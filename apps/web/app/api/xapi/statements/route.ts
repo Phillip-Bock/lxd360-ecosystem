@@ -115,7 +115,8 @@ interface IngestionResponse {
 // ============================================================================
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin':
+    process.env.ALLOWED_ORIGINS?.split(',')[0] || 'https://app.lxd360.com',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
   'Access-Control-Allow-Headers':
     'Content-Type, Authorization, X-Experience-API-Version, X-Tenant-ID, X-Session-ID',

@@ -1,6 +1,5 @@
 'use client';
 
-import { cn } from '@lxd360/ui';
 import { Check, File, Film, Image, MoreHorizontal, Music, Trash2 } from 'lucide-react';
 import NextImage from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import type { MediaAsset, MediaAssetType } from '@/lib/media/types';
 import { formatFileSize } from '@/lib/media/types';
+import { cn } from '@/lib/utils';
 
 // =============================================================================
 // Types

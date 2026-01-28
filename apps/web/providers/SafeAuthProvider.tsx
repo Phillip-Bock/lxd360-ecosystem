@@ -8,7 +8,10 @@ import {
 } from 'firebase/auth';
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { getFirebaseAuth } from '@/lib/firebase/client';
+import { logger } from '@/lib/logger';
 import { getPersonaFromClaims, type Persona } from '@/lib/rbac/personas';
+
+const log = logger.scope('SafeAuthProvider');
 
 type AuthContextType = {
   user: User | null;
@@ -43,7 +46,7 @@ export function SafeAuthProvider({ children }: { children: React.ReactNode }) {
       const loadedPersona = getPersonaFromClaims(tokenResult.claims);
       setPersona(loadedPersona);
     } catch (error) {
-      console.error('Failed to load persona:', error);
+      log.error('Failed to load persona', error);
       // Default to learner on error (secure default)
       setPersona('learner');
     }
