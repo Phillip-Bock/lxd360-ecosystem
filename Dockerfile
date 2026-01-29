@@ -56,6 +56,15 @@ RUN pnpm --filter @inspire/xapi-client build || true
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV NEXT_PUBLIC_CLOUD_RUN=true
+
+# Firebase Client SDK (must be set at build time for client-side JS)
+ENV NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyDhMXHC1OAZ_DEPsIJxqcuysUkP0_DTN-o
+ENV NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=lxd-saas-dev.firebaseapp.com
+ENV NEXT_PUBLIC_FIREBASE_PROJECT_ID=lxd-saas-dev
+ENV NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=lxd360-course-assets
+ENV NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=203150315202
+ENV NEXT_PUBLIC_FIREBASE_APP_ID=1:203150315202:web:e596c12d1b1b7100b2b55b
+
 RUN pnpm --filter @lxd360/web build
 
 # ============================================================================
