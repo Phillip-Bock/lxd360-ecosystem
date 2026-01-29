@@ -55,6 +55,7 @@ RUN pnpm --filter @inspire/xapi-client build || true
 # Build the web app
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+ENV NEXT_PUBLIC_CLOUD_RUN=true
 RUN pnpm --filter @lxd360/web build
 
 # ============================================================================
