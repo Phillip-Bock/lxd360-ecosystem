@@ -76,7 +76,7 @@ packages/*/dist/
 _archived/
 
 # Large media files (use Cloud Storage or CDN instead)
-*.mp4
+# *.mp4  # Removed - need LXD360.mp4 for hero video
 *.mov
 *.avi
 *.mkv
