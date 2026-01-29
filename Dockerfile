@@ -24,7 +24,6 @@ COPY apps/web/package.json ./apps/web/
 COPY packages/types/package.json ./packages/types/
 COPY packages/ml/package.json ./packages/ml/
 COPY packages/xapi-client/package.json ./packages/xapi-client/
-COPY packages/config/package.json ./packages/config/
 
 # Install dependencies
 RUN pnpm install --no-frozen-lockfile
@@ -41,7 +40,6 @@ COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
 COPY --from=deps /app/packages/types/node_modules ./packages/types/node_modules
 COPY --from=deps /app/packages/ml/node_modules ./packages/ml/node_modules
 COPY --from=deps /app/packages/xapi-client/node_modules ./packages/xapi-client/node_modules
-COPY --from=deps /app/packages/config/node_modules ./packages/config/node_modules
 
 # Copy source code
 COPY . .
