@@ -34,6 +34,9 @@ RUN pnpm install --no-frozen-lockfile
 FROM base AS builder
 WORKDIR /app
 
+# Increase Node.js memory for large builds (default is ~2GB, we need more)
+ENV NODE_OPTIONS="--max-old-space-size=8192"
+
 # Copy dependencies
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
