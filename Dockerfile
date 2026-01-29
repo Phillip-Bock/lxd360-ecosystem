@@ -27,7 +27,7 @@ COPY packages/xapi-client/package.json ./packages/xapi-client/
 COPY packages/config/package.json ./packages/config/
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --no-frozen-lockfile
 
 # ============================================================================
 # Builder stage
